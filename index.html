@@ -319,8 +319,11 @@ textarea:focus{border-color:var(--accent);outline:none}
         <li><b>RIR</b> یعنی چند تکرار دیگر با فرم درست می‌توانستی بزنی.</li>
         <li><b>پیشرفت دوگانه:</b> وقتی در همهٔ ست‌ها به سقف بازه با RIR هدف رسیدی، وزنه را ۲ تا ۵٪ بالا ببر و به کف بازه برگرد. اپ این را بالای همان حرکت نشان می‌دهد.</li>
         <li>در کسری کالری، ثابت ماندن عملکرد هم موفقیت است.</li>
-        <li><b>جمعه و شنبه</b>، بعد از تزریق پنجشنبه، RIR را یک واحد محافظه‌کارتر بگیر.</li>
-        <li><b>حرکت تازه:</b> در جلسهٔ اول هر حرکت تازه، وزنهٔ شروع را محتاطانه انتخاب کن و از ست بعد به RIR هدف برسان. در Trap Bar Deadlift دو جلسهٔ اول سمت RIR ۳ بمان.</li>
+        <li><b>RIR هر حرکت جداست</b> و زیر همان حرکت نوشته شده: تک‌مفصلی‌ها نزدیک ناتوانی، چندمفصلی‌های دستگاهی کمی دورتر، و حرکاتی که کمر یا شانه را درگیر می‌کنند دورتر.</li>
+        <li><b>هفتهٔ ۱:</b> ست و تکرار کامل، ولی RIR هر حرکت یک واحد بالاتر (حداکثر ۳) تا وزنه‌ها را پیدا کنی. در Trap Bar Deadlift هفته‌های ۱ و ۲ با RIR ۳. اپ این را خودکار نشان می‌دهد.</li>
+        <li><b>هفته‌های ۲ تا ۴ و بعد:</b> RIR اصلی هر حرکت، ثابت تا دی‌لود. پیشرفت از وزنه و تکرار می‌آید.</li>
+        <li><b>جمعه و شنبه</b>، بعد از تزریق پنجشنبه: اگر بی‌حال یا کم‌انرژی هستی، RIR را یک واحد بالاتر بگیر (در هفتهٔ ۱ نه، چون از قبل بالاتر است).</li>
+        <li>در یک بازه مثل ۱&lrm;–&lrm;۲، ست‌های اول معمولاً سمت عدد بزرگ‌تر و ست آخر سمت عدد کوچک‌تر می‌افتد.</li>
         <li><b>سرعت:</b> پایین آوردن کنترل‌شده در ۲ تا ۳ ثانیه، بالا بردن محکم ولی بدون ضربه.</li>
       </ul>
     </div>
@@ -507,6 +510,8 @@ const ctxOf = iso => ({ week: weekOf(iso), deload: isDeload(iso) });
 function tgt(ex, ctx) {
   let s = ex.s, r = ex.r.slice(), rir = ex.rir ? ex.rir.slice() : null, mode = '';
   if (ctx.deload) { s = Math.max(1, Math.ceil(s / 2)); if (rir) rir = [3, 4]; mode = 'deload'; }
+  else if (rir && ex.tb && ctx.week <= 2) { rir = [3, 3]; mode = 'calib'; }
+  else if (rir && ctx.week === 1) { rir = [Math.min(rir[0] + 1, 3), Math.min(rir[1] + 1, 3)]; mode = 'calib'; }
   return { s, r, rir, mode };
 }
 
@@ -552,7 +557,7 @@ function suggest(ex, t, ctx) {
   if (!p) return null;
   const pt = p.e.t || tgt(ex, ctxOf(p.rec.date));
   if (pt.r[0] !== t.r[0] || pt.r[1] !== t.r[1]) {
-    return ctx.week >= 3 && weekOf(p.rec.date) <= 2 ? { type: 'newrange' } : null;
+    return null;
   }
   const done = p.e.sets.filter(s => s.d && num(s.r) != null);
   if (done.length < pt.s) return null;
@@ -601,7 +606,10 @@ function render() {
     h += `<div class="banner" style="margin-top:12px"><span class="grow">امروز روز استراحت است. اگر جلسه‌ای عقب افتاده، همین‌جا ثبتش کن؛ با تاریخ امروز ذخیره می‌شود.</span></div>`;
   }
   if (ctx.deload) h += `<div class="banner warn" style="margin-top:12px"><span class="grow"><b>هفتهٔ دی‌لود:</b> نصف ست‌ها با RIR ۳ تا ۴، با همان وزنه‌های قبلی. هدف‌های زیر همین را نشان می‌دهند.</span></div>`;
+  else if (ctx.week === 1) h += `<div class="banner" style="margin-top:12px"><span class="grow"><b>هفتهٔ ۱ · پیدا کردن وزنه‌ها:</b> ست و تکرار کامل است؛ RIR هر حرکت یک واحد بالاتر از معمول است و همین را زیر هر حرکت می‌بینی. از هفتهٔ ۲ عددهای اصلی برمی‌گردند.${(view.day === 'sat' || view.day === 'fri') ? ' این هفته واحد اضافهٔ بعد از تزریق را رویش نگذار.' : ''}</span></div>`;
   else if (ctx.week >= 6) h += `<div class="banner" style="margin-top:12px"><span class="grow">هفتهٔ ${fa(ctx.week)}: اگر خستگی یا دو جلسهٔ پیاپی افت داشتی، این هفته را دی‌لود کن.</span><button class="btn" type="button" data-act="deload-on">دی‌لود این هفته</button></div>`;
+
+  if (!ctx.deload && ctx.week >= 2 && (view.day === 'sat' || view.day === 'fri')) h += `<div class="banner" style="margin-top:12px"><span class="grow"><b>بعد از تزریق پنجشنبه:</b> اگر امروز بی‌حال یا کم‌انرژی هستی، RIR هر حرکت را یک واحد بالاتر بگیر.</span></div>`;
 
   h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span></li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span></li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
 
