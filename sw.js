@@ -1,7 +1,7 @@
 // دفتر تمرین — service worker: keeps the app working without internet.
 // Serves from cache first, then refreshes the cache in the background,
 // so a new version shows up on the next launch.
-const CACHE = 'daftar-tamrin-v2';
+const CACHE = 'daftar-tamrin-v3';
 const FILES = [
   './',
   './index.html',

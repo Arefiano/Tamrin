@@ -255,7 +255,7 @@ textarea:focus{border-color:var(--accent);outline:none}
 
     <div class="sec">
       <h3>شروع برنامه</h3>
-      <p>هفتهٔ برنامه از این تاریخ حساب می‌شود. هفته‌های ۱ و ۲ هدف‌های سبک‌تری دارند.</p>
+      <p>هفتهٔ برنامه از این تاریخ حساب می‌شود و یادآوری دی‌لود بر اساس آن است.</p>
       <div class="row"><input type="date" id="start-date" aria-label="تاریخ شروع برنامه"><span class="muted" id="start-fa"></span></div>
       <p id="week-now"></p>
     </div>
@@ -320,7 +320,7 @@ textarea:focus{border-color:var(--accent);outline:none}
         <li><b>پیشرفت دوگانه:</b> وقتی در همهٔ ست‌ها به سقف بازه با RIR هدف رسیدی، وزنه را ۲ تا ۵٪ بالا ببر و به کف بازه برگرد. اپ این را بالای همان حرکت نشان می‌دهد.</li>
         <li>در کسری کالری، ثابت ماندن عملکرد هم موفقیت است.</li>
         <li><b>جمعه و شنبه</b>، بعد از تزریق پنجشنبه، RIR را یک واحد محافظه‌کارتر بگیر.</li>
-        <li><b>هفته‌های ۱ و ۲:</b> چندمفصلی‌ها ۱۰ تا ۱۵ تکرار، از حرکات ۳ و ۴ ستی یک ست کمتر؛ هفتهٔ ۱ همهٔ ست‌ها با RIR ۳. هدف‌های اپ خودشان تنظیم می‌شوند.</li>
+        <li><b>حرکت تازه:</b> در جلسهٔ اول هر حرکت تازه، وزنهٔ شروع را محتاطانه انتخاب کن و از ست بعد به RIR هدف برسان. در Trap Bar Deadlift دو جلسهٔ اول سمت RIR ۳ بمان.</li>
         <li><b>سرعت:</b> پایین آوردن کنترل‌شده در ۲ تا ۳ ثانیه، بالا بردن محکم ولی بدون ضربه.</li>
       </ul>
     </div>
@@ -507,12 +507,6 @@ const ctxOf = iso => ({ week: weekOf(iso), deload: isDeload(iso) });
 function tgt(ex, ctx) {
   let s = ex.s, r = ex.r.slice(), rir = ex.rir ? ex.rir.slice() : null, mode = '';
   if (ctx.deload) { s = Math.max(1, Math.ceil(s / 2)); if (rir) rir = [3, 4]; mode = 'deload'; }
-  else if (ctx.week <= 2) {
-    if (ex.comp) r = [10, 15];
-    if (s >= 3) s -= 1;
-    if (rir && (ctx.week === 1 || ex.tb)) rir = [3, 3];
-    mode = 'intro';
-  }
   return { s, r, rir, mode };
 }
 
@@ -607,7 +601,6 @@ function render() {
     h += `<div class="banner" style="margin-top:12px"><span class="grow">امروز روز استراحت است. اگر جلسه‌ای عقب افتاده، همین‌جا ثبتش کن؛ با تاریخ امروز ذخیره می‌شود.</span></div>`;
   }
   if (ctx.deload) h += `<div class="banner warn" style="margin-top:12px"><span class="grow"><b>هفتهٔ دی‌لود:</b> نصف ست‌ها با RIR ۳ تا ۴، با همان وزنه‌های قبلی. هدف‌های زیر همین را نشان می‌دهند.</span></div>`;
-  else if (ctx.week <= 2) h += `<div class="banner acc" style="margin-top:12px"><span class="grow"><b>هفتهٔ ${fa(ctx.week)} برنامه:</b> چندمفصلی‌ها ۱۰ تا ۱۵ تکرار و از حرکات ۳ و ۴ ستی یک ست کمتر${ctx.week === 1 ? '؛ همهٔ ست‌ها با RIR ۳' : '؛ Trap Bar Deadlift هنوز با RIR ۳'}. هدف‌های زیر همین را نشان می‌دهند.</span></div>`;
   else if (ctx.week >= 6) h += `<div class="banner" style="margin-top:12px"><span class="grow">هفتهٔ ${fa(ctx.week)}: اگر خستگی یا دو جلسهٔ پیاپی افت داشتی، این هفته را دی‌لود کن.</span><button class="btn" type="button" data-act="deload-on">دی‌لود این هفته</button></div>`;
 
   h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span></li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span></li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
