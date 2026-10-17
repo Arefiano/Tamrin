@@ -209,6 +209,30 @@ textarea:focus{border-color:var(--accent);outline:none}
 .guide b{color:var(--ink)}
 .copybox{width:100%;min-height:120px;font-size:12px;direction:ltr;text-align:left}
 
+/* info button, notes, modal */
+.info-btn{position:relative;flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #5D6670;background:transparent;color:var(--ink-2);display:grid;place-items:center;font-size:14px;font-weight:900;line-height:1;padding:0;font-family:inherit}
+.info-btn::after{content:"";position:absolute;inset:-9px}
+.info-btn.on{border-color:var(--accent);color:var(--on-accent);background:var(--accent)}
+.my-note{margin:6px 0 0;padding-inline-start:42px;font-size:13px;color:var(--accent);white-space:pre-line;line-height:1.6}
+.my-note b{font-weight:800}
+.modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;padding-top:max(16px,env(safe-area-inset-top,0px));background:rgba(0,0,0,.62)}
+.modal[hidden]{display:none}
+.m-card{width:100%;max-width:440px;max-height:calc(100dvh - 32px);overflow-y:auto;background:var(--surface);border:1px solid var(--line-2);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 50px rgba(0,0,0,.55)}
+.m-card h2{margin:0;font-size:18px;font-weight:900}
+.m-card .en{direction:ltr;unicode-bidi:isolate;font-weight:800;color:var(--accent)}
+.m-lbl{font-size:14px;font-weight:700;color:var(--ink-2)}
+.m-sub{margin:0;font-size:13px;color:var(--ink-2);line-height:1.6}
+.m-prog{margin:0;font-size:13px;color:var(--ink-2);background:var(--surface-2);border-radius:12px;padding:8px 10px;line-height:1.6}
+.m-act{display:flex;gap:8px}
+.m-act .btn{flex:1;min-height:46px;font-size:15px}
+.m-num{display:flex;align-items:center;gap:10px}
+.m-num input{width:110px;height:52px;border-radius:12px;border:1px solid var(--line-2);background:var(--field);text-align:center;font-size:24px;font-weight:800;direction:ltr;-webkit-appearance:none;appearance:none}
+.m-num input::placeholder{color:#5D6670}
+.m-num input:focus{border-color:var(--accent);outline:none}
+.rpe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.rpe .chip{min-width:0;height:46px;font-size:18px}
+.rpe-txt{min-height:20px;font-size:14px;font-weight:800;color:var(--accent);text-align:center}
+.s-meta{margin:0;text-align:center;color:var(--ink-2);font-size:14px;font-weight:700}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:15px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -311,6 +335,8 @@ textarea:focus{border-color:var(--accent);outline:none}
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
         <li>در حرکات دمبلی وزن یک دمبل را بنویس، و در حرکات لندماین وزن صفحه‌های روی هالتر را.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن.</li>
+        <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
+        <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
       </ul>
     </div>
     <div class="sec">
@@ -361,6 +387,7 @@ textarea:focus{border-color:var(--accent);outline:none}
 
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
+<div class="modal" id="modal" hidden><div class="m-card" role="dialog" aria-modal="true" aria-labelledby="m-title" id="m-card"></div></div>
 <script>
 (() => {
 'use strict';
@@ -384,6 +411,9 @@ const num = v => { const t = toLat(v); if (!t) return null; const n = parseFloat
 const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const myNote = id => (S.exNotes && S.exNotes[id] && S.exNotes[id].t) ? S.exNotes[id].t : '';
+const RPE_TXT = ['', 'خیلی سبک', 'سبک', 'متوسط', 'نسبتاً سخت', 'سخت', 'سخت', 'خیلی سخت', 'خیلی سخت', 'خیلی خیلی سخت', 'حداکثر توان'];
+const metaText = r => [r.min ? fa(r.min) + ' دقیقه' : '', r.rpe ? 'سختی ' + fa(r.rpe) + ' از ۱۰' : ''].filter(Boolean).join(' · ');
 function restText(r) {
   const [a, b] = r;
   if (a % 60 === 0 && b % 60 === 0 && a >= 120) return (a === b ? fa(a / 60) : rng(a / 60, b / 60)) + ' دقیقه';
@@ -485,6 +515,7 @@ function load() {
   s.v = 1;
   if (!s.sessions || typeof s.sessions !== 'object') s.sessions = {};
   if (!Array.isArray(s.deload)) s.deload = [];
+  if (!s.exNotes || typeof s.exNotes !== 'object') s.exNotes = {};
   if (!s.start) s.start = satOf(todayIso());
   return s;
 }
@@ -623,7 +654,7 @@ function render() {
   h += '</div>';
   const done = rec && rec.done;
   h += `<div class="sfoot"><label for="note">یادداشت جلسه</label><textarea id="note" placeholder="مثلاً انرژی، خواب، یا هر چیزی دربارهٔ شانه و کمر">${esc((rec && rec.note) || '')}</textarea>
-    ${done ? `<p class="done-note">${ICON.check.replace('<svg', '<svg width="22" height="22"')} این جلسه ثبت شده</p><button class="btn block" type="button" id="finish">باز کردن دوباره</button>` : `<button class="btn acc block" type="button" id="finish">پایان جلسه</button>`}</div>`;
+    ${done ? `<p class="done-note">${ICON.check.replace('<svg', '<svg width="22" height="22"')} این جلسه ثبت شده</p>${metaText(rec) ? `<p class="s-meta">${metaText(rec)}</p>` : ''}<div class="m-act"><button class="btn" type="button" data-act="edit-meta">ویرایش مدت و سختی</button><button class="btn" type="button" id="finish">باز کردن دوباره</button></div>` : `<button class="btn acc block" type="button" id="finish">پایان جلسه</button>`}</div>`;
   main.innerHTML = h;
 }
 
@@ -636,9 +667,10 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${fa(ex.no)}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3>${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${fa(ex.no)}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button>${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:13px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}</div>`;
   if (ex.note) h += `<p class="ex-note">${ex.note}</p>`;
+  if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
   else if (sug && sug.type === 'up') h += ex.db
     ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
@@ -752,6 +784,8 @@ main.addEventListener('click', ev => {
     card.querySelectorAll('[data-rir]').forEach(b => { const on = b.dataset.rir === e.rir; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     return touch(rec);
   }
+  const ib = ev.target.closest('[data-info]');
+  if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
   const altB = ev.target.closest('[data-alt]');
   if (altB) {
     const card = altB.closest('.ex'); const ex = EX[card.dataset.ex];
@@ -770,9 +804,9 @@ main.addEventListener('click', ev => {
   const ca = ev.target.closest('[data-calt]');
   if (ca) { const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.alt = !rec.cardio.alt; touch(rec); return render(); }
   if (ev.target.closest('#finish')) {
-    const rec = getRec(true); rec.done = !rec.done; touch(rec); save(true);
-    if (rec.done) { stopTimer(); toast('جلسه ثبت شد'); }
-    render(); window.scrollTo({ top: 0, behavior: 'smooth' });
+    const rec = getRec(true);
+    if (!rec.done) { openFinish(false); return; }
+    rec.done = false; touch(rec); save(true); render();
     return;
   }
   const act = ev.target.closest('[data-act]');
@@ -790,6 +824,8 @@ function onCheck(row) {
     if (s.r === '' && rIn.placeholder) { s.r = toLat(rIn.placeholder); rIn.value = faV(s.r); }
     if (s.r === '') { rIn.focus(); toast('تعداد ' + (ex.unit || 'تکرار') + ' را بنویس'); return; }
     s.d = 1;
+    if (!rec.t0) rec.t0 = Date.now();
+    rec.t1 = Date.now();
     row.classList.add('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'true');
     const card = row.closest('.ex');
     card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(s.w); } });
@@ -807,6 +843,7 @@ function handleAct(a) {
   else if (a === 'open-settings') openSheet('settings');
   else if (a === 'today') { view = { day: SLOT_BY_DOW[new Date().getDay()], date: todayIso(), editing: false }; render(); window.scrollTo(0, 0); }
   else if (a === 'deload-on') { toggleDeload(true); }
+  else if (a === 'edit-meta') { openFinish(true); }
 }
 
 $('#tabs').addEventListener('click', ev => {
@@ -939,7 +976,7 @@ function renderHistory() {
     const c = r.cardio || {};
     const cl = (c.min || c.d) ? `<li><span class="en" dir="ltr">${cardioName(r.day, c)}</span> <span class="muted">${cardioText(c, false)}</span></li>` : '';
     const nl = r.note && r.note.trim() ? `<li class="muted">یادداشت: ${esc(r.note.trim())}</li>` : '';
-    return `<article class="h-item"><div class="h-top"><b>${P[r.day].name}</b><span class="muted">${fmtD(r.date, true)}</span><span class="pill">هفتهٔ ${fa(weekOf(r.date))}</span>${isDeload(r.date) ? '<span class="pill warn">دی‌لود</span>' : ''}${r.done ? '' : '<span class="pill">ناتمام</span>'}</div><ul class="h-lines">${lines}${cl}${nl}</ul><div class="h-act"><button class="btn" type="button" data-open="${k}">باز کردن و ویرایش</button><button class="btn danger" type="button" data-del="${k}">حذف</button></div></article>`;
+    return `<article class="h-item"><div class="h-top"><b>${P[r.day].name}</b><span class="muted">${fmtD(r.date, true)}</span><span class="pill">هفتهٔ ${fa(weekOf(r.date))}</span>${isDeload(r.date) ? '<span class="pill warn">دی‌لود</span>' : ''}${r.done ? '' : '<span class="pill">ناتمام</span>'}${metaText(r) ? `<span class="pill">${metaText(r)}</span>` : ''}</div><ul class="h-lines">${lines}${cl}${nl}</ul><div class="h-act"><button class="btn" type="button" data-open="${k}">باز کردن و ویرایش</button><button class="btn danger" type="button" data-del="${k}">حذف</button></div></article>`;
   }).join('');
 }
 $('#history-list').addEventListener('click', ev => {
@@ -993,6 +1030,7 @@ function reportText() {
   const L = ['دفتر تمرین — گزارش برای مربی', 'برنامه: نسخهٔ ۲٫۵ · شروع: ' + S.start + ' (' + fmtD(S.start, true) + ')', 'بازه: ' + (reportRange ? reportRange / 7 + ' هفتهٔ اخیر' : 'همه') + ' · ' + recs.length + ' جلسه', ''];
   for (const r of recs) {
     L.push('■ ' + P[r.day].name + ' ' + r.date + ' (' + fmtD(r.date) + ') · هفتهٔ ' + weekOf(r.date) + (isDeload(r.date) ? ' · دی‌لود' : '') + (r.done ? '' : ' · ناتمام'));
+    if (r.min || r.rpe) L.push('مدت تمرین اصلی: ' + (r.min ? r.min + ' دقیقه' : '-') + ' · سختی جلسه: ' + (r.rpe ? r.rpe + '/10' : '-'));
     for (const { ex, e } of recLines(r)) {
       const t = e.t || tgt(ex, ctxOf(r.date));
       const sets = e.sets.filter(setHas).map(s => (s.w !== '' ? s.w : '-') + '×' + (s.r !== '' ? s.r : '-') + (s.d ? '' : '?')).join(', ');
@@ -1003,6 +1041,8 @@ function reportText() {
     if (r.note && r.note.trim()) L.push('یادداشت: ' + r.note.trim());
     L.push('');
   }
+  const notes = Object.entries(S.exNotes || {}).filter(([id, n]) => EX[id] && n && n.t);
+  if (notes.length) { L.push('— نکته‌های حرکات'); for (const [id, n] of notes) L.push(EX[id].name + ': ' + n.t.replace(/\n+/g, ' / ')); }
   return L.join('\n');
 }
 async function copyText(txt, box, okMsg) {
@@ -1041,6 +1081,7 @@ function importText(txt) {
     if (!cur || (r.upd || 0) > (cur.upd || 0)) { S.sessions[k] = r; n++; }
   }
   if (hadNone && d.start) S.start = d.start;
+  if (d.exNotes && typeof d.exNotes === 'object') for (const [id, n] of Object.entries(d.exNotes)) { if (n && n.t && (!S.exNotes[id] || (n.upd || 0) > (S.exNotes[id].upd || 0))) S.exNotes[id] = n; }
   if (Array.isArray(d.deload)) S.deload = Array.from(new Set(S.deload.concat(d.deload)));
   save(true); renderSettings(); render();
   toast(fa(n) + ' جلسه بازگردانی شد');
@@ -1053,9 +1094,69 @@ $('#import-file').addEventListener('change', ev => {
 $('#import-btn').addEventListener('click', () => { const t = $('#import-text').value; if (!t.trim()) { toast('اول متن پشتیبان را بچسبان'); return; } importText(t); $('#import-text').value = ''; });
 $('#wipe-btn').addEventListener('click', ev => {
   const b = ev.currentTarget;
-  if (b.dataset.armed) { S = { v: 1, sessions: {}, deload: [], start: satOf(todayIso()) }; save(true); stopTimer(); closeSheet(); render(); toast('همهٔ داده‌ها پاک شد'); }
+  if (b.dataset.armed) { S = { v: 1, sessions: {}, deload: [], exNotes: {}, start: satOf(todayIso()) }; save(true); stopTimer(); closeSheet(); render(); toast('همهٔ داده‌ها پاک شد'); }
   else { b.dataset.armed = '1'; b.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { delete b.dataset.armed; b.textContent = 'پاک کردن همه'; }, 4000); }
 });
+
+/* ---------- modal: exercise note, finish ---------- */
+const modal = $('#modal'), mCard = $('#m-card');
+let mState = null;
+function showModal(html, focusSel) {
+  mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
+  if (focusSel) { const f = mCard.querySelector(focusSel); if (f) setTimeout(() => f.focus(), 60); }
+}
+function hideModal() { modal.hidden = true; mCard.innerHTML = ''; mState = null; if (!openId) document.body.classList.remove('lock'); }
+function openNote(id) {
+  const ex = EX[id]; if (!ex) return;
+  mState = { kind: 'note', id };
+  showModal(`<h2 id="m-title">نکته‌های <span class="en">${ex.name}</span></h2>
+    ${ex.note ? `<p class="m-prog"><b>نکتهٔ برنامه:</b> ${ex.note}</p>` : ''}
+    <label class="m-lbl" for="m-note">نکتهٔ خودت</label>
+    <textarea id="m-note" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(id))}</textarea>
+    <p class="m-sub">این نکته برای همین حرکت ذخیره می‌شود و هر هفته زیر آن نمایش داده می‌شود.</p>
+    <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, myNote(id) ? null : '#m-note');
+}
+function openFinish(edit) {
+  const rec = getRec(true);
+  const est = rec.t0 && rec.t1 && rec.t1 > rec.t0 ? Math.max(1, Math.round((rec.t1 - rec.t0) / 60000)) : null;
+  mState = { kind: 'finish', edit, rpe: rec.rpe || null, est };
+  showModal(`<h2 id="m-title">${edit ? 'مدت و سختی جلسه' : 'پایان جلسه'}</h2>
+    <label class="m-lbl" for="m-min">مدت تمرین اصلی (دقیقه)</label>
+    <div class="m-num"><input id="m-min" inputmode="numeric" autocomplete="off" value="${rec.min ? fa(rec.min) : ''}" placeholder="${est ? fa(est) : ''}"><span class="m-sub">${est ? 'از اولین تا آخرین ست حدود ' + fa(est) + ' دقیقه شد؛ اگر خالی بگذاری، همین ثبت می‌شود.' : 'بدون گرم‌کردن و هوازی'}</span></div>
+    <span class="m-lbl">سختی کل جلسه از ۱ تا ۱۰</span>
+    <div class="rpe" role="group" aria-label="سختی جلسه">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => `<button class="chip${mState.rpe === v ? ' on' : ''}" type="button" data-rpe="${v}" aria-pressed="${mState.rpe === v}">${fa(v)}</button>`).join('')}</div>
+    <div class="rpe-txt" id="rpe-txt">${mState.rpe ? RPE_TXT[mState.rpe] : ''}</div>
+    <div class="m-act"><button class="btn acc" type="button" data-m="save-finish">${edit ? 'ذخیره' : 'ثبت و پایان'}</button><button class="btn" type="button" data-m="close">انصراف</button></div>`);
+}
+mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min') faInput(ev.target); });
+mCard.addEventListener('click', ev => {
+  const rb = ev.target.closest('[data-rpe]');
+  if (rb && mState) {
+    const v = +rb.dataset.rpe; mState.rpe = mState.rpe === v ? null : v;
+    mCard.querySelectorAll('[data-rpe]').forEach(b => { const on = +b.dataset.rpe === mState.rpe; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    $('#rpe-txt').textContent = mState.rpe ? RPE_TXT[mState.rpe] : '';
+    return;
+  }
+  const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
+  if (m.dataset.m === 'close') return hideModal();
+  if (m.dataset.m === 'save-note') {
+    const t = $('#m-note').value.trim(); const id = mState.id;
+    if (t) S.exNotes[id] = { t, upd: Date.now() }; else delete S.exNotes[id];
+    save(true); hideModal(); render(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
+    return;
+  }
+  if (m.dataset.m === 'save-finish') {
+    const rec = getRec(true); const inp = $('#m-min');
+    let v = num(inp.value); if (v == null && mState.est) v = mState.est;
+    if (v != null) rec.min = Math.round(v); else delete rec.min;
+    if (mState.rpe) rec.rpe = mState.rpe; else delete rec.rpe;
+    const wasEdit = mState.edit;
+    if (!wasEdit) { rec.done = true; stopTimer(); }
+    touch(rec); save(true); hideModal(); render();
+    if (!wasEdit) { toast('جلسه ثبت شد'); window.scrollTo({ top: 0, behavior: 'smooth' }); } else toast('ذخیره شد');
+  }
+});
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !modal.hidden) hideModal(); });
 
 /* ---------- toast ---------- */
 let toastH = null;
