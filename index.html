@@ -212,7 +212,7 @@ textarea:focus{border-color:var(--accent);outline:none}
 /* info button, notes, modal */
 .info-btn{position:relative;flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid #5D6670;background:transparent;color:var(--ink-2);display:grid;place-items:center;font-size:14px;font-weight:900;line-height:1;padding:0;font-family:inherit}
 .info-btn::after{content:"";position:absolute;inset:-9px}
-.info-btn.on{border-color:var(--accent);color:var(--on-accent);background:var(--accent)}
+.info-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .my-note{margin:6px 0 0;padding-inline-start:42px;font-size:13px;color:var(--accent);white-space:pre-line;line-height:1.6}
 .my-note b{font-weight:800}
 .modal{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;padding-top:max(16px,env(safe-area-inset-top,0px));background:rgba(0,0,0,.62)}
@@ -229,10 +229,90 @@ textarea:focus{border-color:var(--accent);outline:none}
 .m-num input{width:110px;height:52px;border-radius:12px;border:1px solid var(--line-2);background:var(--field);text-align:center;font-size:24px;font-weight:800;direction:ltr;-webkit-appearance:none;appearance:none}
 .m-num input::placeholder{color:#5D6670}
 .m-num input:focus{border-color:var(--accent);outline:none}
-.rpe{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.rpe .chip{min-width:0;height:46px;font-size:18px}
-.rpe-txt{min-height:20px;font-size:14px;font-weight:800;color:var(--accent);text-align:center}
 .s-meta{margin:0;text-align:center;color:var(--ink-2);font-size:14px;font-weight:700}
+/* compact layout (v2.6): smaller type, tighter spacing, one clear hierarchy per card */
+.appbar{padding-block:8px}
+.brand b{font-size:18px}
+.icon-btn{width:40px;height:40px;border-radius:11px}
+.icon-btn svg{width:20px;height:20px}
+.tabs{margin-top:10px;gap:6px}
+.tab{min-height:50px;border-radius:12px;padding:4px 2px}
+.tab b{font-size:15px}
+.tab small{font-size:11px}
+.shead{margin-top:14px}
+.shead h1{margin-top:2px;font-size:32px;line-height:1.2}
+.focus{font-size:14px}
+.focus b{font-size:16px}
+.banners{gap:6px;margin-top:10px}
+.banner{padding:8px 12px;border-radius:12px;font-size:13px;line-height:1.6}
+.shead + .banner, .banner + .banner{margin-top:10px!important}
+details.warm{margin-top:10px;border-radius:14px}
+details.warm summary{padding:9px 14px;font-size:15px}
+details.warm summary .muted{font-size:13px}
+.warm li{font-size:14px}
+.list{gap:10px;margin-top:12px}
+.ex{padding:12px 12px 10px;border-radius:18px}
+.ex-head{align-items:flex-start;gap:8px}
+.badge{width:26px;height:26px;font-size:13px;border-width:1.5px;margin-top:1px}
+.ex-name{flex:1;font-size:17px;line-height:1.4;text-align:right}
+.info-btn{width:24px;height:24px;font-size:13px;margin-top:2px;border-width:1.5px}
+.tgt{gap:4px 10px;margin-top:4px;padding-inline-start:34px}
+.t-sr{font-size:17px}
+.t-rir{font-size:13px;padding:0 9px;gap:5px}
+.t-rir small{font-size:11px}
+.t-rest{font-size:13px;gap:4px}
+.t-rest svg{width:15px;height:15px}
+.t-note{font-size:13px}
+.tag{font-size:11px;padding:0 8px;color:var(--ink-2)}
+.ex-note,.my-note{margin-top:4px;padding-inline-start:34px;font-size:12.5px;line-height:1.6}
+.sugg{margin-top:8px;padding:6px 10px;border-radius:10px;font-size:13px;line-height:1.55}
+.sugg svg{width:16px;height:16px}
+.prev{margin-top:8px;gap:4px 6px;font-size:12px}
+.prev .v{font-size:12px;border-radius:6px;padding:0 6px}
+.sets{gap:6px;margin-top:8px}
+.set,.set-head{grid-template-columns:38px minmax(0,1fr) 44px;gap:6px}
+.set-head{font-size:11px;margin-bottom:-2px}
+.set-n{font-size:12px}
+.pair{grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);gap:3px}
+.pair .x{font-size:13px}
+.pair input{height:44px;border-radius:10px;font-size:18px}
+.chk{width:44px;height:44px;border-radius:11px}
+.chk svg{width:20px;height:20px}
+.rirpick{flex-wrap:nowrap;gap:8px;margin-top:10px;padding-top:8px}
+.rirpick .lbl{font-size:12px;white-space:nowrap}
+.rirpick .chips{flex-wrap:nowrap;gap:4px;margin-inline-start:auto}
+.rirpick .chip{min-width:0;width:38px;height:32px;font-size:14px;padding:0;border-radius:9px}
+.alt{margin:8px 34px 0 0;min-height:28px;padding:0 10px;font-size:12px}
+.ss{border:1px solid var(--accent-line);background:rgba(197,240,74,.035);border-radius:20px;padding:8px;gap:8px}
+.ss-head{padding:2px 4px 0}
+.ss-head .pill{font-size:12px}
+.ss-head .rest{font-size:13px}
+.ss-head .rest svg{width:15px;height:15px}
+.ss-head .rest small{font-size:11px}
+.cardio{padding:12px;border-radius:18px}
+.cardio .badge svg{width:16px;height:16px}
+.c-tgt{margin-top:4px;padding-inline-start:34px;font-size:16px}
+.c-desc{padding-inline-start:34px;font-size:12.5px}
+.crow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:6px;margin-top:10px}
+.crow label{font-size:11px}
+.crow input{height:44px;font-size:18px;border-radius:10px}
+.sfoot{margin-top:14px;gap:8px}
+.sfoot label{font-size:13px}
+textarea{min-height:64px;border-radius:12px;font-size:16px}
+.btn.block{min-height:48px;font-size:16px;border-radius:14px}
+/* effort rating (levels like Apple Watch, on a 10-point scale) */
+.eff{display:flex;flex-direction:column;gap:10px;background:var(--surface-2);border-radius:16px;padding:12px}
+.eff-top{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px}
+.eff-step{width:44px;height:44px;border-radius:50%;border:1px solid var(--line-2);background:var(--surface);font-size:24px;font-weight:700;line-height:1;display:grid;place-items:center}
+.eff-val{display:flex;flex-direction:column;align-items:center;line-height:1.15}
+.eff-val b{font-size:44px;font-weight:900;color:var(--eff,var(--ink-3))}
+.eff-val span{font-size:15px;font-weight:800;color:var(--eff,var(--ink-2))}
+.eff-bar{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;align-items:end;height:46px}
+.eff-bar button{border:0;padding:0;border-radius:6px;background:var(--c);opacity:.22;height:var(--h)}
+.eff-bar button.on{opacity:1}
+.eff-bands{display:grid;grid-template-columns:3fr 3fr 2fr 2fr;gap:4px;font-size:11px;font-weight:800;text-align:center;color:var(--ink-2)}
+.eff-bands span{border-top:2px solid var(--c);padding-top:3px}
+.eff-desc{margin:0;min-height:42px;font-size:13px;color:var(--ink-2);line-height:1.6;text-align:center}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:15px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -412,8 +492,14 @@ const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const myNote = id => (S.exNotes && S.exNotes[id] && S.exNotes[id].t) ? S.exNotes[id].t : '';
-const RPE_TXT = ['', 'خیلی سبک', 'سبک', 'متوسط', 'نسبتاً سخت', 'سخت', 'سخت', 'خیلی سخت', 'خیلی سخت', 'خیلی خیلی سخت', 'حداکثر توان'];
-const metaText = r => [r.min ? fa(r.min) + ' دقیقه' : '', r.rpe ? 'سختی ' + fa(r.rpe) + ' از ۱۰' : ''].filter(Boolean).join(' · ');
+const EFF = [
+  { max: 3, name: 'آسان', c: '#5AD27E', d: 'کم‌زحمت بود؛ راحت می‌شد حرف زد و انرژی زیادی باقی ماند.' },
+  { max: 6, name: 'متوسط', c: '#F2D543', d: 'چالش داشت ولی قابل کنترل بود؛ کمی نفس‌نفس، ولی هنوز می‌شد حرف زد.' },
+  { max: 8, name: 'سخت', c: '#FF9A3D', d: 'به خودت فشار آوردی؛ ست‌های آخر سنگین بودند و فقط چند کلمه می‌شد حرف زد.' },
+  { max: 10, name: 'حداکثر توان', c: '#FF5B5B', d: 'تا آخرین توان؛ دیگر چیزی در باک نماند.' }
+];
+const effOf = v => EFF.find(e => v <= e.max);
+const metaText = r => [r.min ? fa(r.min) + ' دقیقه' : '', r.rpe ? 'سختی ' + fa(r.rpe) + ' از ۱۰ · ' + effOf(r.rpe).name : ''].filter(Boolean).join(' · ');
 function restText(r) {
   const [a, b] = r;
   if (a % 60 === 0 && b % 60 === 0 && a >= 120) return (a === b ? fa(a / 60) : rng(a / 60, b / 60)) + ' دقیقه';
@@ -667,8 +753,8 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${fa(ex.no)}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button>${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>
-    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:13px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}</div>`;
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${fa(ex.no)}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
+    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:13px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>`;
   if (ex.note) h += `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
@@ -1030,7 +1116,7 @@ function reportText() {
   const L = ['دفتر تمرین — گزارش برای مربی', 'برنامه: نسخهٔ ۲٫۵ · شروع: ' + S.start + ' (' + fmtD(S.start, true) + ')', 'بازه: ' + (reportRange ? reportRange / 7 + ' هفتهٔ اخیر' : 'همه') + ' · ' + recs.length + ' جلسه', ''];
   for (const r of recs) {
     L.push('■ ' + P[r.day].name + ' ' + r.date + ' (' + fmtD(r.date) + ') · هفتهٔ ' + weekOf(r.date) + (isDeload(r.date) ? ' · دی‌لود' : '') + (r.done ? '' : ' · ناتمام'));
-    if (r.min || r.rpe) L.push('مدت تمرین اصلی: ' + (r.min ? r.min + ' دقیقه' : '-') + ' · سختی جلسه: ' + (r.rpe ? r.rpe + '/10' : '-'));
+    if (r.min || r.rpe) L.push('مدت تمرین اصلی: ' + (r.min ? r.min + ' دقیقه' : '-') + ' · سختی جلسه: ' + (r.rpe ? r.rpe + '/10 (' + effOf(r.rpe).name + ')' : '-'));
     for (const { ex, e } of recLines(r)) {
       const t = e.t || tgt(ex, ctxOf(r.date));
       const sets = e.sets.filter(setHas).map(s => (s.w !== '' ? s.w : '-') + '×' + (s.r !== '' ? s.r : '-') + (s.d ? '' : '?')).join(', ');
@@ -1123,20 +1209,31 @@ function openFinish(edit) {
   showModal(`<h2 id="m-title">${edit ? 'مدت و سختی جلسه' : 'پایان جلسه'}</h2>
     <label class="m-lbl" for="m-min">مدت تمرین اصلی (دقیقه)</label>
     <div class="m-num"><input id="m-min" inputmode="numeric" autocomplete="off" value="${rec.min ? fa(rec.min) : ''}" placeholder="${est ? fa(est) : ''}"><span class="m-sub">${est ? 'از اولین تا آخرین ست حدود ' + fa(est) + ' دقیقه شد؛ اگر خالی بگذاری، همین ثبت می‌شود.' : 'بدون گرم‌کردن و هوازی'}</span></div>
-    <span class="m-lbl">سختی کل جلسه از ۱ تا ۱۰</span>
-    <div class="rpe" role="group" aria-label="سختی جلسه">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => `<button class="chip${mState.rpe === v ? ' on' : ''}" type="button" data-rpe="${v}" aria-pressed="${mState.rpe === v}">${fa(v)}</button>`).join('')}</div>
-    <div class="rpe-txt" id="rpe-txt">${mState.rpe ? RPE_TXT[mState.rpe] : ''}</div>
+    <span class="m-lbl">سختی کل جلسه</span>
+    <div class="eff" id="eff">
+      <div class="eff-top" dir="ltr"><button class="eff-step" type="button" data-step="-1" aria-label="کمتر">−</button><div class="eff-val" aria-live="polite"><b id="eff-n"></b><span id="eff-c"></span></div><button class="eff-step" type="button" data-step="1" aria-label="بیشتر">+</button></div>
+      <div class="eff-bar" dir="ltr" role="group" aria-label="سختی از ۱ تا ۱۰">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => `<button type="button" data-rpe="${v}" aria-label="${fa(v)}" style="--c:${effOf(v).c};--h:${32 + v * 7}%"></button>`).join('')}</div>
+      <div class="eff-bands" dir="ltr">${EFF.map(e => `<span style="--c:${e.c}">${e.name}</span>`).join('')}</div>
+      <p class="eff-desc" id="eff-d"></p>
+    </div>
     <div class="m-act"><button class="btn acc" type="button" data-m="save-finish">${edit ? 'ذخیره' : 'ثبت و پایان'}</button><button class="btn" type="button" data-m="close">انصراف</button></div>`);
+  paintEff();
+}
+function paintEff() {
+  const v = mState && mState.rpe; const e = v ? effOf(v) : null;
+  const box = $('#eff'); if (!box) return;
+  box.style.setProperty('--eff', e ? e.c : '');
+  $('#eff-n').textContent = v ? fa(v) : '–';
+  $('#eff-c').textContent = e ? e.name : 'از ۱ تا ۱۰ انتخاب کن';
+  $('#eff-d').textContent = e ? e.d : 'روی ستون‌ها بزن یا با − و + تنظیم کن.';
+  box.querySelectorAll('[data-rpe]').forEach(b => { const on = v && +b.dataset.rpe <= v; b.classList.toggle('on', !!on); b.setAttribute('aria-pressed', +b.dataset.rpe === v); });
 }
 mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min') faInput(ev.target); });
 mCard.addEventListener('click', ev => {
   const rb = ev.target.closest('[data-rpe]');
-  if (rb && mState) {
-    const v = +rb.dataset.rpe; mState.rpe = mState.rpe === v ? null : v;
-    mCard.querySelectorAll('[data-rpe]').forEach(b => { const on = +b.dataset.rpe === mState.rpe; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-    $('#rpe-txt').textContent = mState.rpe ? RPE_TXT[mState.rpe] : '';
-    return;
-  }
+  if (rb && mState) { mState.rpe = +rb.dataset.rpe; paintEff(); return; }
+  const st = ev.target.closest('[data-step]');
+  if (st && mState) { mState.rpe = Math.min(10, Math.max(1, (mState.rpe || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
   if (m.dataset.m === 'save-note') {
