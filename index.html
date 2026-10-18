@@ -313,6 +313,17 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
 .eff-bands{display:grid;grid-template-columns:3fr 3fr 2fr 2fr;gap:4px;font-size:12px;font-weight:800;text-align:center;color:var(--ink-2)}
 .eff-bands span{border-top:2px solid var(--c);padding-top:3px;white-space:nowrap}
 .eff-desc{margin:0;min-height:42px;font-size:14px;color:var(--ink-2);line-height:1.6;text-align:center}
+/* exercise cards read left to right: number, English name, info at the right edge; targets under the name */
+.ex-head{direction:ltr;align-items:center}
+.ex-name{text-align:left;font-family:var(--font)}
+.badge{margin-top:0;font-feature-settings:normal}
+.info-btn{margin-top:0}
+.tgt{direction:ltr;justify-content:flex-start;padding-inline-start:34px}
+.tgt>.t-rest,.tgt>.t-note,.tgt>.tag{direction:rtl;unicode-bidi:isolate}
+.ex-note,.my-note{padding-inline-start:0}
+.alt{margin:8px 0 0}
+.c-tgt,.c-desc{padding-inline-start:0}
+.cardio .ex-head .zone{margin-inline-start:auto}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -753,7 +764,7 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${fa(ex.no)}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>`;
   if (ex.note) h += `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
@@ -1058,7 +1069,7 @@ function renderHistory() {
   if (!recs.length) { box.innerHTML = '<p class="empty">هنوز جلسه‌ای ثبت نشده. اولین ستی که ثبت کنی اینجا می‌آید.</p>'; return; }
   box.innerHTML = recs.map(r => {
     const k = rkey(r.date, r.day);
-    const lines = recLines(r).map(({ ex, e }) => `<li><span class="en" dir="ltr">${fa(ex.no)}. ${ex.name}</span>${e.alt ? ' <span class="muted">(جایگزین)</span>' : ''}<div class="vals">${e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('')}${e.rir !== '' && e.rir != null ? `<span class="v" dir="ltr">RIR ${fa(e.rir)}</span>` : ''}</div></li>`).join('');
+    const lines = recLines(r).map(({ ex, e }) => `<li><span class="en" dir="ltr">${ex.no}. ${ex.name}</span>${e.alt ? ' <span class="muted">(جایگزین)</span>' : ''}<div class="vals">${e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('')}${e.rir !== '' && e.rir != null ? `<span class="v" dir="ltr">RIR ${fa(e.rir)}</span>` : ''}</div></li>`).join('');
     const c = r.cardio || {};
     const cl = (c.min || c.d) ? `<li><span class="en" dir="ltr">${cardioName(r.day, c)}</span> <span class="muted">${cardioText(c, false)}</span></li>` : '';
     const nl = r.note && r.note.trim() ? `<li class="muted">یادداشت: ${esc(r.note.trim())}</li>` : '';
