@@ -704,12 +704,14 @@ function suggest(ex, t, ctx) {
 const $ = s => document.querySelector(s);
 const main = $('#main');
 
+let UPDATE_READY = false;
 function renderTop() {
   const w = weekOf(todayIso());
   $('#weekchip').textContent = 'هفتهٔ ' + fa(w) + (isDeload(todayIso()) ? ' · دی‌لود' : '');
   const todaySlot = TRAIN_DOW[new Date().getDay()];
   $('#tabs').innerHTML = DAYS.map(d => `<button class="tab" type="button" role="tab" data-day="${d}" aria-selected="${view.day === d}">${todaySlot === d ? '<span class="today" aria-label="امروز"></span>' : ''}<b>${P[d].name}</b><small>${P[d].short}</small></button>`).join('');
   const b = [];
+  if (UPDATE_READY) b.push(`<div class="banner acc"><span class="grow"><b>نسخهٔ جدید آماده است.</b> داده‌هایت ذخیره شده‌اند.</span><button class="btn acc" type="button" data-act="reload">به‌روزرسانی</button></div>`);
   if (IS_PREVIEW) b.push(`<div class="banner warn"><span class="grow"><b>پیش‌نمایش.</b> این نسخه برای امتحان کردن است و داده‌هایش ممکن است پاک شود. نسخهٔ اصلی را از GitHub نصب کن.</span></div>`);
   else if (!STANDALONE && !S.hideInstall) b.push(`<div class="banner acc"><span class="grow"><b>نصب روی آیفون:</b> در Safari دکمهٔ اشتراک را بزن و Add to Home Screen را انتخاب کن.</span><button class="btn" type="button" data-act="hide-install">باشه</button></div>`);
   const n = Object.values(S.sessions).filter(recHas).length;
@@ -940,6 +942,7 @@ function handleAct(a) {
   else if (a === 'open-settings') openSheet('settings');
   else if (a === 'today') { view = { day: SLOT_BY_DOW[new Date().getDay()], date: todayIso(), editing: false }; render(); window.scrollTo(0, 0); }
   else if (a === 'deload-on') { toggleDeload(true); }
+  else if (a === 'reload') { save(true); location.reload(); }
   else if (a === 'edit-meta') { openFinish(true); }
 }
 
@@ -1275,7 +1278,18 @@ function toast(msg) {
 
 render();
 if (!IS_PREVIEW) { try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { }); } catch (e) { } }
-if ('serviceWorker' in navigator && location.protocol === 'https:') { navigator.serviceWorker.register('sw.js').catch(() => {}); }
+if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
+    const check = () => reg.update().catch(() => {});
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+    setInterval(check, 30 * 60 * 1000);
+  }).catch(() => {});
+  let hadCtrl = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadCtrl) { hadCtrl = true; return; }
+    UPDATE_READY = true; renderTop();
+  });
+}
 })();
 </script>
 
