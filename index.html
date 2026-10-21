@@ -424,7 +424,7 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
       <ul>
         <li>وزنه را در خانهٔ چپ و تکرار را در خانهٔ راست بنویس و تیک بزن. تایمر استراحت خودش شروع می‌شود.</li>
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
-        <li>در حرکات دمبلی وزن یک دمبل را بنویس، و در حرکات لندماین وزن صفحه‌های روی هالتر را.</li>
+        <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
         <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
@@ -779,7 +779,7 @@ function exCard(ex, ctx, rec, inSS) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌ها' : 'کیلو'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌ها' : ex.tb ? 'کیلو · کل با میله' : 'کیلو'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
