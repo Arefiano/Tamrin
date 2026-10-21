@@ -424,7 +424,7 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
       <ul>
         <li>وزنه را در خانهٔ چپ و تکرار را در خانهٔ راست بنویس و تیک بزن. تایمر استراحت خودش شروع می‌شود.</li>
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
-        <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
+        <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
         <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
@@ -554,12 +554,12 @@ const P = {
   wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
     { id: 'wed1', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift' },
     { id: 'wed2', name: 'Split Squat', tag: 'هر پا', s: 2, r: [8, 12], rir: [2, 2], rest: [90, 90], comp: 1, db: 1, note: 'پای عقب روی زمین؛ با یک یا دو دست میله یا رک را بگیر و با وزن بدن شروع کن. تا وقتی دمبل نداری، خانهٔ وزنه را خالی بگذار. پیشرفت: اول تکرار، بعد کمک کمتر از دست، بعد دمبل سبک، و در نهایت برگشت به Bulgarian Split Squat.', alt: 'Single-Leg Leg Press' },
-    { id: 'wed3', name: 'Leg Press', s: 3, r: [8, 12], rir: [2, 2], rest: [120, 180], comp: 1, note: 'لگن و کمر تا پایین حرکت به پشتی چسبیده بماند؛ تکراری که لگن بلند شود حساب نیست.', alt: 'Hack Squat' },
+    { id: 'wed3', name: 'Leg Press', pl: 1, s: 3, r: [8, 12], rir: [2, 2], rest: [120, 180], comp: 1, note: 'لگن و کمر تا پایین حرکت به پشتی چسبیده بماند؛ تکراری که لگن بلند شود حساب نیست.', alt: 'Hack Squat' },
     { ss: 1, rest: [60, 90], items: [
       { id: 'wed4', name: 'Seated Leg Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Lying Leg Curl' },
       { id: 'wed5', name: 'Leg Extension', s: 3, r: [10, 15], rir: [0, 1] } ] },
     { ss: 1, rest: [60, 90], items: [
-      { id: 'wed6', name: 'Calf Press on Leg Press', s: 3, r: [10, 20], rir: [0, 1], note: 'ست آخر: بعد از ناتوانی، چند تکرار نیمه در پایین حرکت', alt: 'Standing Calf Raise' },
+      { id: 'wed6', name: 'Calf Press on Leg Press', pl: 1, s: 3, r: [10, 20], rir: [0, 1], note: 'ست آخر: بعد از ناتوانی، چند تکرار نیمه در پایین حرکت', alt: 'Standing Calf Raise' },
       { id: 'wed7', name: 'Dumbbell Lateral Raise', s: 3, r: [12, 20], rir: [0, 1], db: 1, alt: 'Cable Lateral Raise' } ] }
   ] },
   fri: { key: 'fri', name: 'جمعه', n: 4, short: 'سرشانه', focus: 'اولویت سرشانه', sub: 'فشاری سبک · ۴۸ دقیقه + هوازی', items: [
@@ -779,7 +779,7 @@ function exCard(ex, ctx, rec, inSS) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌ها' : ex.tb ? 'کیلو · کل با میله' : 'کیلو'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌ها' : ex.tb ? 'کیلو · کل با میله' : ex.pl ? 'کیلو · صفحه‌های دو طرف' : 'کیلو'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
