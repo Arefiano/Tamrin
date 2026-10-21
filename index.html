@@ -22,6 +22,7 @@
   --ink:#F1F3F5; --ink-2:#A0A9B3; --ink-3:#7F8994;
   --accent:#C5F04A; --on-accent:#0D1013; --accent-soft:#1E2614; --accent-line:#5B6E24;
   --cardio:#6CC9F0; --cardio-bg:#0F1D25; --cardio-line:#24485A; --cardio-ink:#BFE3F5; --cardio-soft:#8FB8CC;
+  --pause:#B9A6FF; --pause-bg:#1D1930; --pause-line:#3F3666;
   --warn:#FFB547; --warn-soft:#2A2113; --danger:#FF8A7A;
   --font:'Yekan Bakh', -apple-system, 'SF Arabic', 'Geeza Pro', Tahoma, sans-serif;
 }
@@ -338,6 +339,10 @@ details.cues summary::-webkit-details-marker{display:none}
 details.cues summary::after{content:"";width:7px;height:7px;border-inline-end:1.5px solid var(--ink-2);border-bottom:1.5px solid var(--ink-2);transform:rotate(45deg);margin-top:-3px;transition:transform .2s}
 details.cues[open] summary::after{transform:rotate(-135deg);margin-top:3px}
 details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
+.pz{margin-top:6px;padding-inline-start:34px;direction:ltr;display:flex}
+.t-pause{direction:rtl;unicode-bidi:isolate;display:inline-flex;align-items:center;gap:5px;background:var(--pause-bg);border:1px solid var(--pause-line);color:var(--pause);border-radius:999px;padding:1px 10px 1px 12px;font-size:13.5px;font-weight:700}
+.t-pause b{font-weight:900}
+.t-pause svg{width:12px;height:12px;flex:none}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -535,6 +540,7 @@ const mmss = sec => { sec = Math.max(0, Math.round(sec)); return fa(Math.floor(s
 const ICON = {
   clock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>',
   check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6.5" y="5" width="3.6" height="14" rx="1.2"></rect><rect x="13.9" y="5" width="3.6" height="14" rx="1.2"></rect></svg>',
   up: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6"></path></svg>',
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v6M12 7.5v.5"></path></svg>',
   walk: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13" cy="4" r="2"></circle><path d="M11 21l2-6-3-3 1-5 4 3 3 1"></path><path d="M10 12l-3 2-2 3"></path><path d="M13 15l3 2 1 4"></path></svg>',
@@ -553,7 +559,7 @@ const P = {
       { id: 'sat6', name: 'Cable Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Dumbbell Curl', note: ['<b>اجرا:</b> آرنج‌ها ثابت کنار بدن؛ پایین کامل صاف، بالا بدون تاب.'] } ] },
     { ss: 1, rest: [60, 90], items: [
       { id: 'sat7', name: 'Seated Leg Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Lying Leg Curl', note: ['<b>تنظیم:</b> زانو هم‌راستای محور دستگاه؛ پد بالای مچ.', '<b>اجرا:</b> کمی به جلو خم بنشین تا پشت ران بیشتر کشیده شود؛ بالا کامل صاف.'] },
-      { id: 'sat8', name: 'Pallof Press', tag: 'هر سمت', s: 2, r: [10, 15], rir: null, ctl: 'کنترل‌شده', note: ['<b>اجرا:</b> پهلو به دستگاه، دسته جلوی سینه؛ دست‌ها را صاف کن، ۲ ثانیه نگه دار، برگرد.', '<b>هدف:</b> تنه نچرخد؛ اول یک سمت کامل، بعد سمت دیگر.'] } ] }
+      { id: 'sat8', pz: '۲ ثانیه دست‌ها صاف', name: 'Pallof Press', tag: 'هر سمت', s: 2, r: [10, 15], rir: null, ctl: 'کنترل‌شده', note: ['<b>اجرا:</b> پهلو به دستگاه، دسته جلوی سینه؛ دست‌ها را صاف کن، ۲ ثانیه نگه دار، برگرد.', '<b>هدف:</b> تنه نچرخد؛ اول یک سمت کامل، بعد سمت دیگر.'] } ] }
   ] },
   mon: { key: 'mon', name: 'دوشنبه', n: 2, short: 'سینه', focus: 'اولویت سینه', sub: 'فشاری · ۵۷ دقیقه + هوازی', items: [
     { id: 'mon1', name: 'Neutral-Grip Dumbbell Bench Press', s: 4, r: [6, 10], rir: [2, 3], rest: [120, 180], pri: 1, comp: 1, db: 1, alt: 'Machine Chest Press', note: ['<b>آماده‌سازی:</b> دمبل‌ها را با زانو بالا بیاور و آخر ست روی ران‌ها برگردان؛ نینداز.', '<b>اجرا:</b> کف دست‌ها رو به هم، آرنج ۳۰ تا ۴۵ درجه از بدن، دمبل تا کنار سینه.', '<b>شانه:</b> اگر رساندن دمبل اذیت کرد، بازه را ۸ تا ۱۲ کن.'] },
@@ -562,27 +568,27 @@ const P = {
     { ss: 1, rest: [60, 90], items: [
       { id: 'mon4', name: 'Dumbbell Lateral Raise', s: 3, r: [12, 20], rir: [0, 1], db: 1, alt: 'Cable Lateral Raise', note: ['<b>اجرا:</b> کمی به جلو خم، دمبل‌ها کمی جلوتر از بدن؛ تا ارتفاع شانه، بدون تاب.'] },
       { id: 'mon5', name: 'Rope Triceps Pressdown', s: 3, r: [10, 15], rir: [0, 1], note: ['<b>اجرا:</b> آرنج‌ها ثابت کنار بدن؛ پایین طناب را از هم باز کن.'] } ] },
-    { id: 'mon6', name: 'Seated Calf Raise', s: 2, r: [12, 20], rir: [0, 1], rest: [60, 60], note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.'] },
+    { id: 'mon6', pz: '۱&lrm;–&lrm;۲ ثانیه در پایین', name: 'Seated Calf Raise', s: 2, r: [12, 20], rir: [0, 1], rest: [60, 60], note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.'] },
     { cardio: 'bike', id: 'mon7' }
   ] },
   wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
-    { id: 'wed1', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift', note: ['<b>آماده:</b> وسط میله، دستهٔ بلند؛ باسن عقب، کمر صاف، بازوها صاف.', '<b>اجرا:</b> زمین را هل بده، باسن و شانه با هم بالا؛ بالا بایست، لگن را جلو نده.', '<b>هر تکرار:</b> صفحه‌ها آرام روی زمین، ۱ ثانیه مکث، دوباره نفس و سفت کردن شکم.', '<b>کمر:</b> اگر گرد شد، ست تمام است؛ RIR هیچ‌وقت زیر ۲.'] },
+    { id: 'wed1', pz: '۱ ثانیه روی زمین', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift', note: ['<b>آماده:</b> وسط میله، دستهٔ بلند؛ باسن عقب، کمر صاف، بازوها صاف.', '<b>اجرا:</b> زمین را هل بده، باسن و شانه با هم بالا؛ بالا بایست، لگن را جلو نده.', '<b>هر تکرار:</b> صفحه‌ها آرام روی زمین، ۱ ثانیه مکث، دوباره نفس و سفت کردن شکم.', '<b>کمر:</b> اگر گرد شد، ست تمام است؛ RIR هیچ‌وقت زیر ۲.'] },
     { id: 'wed2', name: 'Split Squat', tag: 'هر پا', s: 2, r: [8, 12], rir: [2, 2], rest: [120, 120], comp: 1, db: 1, note: ['<b>اجرا:</b> اول پای راست جلو، تکیه با دست چپ، زانو به داخل نرود؛ بعد پای چپ. فقط تا عمق راحت.', '<b>استراحت:</b> بین دو پا تا ۴۵ ثانیه (اختیاری)؛ تیک را بعد از پای دوم بزن.', '<b>وزنه:</b> بدون دمبل، خانه را خالی بگذار.', '<b>پیشرفت:</b> تکرار بیشتر، کمک کمتر از دست، بعد دمبل سبک.'], alt: 'Single-Leg Leg Press' },
     { id: 'wed3', name: 'Leg Press', pl: 1, s: 3, r: [8, 12], rir: [2, 2], rest: [120, 180], comp: 1, alt: 'Hack Squat', note: ['<b>پا:</b> عرض لگن، وسط صفحه؛ زانو در راستای پنجه.', '<b>عمق:</b> لگن و کمر به پشتی چسبیده بمانند؛ تکراری که لگن بلند شود حساب نیست.'] },
     { ss: 1, rest: [60, 90], items: [
       { id: 'wed4', name: 'Seated Leg Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Lying Leg Curl', note: ['<b>تنظیم:</b> زانو هم‌راستای محور دستگاه؛ پد بالای مچ.', '<b>اجرا:</b> کمی به جلو خم بنشین تا پشت ران بیشتر کشیده شود؛ بالا کامل صاف.'] },
-      { id: 'wed5', name: 'Leg Extension', s: 3, r: [10, 15], rir: [0, 1], note: ['<b>اجرا:</b> زانو هم‌راستای محور دستگاه؛ بالا ۱ ثانیه سفت کن، پایین کامل خم.', '<b>صندلی:</b> اگر پشتی جا دارد، کمی عقب‌تر بنشین.'] } ] },
+      { id: 'wed5', pz: '۱ ثانیه در بالا', name: 'Leg Extension', s: 3, r: [10, 15], rir: [0, 1], note: ['<b>اجرا:</b> زانو هم‌راستای محور دستگاه؛ بالا ۱ ثانیه سفت کن، پایین کامل خم.', '<b>صندلی:</b> اگر پشتی جا دارد، کمی عقب‌تر بنشین.'] } ] },
     { ss: 1, rest: [60, 90], items: [
-      { id: 'wed6', name: 'Calf Press on Leg Press', pl: 1, s: 3, r: [10, 20], rir: [0, 1], alt: 'Standing Calf Raise', note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.', '<b>ایمنی:</b> ضامن سورتمه بسته بماند؛ زانو تقریباً صاف، قفل نه.'] },
+      { id: 'wed6', pz: '۱&lrm;–&lrm;۲ ثانیه در پایین', name: 'Calf Press on Leg Press', pl: 1, s: 3, r: [10, 20], rir: [0, 1], alt: 'Standing Calf Raise', note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.', '<b>ایمنی:</b> ضامن سورتمه بسته بماند؛ زانو تقریباً صاف، قفل نه.'] },
       { id: 'wed7', name: 'Dumbbell Lateral Raise', s: 3, r: [12, 20], rir: [0, 1], db: 1, alt: 'Cable Lateral Raise', note: ['<b>اجرا:</b> کمی به جلو خم، دمبل‌ها کمی جلوتر از بدن؛ تا ارتفاع شانه، بدون تاب.'] } ] }
   ] },
   fri: { key: 'fri', name: 'جمعه', n: 4, short: 'سرشانه', focus: 'اولویت سرشانه', sub: 'فشاری سبک · ۴۸ دقیقه + هوازی', items: [
     { id: 'fri1', name: 'Standing Single-Arm Landmine Press', tag: 'هر دست', s: 3, r: [8, 12], rir: [2, 3], rest: [90, 90], pri: 1, comp: 1, lm: 1, alt: 'Half-Kneeling Landmine Press', note: ['<b>اجرا:</b> پای مخالف دست کمی جلو؛ میله را رو به بالا و جلو هل بده تا دست صاف شود.', '<b>تنه:</b> شکم سفت، کمر را قوس نده.'] },
     { id: 'fri2', name: 'Landmine Lateral Raise', tag: 'هر دست', s: 4, r: [8, 12], rir: [0, 1], rest: [60, 60], pri: 1, lm: 1, alt: 'Dumbbell Lateral Raise', note: ['<b>اجرا:</b> دست فقط تا ارتفاع شانه؛ بدون تاب و بدون کج شدن تنه.'] },
     { id: 'fri3', name: 'Chest-Supported Dumbbell Rear Delt Raise', s: 3, r: [12, 20], rir: [0, 1], rest: [60, 90], pri: 1, db: 1, alt: 'Reverse Pec Deck', note: ['<b>نیمکت:</b> دمر روی شیب ۳۰ تا ۴۵ درجه.', '<b>اجرا:</b> کف دست‌ها رو به هم، آرنج کمی خم؛ تا هم‌سطح بدن بالا بیاور.'] },
-    { id: 'fri4', name: 'Dumbbell Floor Press', s: 2, r: [8, 12], rir: [2, 3], rest: [120, 120], comp: 1, db: 1, alt: 'Dumbbell Bench Press', note: ['<b>اجرا:</b> کف دست‌ها رو به هم، آرنج ۳۰ تا ۴۵ درجه؛ بازو آرام روی زمین، ۱ ثانیه مکث، بدون ضربه.'] },
+    { id: 'fri4', pz: '۱ ثانیه روی زمین', name: 'Dumbbell Floor Press', s: 2, r: [8, 12], rir: [2, 3], rest: [120, 120], comp: 1, db: 1, alt: 'Dumbbell Bench Press', note: ['<b>اجرا:</b> کف دست‌ها رو به هم، آرنج ۳۰ تا ۴۵ درجه؛ بازو آرام روی زمین، ۱ ثانیه مکث، بدون ضربه.'] },
     { ss: 1, rest: [60, 60], items: [
-      { id: 'fri5', name: 'Pallof Press', tag: 'هر سمت', s: 2, r: [10, 15], rir: null, ctl: 'کنترل‌شده', note: ['<b>اجرا:</b> پهلو به دستگاه، دسته جلوی سینه؛ دست‌ها را صاف کن، ۲ ثانیه نگه دار، برگرد.', '<b>هدف:</b> تنه نچرخد؛ اول یک سمت کامل، بعد سمت دیگر.'] },
+      { id: 'fri5', pz: '۲ ثانیه دست‌ها صاف', name: 'Pallof Press', tag: 'هر سمت', s: 2, r: [10, 15], rir: null, ctl: 'کنترل‌شده', note: ['<b>اجرا:</b> پهلو به دستگاه، دسته جلوی سینه؛ دست‌ها را صاف کن، ۲ ثانیه نگه دار، برگرد.', '<b>هدف:</b> تنه نچرخد؛ اول یک سمت کامل، بعد سمت دیگر.'] },
       { id: 'fri6', name: 'Suitcase Carry', tag: 'هر سمت', s: 2, r: [20, 30], rir: null, unit: 'متر', db: 1, note: ['<b>اجرا:</b> دمبل در یک دست، تنه صاف و بدون کج شدن؛ قدم‌های آرام. بعد دست دیگر.'] } ] },
     { cardio: 'tread', id: 'fri7' }
   ] }
@@ -781,7 +787,7 @@ function exCard(ex, ctx, rec, inSS) {
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
     <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
-    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>`;
+    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
   if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
@@ -793,7 +799,7 @@ function exCard(ex, ctx, rec, inSS) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'کل با میله' : ex.pl ? 'صفحه‌های دو طرف' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'کل با میله' : ex.pl ? 'جمع صفحه‌ها' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
