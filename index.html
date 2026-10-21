@@ -324,6 +324,10 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
 .alt{margin:8px 0 0}
 .c-tgt,.c-desc{padding-inline-start:0}
 .cardio .ex-head .zone{margin-inline-start:auto}
+.wbox{position:relative;display:block;min-width:0}
+.wbox input{padding-right:24px;padding-left:6px}
+.wbox .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ink-3);pointer-events:none;direction:ltr}
+.set.done .wbox .unit{color:var(--accent-line)}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -779,13 +783,13 @@ function exCard(ex, ctx, rec, inSS) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌های روی میله' : ex.tb ? 'کیلو · کل با میله' : ex.pl ? 'کیلو · صفحه‌های دو طرف' : 'کیلو · عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'کل با میله' : ex.pl ? 'صفحه‌های دو طرف' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
     h += `<div class="set${s.d ? ' done' : ''}" data-ex="${ex.id}" data-i="${i}">
       <span class="set-n">ست ${fa(i + 1)}</span>
-      <div class="pair"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><span class="x" aria-hidden="true">×</span><input class="r" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
+      <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}</button>
     </div>`;
   }
