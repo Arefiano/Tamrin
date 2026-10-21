@@ -328,6 +328,10 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
 .wbox input{padding-right:24px;padding-left:6px}
 .wbox .unit{position:absolute;right:9px;top:50%;transform:translateY(-50%);font-style:normal;font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--ink-3);pointer-events:none;direction:ltr}
 .set.done .wbox .unit{color:var(--accent-line)}
+.ex-list{list-style:none;margin:6px 0 0;padding:8px 10px;display:flex;flex-direction:column;gap:3px;background:var(--surface-2);border-radius:10px}
+.ex-list li{line-height:1.6}
+.ex-list b{color:var(--ink);font-weight:800}
+.m-prog .ex-list{padding:4px 0 0;background:none}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -557,7 +561,7 @@ const P = {
   ] },
   wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
     { id: 'wed1', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift' },
-    { id: 'wed2', name: 'Split Squat', tag: 'هر پا', s: 2, r: [8, 12], rir: [2, 2], rest: [120, 120], comp: 1, db: 1, note: 'پای عقب روی زمین؛ با یک یا دو دست میله یا رک را بگیر و با وزن بدن شروع کن. اول پای راست جلو، با دست چپ تکیه کن؛ زانوی راست به داخل نرود. بعد پای چپ جلو. بین دو پا تا ۴۵ ثانیه نفس بگیر؛ اگر نفست سر جایش بود، لازم نیست. تیک ست را بعد از پای دوم بزن. تا وقتی دمبل نداری، خانهٔ وزنه را خالی بگذار. پیشرفت: اول تکرار، بعد کمک کمتر از دست، بعد دمبل سبک، و در نهایت برگشت به Bulgarian Split Squat.', alt: 'Single-Leg Leg Press' },
+    { id: 'wed2', name: 'Split Squat', tag: 'هر پا', s: 2, r: [8, 12], rir: [2, 2], rest: [120, 120], comp: 1, db: 1, note: ['<b>اجرا:</b> اول پای راست جلو، تکیه با دست چپ، زانو به داخل نرود؛ بعد پای چپ. فقط تا عمق راحت.', '<b>استراحت:</b> بین دو پا تا ۴۵ ثانیه (اختیاری)؛ تیک را بعد از پای دوم بزن.', '<b>وزنه:</b> بدون دمبل، خانه را خالی بگذار.', '<b>پیشرفت:</b> تکرار بیشتر، کمک کمتر از دست، بعد دمبل سبک.'], alt: 'Single-Leg Leg Press' },
     { id: 'wed3', name: 'Leg Press', pl: 1, s: 3, r: [8, 12], rir: [2, 2], rest: [120, 180], comp: 1, note: 'لگن و کمر تا پایین حرکت به پشتی چسبیده بماند؛ تکراری که لگن بلند شود حساب نیست.', alt: 'Hack Squat' },
     { ss: 1, rest: [60, 90], items: [
       { id: 'wed4', name: 'Seated Leg Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Lying Leg Curl' },
@@ -772,7 +776,7 @@ function exCard(ex, ctx, rec, inSS) {
   let h = `<article class="ex" data-ex="${ex.id}">
     <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>`;
-  if (ex.note) h += `<p class="ex-note">${ex.note}</p>`;
+  if (ex.note) h += Array.isArray(ex.note) ? `<ul class="ex-note ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
   else if (sug && sug.type === 'up') h += ex.db
@@ -1214,7 +1218,7 @@ function openNote(id) {
   const ex = EX[id]; if (!ex) return;
   mState = { kind: 'note', id };
   showModal(`<h2 id="m-title">نکته‌های <span class="en">${ex.name}</span></h2>
-    ${ex.note ? `<p class="m-prog"><b>نکتهٔ برنامه:</b> ${ex.note}</p>` : ''}
+    ${ex.note ? `<div class="m-prog"><b>نکتهٔ برنامه:</b> ${Array.isArray(ex.note) ? '<ul class="ex-list">' + ex.note.map(n => `<li>${n}</li>`).join('') + '</ul>' : ex.note}</div>` : ''}
     <label class="m-lbl" for="m-note">نکتهٔ خودت</label>
     <textarea id="m-note" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(id))}</textarea>
     <p class="m-sub">این نکته برای همین حرکت ذخیره می‌شود و هر هفته زیر آن نمایش داده می‌شود.</p>
