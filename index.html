@@ -633,6 +633,9 @@ function load() {
   if (!s.sessions || typeof s.sessions !== 'object') s.sessions = {};
   if (!Array.isArray(s.deload)) s.deload = [];
   if (!s.exNotes || typeof s.exNotes !== 'object') s.exNotes = {};
+  // v2.5 swap (2026-10-20): mon1 became the dumbbell press. Sessions logged before the swap with the
+  // old "alternative" toggle on were already dumbbell sets, so clear the flag.
+  if (!s.mig1) { for (const r of Object.values(s.sessions)) { const e = r && r.ex && r.ex.mon1; if (e && e.alt && r.date < '2026-10-20') e.alt = false; } s.mig1 = 1; }
   if (!s.start) s.start = satOf(todayIso());
   return s;
 }
