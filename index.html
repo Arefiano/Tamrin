@@ -343,6 +343,7 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .t-pause{direction:rtl;unicode-bidi:isolate;display:inline-flex;align-items:center;gap:5px;background:var(--pause-bg);border:1px solid var(--pause-line);color:var(--pause);border-radius:999px;padding:1px 10px 1px 12px;font-size:13.5px;font-weight:700}
 .t-pause b{font-weight:900}
 .t-pause svg{width:16px;height:16px;flex:none}
+.pair input.r.low,.set.done .pair input.r.low{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -808,7 +809,7 @@ function exCard(ex, ctx, rec, inSS) {
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
     h += `<div class="set${s.d ? ' done' : ''}" data-ex="${ex.id}" data-i="${i}">
       <span class="set-n">ست ${fa(i + 1)}</span>
-      <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
+      <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}</button>
     </div>`;
   }
@@ -882,6 +883,7 @@ main.addEventListener('input', ev => {
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
     while (e.sets.length <= i) e.sets.push({ w: '', r: '', d: 0 });
     e.sets[i][el.classList.contains('w') ? 'w' : 'r'] = toLat(el.value);
+    if (el.classList.contains('r')) markLow(el, ex);
     if (el.classList.contains('w')) {
       const card = row.closest('.ex');
       card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value) wi.placeholder = el.value || wi.placeholder; } });
@@ -935,6 +937,10 @@ main.addEventListener('click', ev => {
   if (act) handleAct(act.dataset.act);
 });
 
+function markLow(inp, ex) {
+  const v = num(inp.value); const lo = tgt(ex, ctxOf(view.date)).r[0];
+  inp.classList.toggle('low', v != null && v < lo);
+}
 function onCheck(row) {
   const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
   const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
@@ -944,6 +950,7 @@ function onCheck(row) {
   if (!s.d) {
     if (s.w === '' && wIn.placeholder) { s.w = toLat(wIn.placeholder); wIn.value = faV(s.w); }
     if (s.r === '' && rIn.placeholder) { s.r = toLat(rIn.placeholder); rIn.value = faV(s.r); }
+    markLow(rIn, ex);
     if (s.r === '') { rIn.focus(); toast('تعداد ' + (ex.unit || 'تکرار') + ' را بنویس'); return; }
     s.d = 1;
     if (!rec.t0) rec.t0 = Date.now();
