@@ -779,7 +779,7 @@ function exCard(ex, ctx, rec, inSS) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌ها' : ex.tb ? 'کیلو · کل با میله' : ex.pl ? 'کیلو · صفحه‌های دو طرف' : 'کیلو'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'کیلو · هر دمبل' : ex.lm ? 'کیلو · صفحه‌های روی میله' : ex.tb ? 'کیلو · کل با میله' : ex.pl ? 'کیلو · صفحه‌های دو طرف' : 'کیلو · عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, sug && sug.type === 'up' ? null : prev, i);
