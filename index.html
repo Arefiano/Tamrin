@@ -344,6 +344,7 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .t-pause b{font-weight:900}
 .t-pause svg{width:16px;height:16px;flex:none}
 .pair input.r.low,.set.done .pair input.r.low{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
+.addset{align-self:flex-start;margin-inline-start:44px;min-height:30px;padding:0 10px;border-radius:9px;border:1px dashed var(--line-2);background:transparent;color:var(--ink-2);font-size:13px;font-weight:700}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -787,7 +788,7 @@ function exCard(ex, ctx, rec, inSS) {
   const prev = prevEntry(ex.id, view.date);
   const sug = suggest(ex, t, ctx);
   let last = -1;
-  if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d) last = i; });
+  if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
     <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
@@ -813,7 +814,7 @@ function exCard(ex, ctx, rec, inSS) {
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}</button>
     </div>`;
   }
-  h += '</div>';
+  h += `<button class="addset" type="button" data-addset>+ ست اضافه</button></div>`;
   if (t.rir) {
     const cur = e ? e.rir : '';
     h += `<div class="rirpick"><span class="lbl">RIR ست آخر</span><div class="chips" role="group" aria-label="RIR ست آخر">${[0, 1, 2, 3, 4].map(v => `<button class="chip${cur === String(v) ? ' on' : ''}" type="button" data-rir="${v}" aria-pressed="${cur === String(v)}">${v === 4 ? '۴+' : fa(v)}</button>`).join('')}</div></div>`;
@@ -910,6 +911,16 @@ main.addEventListener('click', ev => {
   }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
+  const ad = ev.target.closest('[data-addset]');
+  if (ad) {
+    const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
+    const n = Math.max(tgt(ex, ctxOf(view.date)).s, e.sets.reduce((m, st, i) => (setHas(st) || st.d || st.x) ? i + 1 : m, 0));
+    while (e.sets.length < n) e.sets.push({ w: '', r: '', d: 0 });
+    e.sets.splice(n, e.sets.length - n, { w: '', r: '', d: 0, x: 1 });
+    touch(rec); render();
+    const inp = document.getElementById('w-' + ex.id + '-' + n); if (inp) inp.focus({ preventScroll: false });
+    return;
+  }
   const altB = ev.target.closest('[data-alt]');
   if (altB) {
     const card = altB.closest('.ex'); const ex = EX[card.dataset.ex];
