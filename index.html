@@ -413,6 +413,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .daymenu button.on{background:var(--accent-soft)}
 .daymenu button.on b{color:var(--accent)}
 .daymenu button.top{justify-content:center;color:var(--ink-2);font-size:14px;font-weight:700;border-top:1px solid var(--line);border-radius:0 0 12px 12px;margin-top:2px}
+.daypill.on:active{transform:translate(-50%,0) scale(.96)}
 .dayshade{position:fixed;inset:0;z-index:21;background:transparent;touch-action:none}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -502,6 +503,11 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
       <h3>پاک کردن همهٔ داده‌ها</h3>
       <p>همهٔ جلسه‌های ثبت‌شده روی این گوشی پاک می‌شوند. اول پشتیبان بگیر.</p>
       <div class="row"><button class="btn danger" type="button" id="wipe-btn">پاک کردن همه</button></div>
+    </div>
+    <div class="sec">
+      <h3>نسخهٔ اپ</h3>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v43</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
 </section>
@@ -1476,6 +1482,12 @@ $('#import-file').addEventListener('change', ev => {
   ev.target.value = '';
 });
 $('#import-btn').addEventListener('click', () => { const t = $('#import-text').value; if (!t.trim()) { toast('اول متن پشتیبان را بچسبان'); return; } importText(t); $('#import-text').value = ''; });
+$('#force-update').addEventListener('click', async () => {
+  save(true); toast('در حال گرفتن نسخهٔ جدید…');
+  try { if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch (e) { }
+  try { if (navigator.serviceWorker) { const r = await navigator.serviceWorker.getRegistration(); if (r) await r.update(); } } catch (e) { }
+  setTimeout(() => location.reload(), 400);
+});
 $('#wipe-btn').addEventListener('click', ev => {
   const b = ev.currentTarget;
   if (b.dataset.armed) { S = { v: 1, sessions: {}, deload: [], exNotes: {}, start: satOf(todayIso()) }; save(true); stopTimer(); closeSheet(); render(); toast('همهٔ داده‌ها پاک شد'); }
