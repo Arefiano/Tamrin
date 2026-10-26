@@ -356,6 +356,46 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 @keyframes slideR{from{opacity:.35;transform:translateX(28px)}to{opacity:1;transform:none}}
 #main.slide-l{animation:slideL .22s ease-out}
 #main.slide-r{animation:slideR .22s ease-out}
+/* motion: one easing and a few short durations everywhere */
+:root{--ease:cubic-bezier(.22,.8,.24,1);--ease-out:cubic-bezier(.4,0,1,1)}
+button,.btn,.chip,.chk,.tab,.alt,.addset,.info-btn,.eff-step{transition:transform .14s var(--ease),background-color .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease),opacity .2s var(--ease)}
+button:active,.btn:active,.chip:active,.tab:active,.alt:active,.addset:active,.eff-step:active{transform:scale(.96)}
+.chk:active{transform:scale(.9)}
+.set .pair input,.crow input,textarea{transition:border-color .2s var(--ease),background-color .25s var(--ease),color .2s var(--ease)}
+.set.done .chk svg{animation:pop .32s var(--ease)}
+@keyframes pop{0%{transform:scale(.4)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cardio.done .chk svg{animation:pop .32s var(--ease)}
+.eff-bar button{transition:opacity .22s var(--ease),transform .14s var(--ease)}
+.eff-val b{transition:color .2s var(--ease)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeOut{from{opacity:1}to{opacity:0}}
+@keyframes cardIn{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes cardOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(10px) scale(.98)}}
+@keyframes sheetIn{from{opacity:.6;transform:translateY(28px)}to{opacity:1;transform:none}}
+@keyframes sheetOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(24px)}}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,-10px) scale(.96)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes toastOut{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-8px)}}
+@keyframes timerIn{from{transform:translateY(100%)}to{transform:none}}
+@keyframes timerOut{from{transform:none}to{transform:translateY(100%)}}
+.modal:not([hidden]){animation:fadeIn .2s var(--ease)}
+.modal:not([hidden]) .m-card{animation:cardIn .26s var(--ease)}
+.modal.out{animation:fadeOut .19s var(--ease-out) forwards}
+.modal.out .m-card{animation:cardOut .19s var(--ease-out) forwards}
+.sheet:not([hidden]){animation:sheetIn .28s var(--ease)}
+.sheet.out{animation:sheetOut .19s var(--ease-out) forwards}
+.toast:not([hidden]){animation:toastIn .26s var(--ease)}
+.toast.out{animation:toastOut .19s var(--ease-out) forwards}
+.timer:not([hidden]){animation:timerIn .3s var(--ease)}
+.timer.out{animation:timerOut .19s var(--ease-out) forwards}
+.banner{animation:fadeUp .3s var(--ease)}
+details.warm[open] ul,details.cues[open] .ex-list{animation:fadeUp .24s var(--ease)}
+details.warm summary::after,details.cues summary::after{transition:transform .25s var(--ease)}
+.sugg,.my-note{animation:fadeUp .3s var(--ease)}
+.daypill{transition:opacity .25s var(--ease),transform .3s var(--ease)}
+#main.slide-l{animation:slideL .3s var(--ease)}
+#main.slide-r{animation:slideR .3s var(--ease)}
+.t-bar i{transition:width .25s linear}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -1108,7 +1148,7 @@ function beep(n) {
 function startTimer(rest, label) {
   T = { start: Date.now(), lo: rest[0], hi: rest[1], label, b1: 0, b2: 0 };
   try { localStorage.setItem(KEY + ':timer', JSON.stringify(T)); } catch (e) { }
-  timerEl.hidden = false; document.body.classList.add('has-timer');
+  cancelOut(timerEl); timerEl.hidden = false; document.body.classList.add('has-timer');
   $('#t-ex').textContent = label;
   try { if (navigator.wakeLock && !wake) navigator.wakeLock.request('screen').then(l => { wake = l; l.addEventListener('release', () => { wake = null; }); }).catch(() => { }); } catch (e) { }
   clearInterval(tickH); tickH = setInterval(tick, 250); tick();
@@ -1116,7 +1156,7 @@ function startTimer(rest, label) {
 function stopTimer() {
   T = null; clearInterval(tickH); tickH = null;
   try { localStorage.removeItem(KEY + ':timer'); } catch (e) { }
-  timerEl.hidden = true; document.body.classList.remove('has-timer'); timerEl.className = 'timer';
+  outThen(timerEl, () => { timerEl.hidden = true; timerEl.className = 'timer'; }); document.body.classList.remove('has-timer');
   try { if (wake) wake.release(); } catch (e) { } wake = null;
 }
 function tick() {
@@ -1162,15 +1202,24 @@ try {
 let openId = null;
 function openSheet(id) {
   closeSheet();
-  const el = $('#sh-' + id); if (!el) return;
+  const el = $('#sh-' + id); if (!el) return; cancelOut(el);
   if (id === 'history') renderHistory();
   if (id === 'settings') renderSettings();
   el.hidden = false; el.scrollTop = 0; document.body.classList.add('lock'); openId = id;
 }
 function closeSheet() {
   if (!openId) return;
-  $('#sh-' + openId).hidden = true; document.body.classList.remove('lock'); openId = null;
+  const el = $('#sh-' + openId); openId = null;
+  outThen(el, () => { el.hidden = true; if (modal.hidden) document.body.classList.remove('lock'); });
 }
+/* play a short exit animation, then hide (skipped when the user prefers reduced motion) */
+const RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function outThen(el, done) {
+  if (RM || el.hidden) { done(); return; }
+  el.classList.add('out');
+  clearTimeout(el._outT); el._outT = setTimeout(() => { el.classList.remove('out'); done(); }, 190);
+}
+function cancelOut(el) { clearTimeout(el._outT); el.classList.remove('out'); }
 $('#open-history').addEventListener('click', () => openSheet('history'));
 $('#open-settings').addEventListener('click', () => openSheet('settings'));
 $('#open-guide').addEventListener('click', () => openSheet('guide'));
@@ -1324,10 +1373,10 @@ $('#wipe-btn').addEventListener('click', ev => {
 const modal = $('#modal'), mCard = $('#m-card');
 let mState = null;
 function showModal(html, focusSel) {
-  mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
+  cancelOut(modal); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
   if (focusSel) { const f = mCard.querySelector(focusSel); if (f) setTimeout(() => f.focus(), 60); }
 }
-function hideModal() { modal.hidden = true; mCard.innerHTML = ''; mState = null; if (!openId) document.body.classList.remove('lock'); }
+function hideModal() { mState = null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = ''; if (!openId) document.body.classList.remove('lock'); }); }
 function openNote(id) {
   const ex = EX[id]; if (!ex) return;
   mState = { kind: 'note', id };
@@ -1394,8 +1443,9 @@ document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !modal.h
 /* ---------- toast ---------- */
 let toastH = null;
 function toast(msg) {
-  const t = $('#toast'); t.textContent = msg; t.hidden = false;
-  clearTimeout(toastH); toastH = setTimeout(() => { t.hidden = true; }, 2200);
+  const t = $('#toast'); cancelOut(t); t.textContent = msg; t.hidden = false;
+  t.classList.remove('out'); t.style.animation = 'none'; void t.offsetWidth; t.style.animation = '';
+  clearTimeout(toastH); toastH = setTimeout(() => outThen(t, () => { t.hidden = true; }), 2200);
 }
 
 render();
