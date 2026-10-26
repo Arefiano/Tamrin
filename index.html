@@ -426,6 +426,91 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .set.rowout{animation:rowOut .22s var(--ease-out) forwards}
 @keyframes rowOut{to{opacity:0;transform:translateX(-20px)}}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
+/* ---------- ui2: experimental redesign (switch in settings; off = previous look) ---------- */
+:root{--edge:#5C6672;--gold:#FFD166}
+.ui2 .tab[aria-selected=true]{background:#262E37;border-color:var(--edge);color:var(--ink)}
+.ui2 .tab[aria-selected=true] small{color:var(--ink-2)}
+.ui2 .tab .today,.ui2 .tab[aria-selected=true] .today{background:var(--ink-2)}
+.ui2 .shead-top .pill{color:var(--ink-2)}
+.ui2 .shead-top .muted{font-size:15px}
+.ui2 .shead h1{font-size:30px;margin-top:0}
+.ui2 .focus{font-size:14px;color:var(--ink-2);font-weight:600}
+.prog{display:flex;align-items:center;gap:10px;margin-top:8px}
+.prog-bar{flex:1;height:6px;border-radius:999px;background:var(--line);overflow:hidden}
+.prog-bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:999px;transition:width .45s var(--ease)}
+.prog span{font-size:13px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.nb{margin-top:10px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:14px;color:var(--ink-2)}
+.nb summary{list-style:none;cursor:pointer;padding:8px 12px;display:flex;align-items:center;gap:6px;line-height:1.5}
+.nb summary::-webkit-details-marker{display:none}
+.nb summary b{color:var(--ink)}
+.nb summary::after{content:"";flex:none;margin-inline-start:auto;width:7px;height:7px;border-inline-end:1.5px solid var(--ink-2);border-bottom:1.5px solid var(--ink-2);transform:rotate(45deg);margin-top:-3px;transition:transform .25s var(--ease)}
+.nb[open] summary::after{transform:rotate(-135deg);margin-top:3px}
+.nb p{margin:0;padding:0 12px 10px;line-height:1.65}
+.nb[open] p{animation:fadeUp .24s var(--ease)}
+.ui2 .badge.pri{background:transparent;border-color:var(--edge);color:var(--ink)}
+.ui2 .ex.complete .badge{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.ui2 .badge svg{width:15px;height:15px}
+.ui2 .ex-name{font-size:16px;letter-spacing:-.005em}
+.pri-tag{font-size:12px;font-weight:800;color:var(--ink);border:1px solid var(--edge);border-radius:999px;padding:0 8px;direction:rtl;unicode-bidi:isolate}
+.ex-sum{display:none}
+.ui2 .ex.complete:not(.open) > :not(.ex-head):not(.ex-sum){display:none}
+.ui2 .ex.complete:not(.open){background:#12161A}
+.ui2 .ex.complete .ex-head,.ui2 .ex.complete .ex-sum{cursor:pointer}
+.ui2 .ex.complete:not(.open) .ex-sum{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin-top:6px;padding-left:34px;direction:ltr}
+.ex-sum .v{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:7px;padding:0 7px;font-weight:800;font-size:14px;color:var(--ink)}
+.ex-sum .v.pr{border-color:var(--gold);color:var(--gold)}
+.ex-sum .rir{font-size:13px;font-weight:700;color:var(--ink-2)}
+.ex-sum .alt-note{font-size:13px;color:var(--warn);direction:rtl;unicode-bidi:isolate}
+.ex-sum .open-h{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--ink-3);direction:rtl;unicode-bidi:isolate}
+.ui2 .ex.cur{border-color:var(--edge);box-shadow:inset -3px 0 0 var(--accent)}
+.ui2 .rirpick.need .lbl{color:var(--accent)}
+.ui2 .rirpick.need .chip{border-color:var(--accent-line);animation:needPulse 1.8s ease-in-out infinite}
+@keyframes needPulse{50%{background:var(--accent-soft)}}
+.ui2 .pair input{border-color:var(--edge)}
+.ui2 .set.done .pair input{border-color:var(--accent-line)}
+.ui2 .crow input{border-color:#3D7088}
+.ui2 .set.pr .set-n{color:var(--gold);line-height:1.15}
+.ui2 .set.pr .set-n::after{content:"رکورد";display:block;font-size:10.5px;font-weight:900}
+.ui2 .set.pr .pair input{border-color:#8A6F2A}
+.ui2 .ss{border-color:var(--line-2);background:rgba(255,255,255,.02)}
+.ui2 .ss-head .pill.acc{background:transparent;color:var(--ink);border-color:var(--edge)}
+.ui2 .guide h3{color:var(--ink)}
+.ui2 .crow{grid-template-columns:repeat(var(--cols,2),minmax(0,1fr))}
+.cbtn{width:100%!important;height:46px!important;display:flex!important;align-items:center;justify-content:center;gap:8px;margin-top:8px;font-weight:800;font-size:15px;color:var(--cardio-soft)!important;border-color:#3D7088!important;background:#0B161C!important}
+.cbtn svg{width:18px!important;height:18px!important}
+.cbtn .on{display:none}
+.cardio.done .cbtn{background:var(--cardio)!important;border-color:var(--cardio)!important;color:var(--on-accent)!important}
+.cardio.done .cbtn .on{display:inline}
+.cardio.done .cbtn .off{display:none}
+.ui2 .timer .t-row{cursor:default}
+.ui2 .timer.mini{padding-top:8px;padding-bottom:calc(8px + env(safe-area-inset-bottom,0px))}
+.ui2 .timer.mini .t-btns,.ui2 .timer.mini #t-range{display:none}
+.ui2 .timer.mini .t-time{font-size:28px;min-width:0}
+.ui2 .timer.mini .timer-in{gap:6px}
+.ui2 .timer.mini .t-row{cursor:pointer}
+.ui2 .timer.mini .t-info::after{content:"برای دکمه‌ها بزن";font-size:12px;color:var(--ink-3);font-weight:600}
+.ui2 .timer .t-btns .btn{white-space:nowrap;padding:6px 8px}
+.ui2 .daypill{left:auto;right:16px;transform:translateY(-6px) scale(.96);transform-origin:right center}
+.ui2 .daypill.on{transform:none}
+.ui2 .daypill.on:active{transform:scale(.96)}
+.ui2 .daypill i{width:16px;height:16px;background:conic-gradient(var(--accent) calc(var(--p,0) * 1%),var(--line-2) 0);-webkit-mask:radial-gradient(circle,transparent 4.5px,#000 5px);mask:radial-gradient(circle,transparent 4.5px,#000 5px)}
+.ui2 .brand{transition:opacity .2s var(--ease)}
+.ui2.pill-on .brand{opacity:0;pointer-events:none}
+.ui2 .daymenu{left:auto;right:16px;transform:none;transform-origin:top right}
+.ui2 .daymenu:not([hidden]){animation:menuIn2 .22s var(--ease)}
+.ui2 .daymenu.out{animation:menuOut2 .16s var(--ease-out) forwards}
+@keyframes menuIn2{from{opacity:0;transform:translateY(-6px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes menuOut2{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px) scale(.97)}}
+.sec .row[hidden]{display:none}
+.sec select{height:44px;border-radius:12px;border:1px solid var(--edge);background:var(--field);padding:0 12px;font-size:16px;color:var(--ink);max-width:100%}
+.pg-day{margin-top:10px;font-size:13px;font-weight:800;color:var(--ink-2)}
+.pg-row{display:grid;grid-template-columns:minmax(0,1fr) 88px;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line);direction:ltr}
+.pg-row .n{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.pg-row .m{display:flex;gap:8px;align-items:baseline;font-size:13px;color:var(--ink-2)}
+.pg-row .m b{color:var(--ink);font-size:14px}
+.pg-row .up{color:var(--accent);font-weight:800}
+.pg-row .dn{color:var(--warn);font-weight:800}
+.pg-row svg{width:88px;height:30px;display:block}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -451,9 +536,9 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="t-bar"><i id="t-fill"></i></div>
     <div class="t-btns">
-      <button class="btn" type="button" data-t="-15">۱۵ ثانیه کمتر</button>
-      <button class="btn" type="button" data-t="15">۱۵ ثانیه بیشتر</button>
-      <button class="btn" type="button" data-t="stop">بستن تایمر</button>
+      <button class="btn" type="button" data-t="-15" id="t-m">۱۵ ثانیه کمتر</button>
+      <button class="btn" type="button" data-t="15" id="t-p">۱۵ ثانیه بیشتر</button>
+      <button class="btn" type="button" data-t="stop" id="t-s">بستن تایمر</button>
     </div>
   </div>
 </div>
@@ -473,6 +558,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
       <h3>شروع برنامه</h3>
       <p>هفتهٔ برنامه از این تاریخ حساب می‌شود و یادآوری دی‌لود بر اساس آن است.</p>
       <div class="row"><input type="date" id="start-date" aria-label="تاریخ شروع برنامه"><span class="muted" id="start-fa"></span></div>
+      <div class="row" id="start-row2" hidden><select id="start-sel" aria-label="شنبهٔ شروع برنامه"></select></div>
       <p id="week-now"></p>
     </div>
 
@@ -515,8 +601,14 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
       <div class="row"><button class="btn danger" type="button" id="wipe-btn">پاک کردن همه</button></div>
     </div>
     <div class="sec">
+      <h3>طراحی آزمایشی</h3>
+      <p>ظاهر جدید: جمع شدن حرکت‌های تمام‌شده، نوار پیشرفت جلسه، رکوردها، نمودار پیشرفت در سابقه و چند اصلاح دیگر. اگر خاموشش کنی ظاهر قبلی برمی‌گردد؛ داده‌ها دست نمی‌خورند.</p>
+      <div class="row"><button class="btn" type="button" id="ui2-btn"></button></div>
+    </div>
+
+    <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v50</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v51</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -623,6 +715,7 @@ const num = v => { const t = toLat(v); if (!t) return null; const n = parseFloat
 const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const UI2 = () => S.ui2 !== false;
 const myNote = id => (S.exNotes && S.exNotes[id] && S.exNotes[id].t) ? S.exNotes[id].t : '';
 const EFF = [
   { max: 3, name: 'آسان', c: '#5AD27E', d: 'کم‌زحمت بود؛ راحت می‌شد حرف زد و انرژی زیادی باقی ماند.' },
@@ -855,7 +948,17 @@ function render() {
   const rec = getRec(false);
   const ctx = ctxOf(view.date);
   const isToday = view.date === todayIso();
-  let h = `<section class="shead">
+  const u2 = UI2();
+  document.body.classList.toggle('ui2', u2);
+  $('#t-m').innerHTML = u2 ? '<span dir="ltr">−۱۵</span> ثانیه' : '۱۵ ثانیه کمتر';
+  $('#t-p').innerHTML = u2 ? '<span dir="ltr">+۱۵</span> ثانیه' : '۱۵ ثانیه بیشتر';
+  $('#t-s').textContent = u2 ? 'بستن' : 'بستن تایمر';
+  let h = u2 ? `<section class="shead">
+    <div class="shead-top"><span class="muted">${day.name} · ${isToday ? 'امروز · ' : ''}${fmtD(view.date)}</span><span class="pill">جلسهٔ ${fa(day.n)} از ۴</span></div>
+    <h1>${day.short.replace(/ـ/g, '')}</h1>
+    <p class="focus">${day.focus} · ${day.sub}</p>
+    <div class="prog" id="prog"><div class="prog-bar"><i></i></div><span></span></div>
+  </section>` : `<section class="shead">
     <div class="shead-top"><span class="pill acc">جلسهٔ ${fa(day.n)} از ۴</span><span class="muted">${isToday ? 'امروز · ' : ''}${fmtD(view.date)}</span></div>
     <h1>${day.name}</h1>
     <p class="focus"><b>${day.focus}</b>${day.sub}</p>
@@ -864,6 +967,7 @@ function render() {
     h += `<div class="banner" style="margin-top:12px"><span class="grow">امروز روز استراحت است. اگر جلسه‌ای عقب افتاده، همین‌جا ثبتش کن؛ با تاریخ امروز ذخیره می‌شود.</span></div>`;
   }
   if (ctx.deload) h += `<div class="banner warn" style="margin-top:12px"><span class="grow"><b>هفتهٔ دی‌لود:</b> نصف ست‌ها با RIR ۳ تا ۴، با همان وزنه‌های قبلی. هدف‌های زیر همین را نشان می‌دهند.</span></div>`;
+  else if (ctx.week === 1 && u2) h += `<details class="nb"><summary><span><b>هفتهٔ ۱ · پیدا کردن وزنه‌ها:</b> RIR هر حرکت یک واحد بالاتر</span></summary><p>ست و تکرار کامل است؛ RIR هر حرکت یک واحد بالاتر از معمول است و همین را زیر هر حرکت می‌بینی. از هفتهٔ ۲ عددهای اصلی برمی‌گردند.${(view.day === 'sat' || view.day === 'fri') ? ' اگر بعد از تزریق پنجشنبه بی‌حال بودی، این هفته RIR را از این هم بالاتر نبر؛ عددهای زیر هر حرکت از قبل محتاطانه‌اند.' : ''}</p></details>`;
   else if (ctx.week === 1) h += `<div class="banner" style="margin-top:12px"><span class="grow"><b>هفتهٔ ۱ · پیدا کردن وزنه‌ها:</b> ست و تکرار کامل است؛ RIR هر حرکت یک واحد بالاتر از معمول است و همین را زیر هر حرکت می‌بینی. از هفتهٔ ۲ عددهای اصلی برمی‌گردند.${(view.day === 'sat' || view.day === 'fri') ? ' اگر بعد از تزریق پنجشنبه بی‌حال بودی، این هفته RIR را از این هم بالاتر نبر؛ عددهای زیر هر حرکت از قبل محتاطانه‌اند.' : ''}</span></div>`;
   else if (ctx.week >= 6) h += `<div class="banner" style="margin-top:12px"><span class="grow">هفتهٔ ${fa(ctx.week)}: اگر خستگی یا دو جلسهٔ پیاپی افت داشتی، این هفته را دی‌لود کن.</span><button class="btn" type="button" data-act="deload-on">دی‌لود این هفته</button></div>`;
 
@@ -883,6 +987,81 @@ function render() {
   h += `<div class="sfoot"><label for="note">یادداشت جلسه</label><textarea id="note" placeholder="مثلاً انرژی، خواب، یا هر چیزی دربارهٔ شانه و کمر">${esc((rec && rec.note) || '')}</textarea>
     ${done ? `<p class="done-note">${ICON.check.replace('<svg', '<svg width="22" height="22"')} این جلسه ثبت شده</p>${metaText(rec) ? `<p class="s-meta">${metaText(rec)}</p>` : ''}<div class="m-act"><button class="btn" type="button" data-act="edit-meta">ویرایش مدت و سختی</button><button class="btn" type="button" id="finish">باز کردن دوباره</button></div>` : `<button class="btn acc block" type="button" id="finish">پایان جلسه</button>`}</div>`;
   main.innerHTML = h;
+  refreshCards();
+}
+
+/* ---------- ui2 helpers: completion, current exercise, progress, records ---------- */
+const expanded = new Set();
+const dayExs = d => P[d].items.flatMap(b => b.ss ? b.items : (b.cardio ? [] : [b]));
+function exState(e, t) {
+  const sets = e ? e.sets : [];
+  let done = 0; for (let i = 0; i < t.s; i++) if (sets[i] && sets[i].d) done++;
+  const extraOk = sets.slice(t.s).every(s => !s || s.d || !setHas(s));
+  const allSets = done >= t.s && extraOk;
+  const complete = allSets && (!t.rir || (e && e.rir !== '' && e.rir != null));
+  return { done, allSets, complete };
+}
+const metric = s => { const w = num(s.w), r = num(s.r); if (r == null || r <= 0) return null; return w && w > 0 ? { k: 'w', v: w * (1 + r / 30) } : { k: 'r', v: r }; };
+function prevBest(exId, date, alt) {
+  const best = {};
+  for (const r of Object.values(S.sessions)) {
+    if (r.date >= date) continue;
+    const e = r.ex && r.ex[exId]; if (!e || !!e.alt !== !!alt) continue;
+    for (const s of e.sets) { if (!s || !setHas(s)) continue; const m = metric(s); if (m && (best[m.k] == null || m.v > best[m.k])) best[m.k] = m.v; }
+  }
+  return best;
+}
+function prIndex(ex, e) {
+  if (!e) return -1;
+  const pb = prevBest(ex.id, view.date, e.alt); let bi = -1, bv = 0;
+  e.sets.forEach((s, i) => { if (!s || !s.d) return; const m = metric(s); if (!m || pb[m.k] == null) return; if (m.v > pb[m.k] + 1e-9 && m.v > bv) { bv = m.v; bi = i; } });
+  return bi;
+}
+function sumInner(ex, e, pi) {
+  if (!e) return '';
+  const v = e.sets.map((s, i) => (s && (s.d || setHas(s))) ? `<span class="v${i === pi ? ' pr' : ''}">${s.w !== '' ? fa(s.w) + LRM + '×' + LRM : ''}${s.r !== '' ? fa(s.r) : '–'}</span>` : '').join('');
+  return v + (e.rir !== '' && e.rir != null ? `<span class="rir">RIR ${e.rir === '4' ? '۴+' : fa(e.rir)}</span>` : '') + (e.alt ? '<span class="alt-note">با جایگزین</span>' : '') + '<span class="open-h">باز کردن</span>';
+}
+function animHeight(el, change) {
+  if (RM) { change(); return; }
+  const h0 = el.offsetHeight; change(); const h1 = el.offsetHeight;
+  if (Math.abs(h1 - h0) < 2) return;
+  el.style.height = h0 + 'px'; el.style.overflow = 'hidden'; void el.offsetWidth;
+  el.style.transition = 'height .34s var(--ease)'; el.style.height = h1 + 'px';
+  clearTimeout(el._hT); el._hT = setTimeout(() => { el.style.height = ''; el.style.overflow = ''; el.style.transition = ''; }, 360);
+}
+function refreshCards(animId) {
+  if (!UI2()) { updateProgress(); return; }
+  const rec = getRec(false); const ctx = ctxOf(view.date); let cur = null;
+  main.querySelectorAll('.ex[data-ex]').forEach(card => {
+    const ex = EX[card.dataset.ex]; const e = entry(rec, ex, false); const t = tgt(ex, ctx); const st = exState(e, t);
+    const pi = prIndex(ex, e);
+    card.querySelectorAll('.set').forEach(rw => rw.classList.toggle('pr', +rw.dataset.i === pi));
+    if (!st.complete) expanded.delete(ex.id);
+    const apply = () => {
+      const now = exState(entry(getRec(false), ex, false), t).complete;
+      card.classList.toggle('complete', now); card.classList.toggle('open', now && expanded.has(ex.id));
+      card.querySelector('.badge').innerHTML = now ? ICON.check : ex.no;
+      const sm = card.querySelector('.ex-sum'); if (sm) sm.innerHTML = sumInner(ex, entry(getRec(false), ex, false), pi);
+    };
+    const was = card.classList.contains('complete');
+    if (animId === ex.id && was !== st.complete) { clearTimeout(card._cT); card._cT = setTimeout(() => animHeight(card, apply), st.complete ? 650 : 0); }
+    else apply();
+    const rp = card.querySelector('.rirpick'); if (rp) rp.classList.toggle('need', st.allSets && !st.complete);
+    if (!st.complete && !cur) cur = card;
+  });
+  main.querySelectorAll('.ex.cur').forEach(c => c.classList.remove('cur'));
+  if (cur && !(rec && rec.done)) cur.classList.add('cur');
+  updateProgress();
+}
+function updateProgress() {
+  const rec = getRec(false); const ctx = ctxOf(view.date); let tot = 0, dn = 0;
+  for (const ex of dayExs(view.day)) { const t = tgt(ex, ctx); tot += t.s; const e = entry(rec, ex, false); if (e) for (let i = 0; i < t.s; i++) if (e.sets[i] && e.sets[i].d) dn++; }
+  const p = tot ? Math.round(dn / tot * 100) : 0;
+  pill.style.setProperty('--p', p);
+  const pg = $('#prog'); if (!pg) return;
+  pg.querySelector('i').style.width = p + '%';
+  pg.querySelector('span').textContent = fa(dn) + ' از ' + fa(tot) + ' ست';
 }
 
 function exCard(ex, ctx, rec, inSS) {
@@ -894,8 +1073,8 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>
-    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
+    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}${ex.pri && UI2() ? '<span class="pri-tag">اولویت</span>' : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
   if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
@@ -944,6 +1123,7 @@ function cardioName(day, c) {
   const tread = b && (b.cardio === 'tread' || b.cardio === 'treadint');
   return c && c.alt ? (tread ? 'Stationary Bike' : 'Elliptical') : (tread ? 'Treadmill' : 'Stationary Bike');
 }
+const cbtn = c => `<button class="chk cbtn" type="button" data-cdone aria-pressed="${!!c.d}">${ICON.check}<span class="off">ثبت هوازی</span><span class="on">هوازی ثبت شد</span></button>`;
 function cardioCard(day, ctx, rec, b) {
   const c = (rec && rec.cardio) || {};
   if (b.cardio === 'treadint') {
@@ -954,7 +1134,7 @@ function cardioCard(day, ctx, rec, b) {
     <p class="c-tgt">۱۴ دقیقه، اینتروال</p>
     <p class="c-desc">۳ دقیقه آرام، بعد ۳ بار: ۳ دقیقه منطقهٔ ۲ و ۱ دقیقه آرام (دور آخر بدون آرام). بعد از وزنه؛ دستگیره را نگیر.</p>
     <p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
-    <div class="crow" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px">${inp('min', 'دقیقهٔ کل', 1)}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button>${inp('inc2', 'شیب منطقهٔ ۲')}${inp('spd2', 'سرعت منطقهٔ ۲')}<span></span>${inp('inc1', 'شیب آرام')}${inp('spd1', 'سرعت آرام')}<span></span></div>
+    ${UI2() ? `<div class="crow" style="--cols:2">${inp('min', 'دقیقهٔ کل', 1)}${inp('inc2', 'شیب منطقهٔ ۲')}${inp('spd2', 'سرعت منطقهٔ ۲')}${inp('inc1', 'شیب آرام')}${inp('spd1', 'سرعت آرام')}</div>${cbtn(c)}` : `<div class="crow" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px">${inp('min', 'دقیقهٔ کل', 1)}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button>${inp('inc2', 'شیب منطقهٔ ۲')}${inp('spd2', 'سرعت منطقهٔ ۲')}<span></span>${inp('inc1', 'شیب آرام')}${inp('spd1', 'سرعت آرام')}<span></span></div>`}
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">Stationary Bike</span></button>
   </article>`;
   }
@@ -968,7 +1148,7 @@ function cardioCard(day, ctx, rec, b) {
   return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
     <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span></div>
     <p class="c-tgt">${target}</p><p class="c-desc">${desc} بعد از وزنه.</p><p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
-    <div class="crow" style="grid-template-columns:repeat(${fields.length},minmax(0,1fr)) 48px">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button></div>
+    ${UI2() ? `<div class="crow" style="--cols:${fields.length}">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}</div>${cbtn(c)}` : `<div class="crow" style="grid-template-columns:repeat(${fields.length},minmax(0,1fr)) 48px">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button></div>`}
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">${alt}</span></button>
   </article>`;
 }
@@ -1002,6 +1182,7 @@ main.addEventListener('input', ev => {
     while (e.sets.length <= i) e.sets.push({ w: '', r: '', d: 0 });
     e.sets[i][el.classList.contains('w') ? 'w' : 'r'] = toLat(el.value);
     if (el.classList.contains('r')) markLow(el, ex);
+    if (row.classList.contains('done') && UI2()) { cancelAnimationFrame(row._rf); row._rf = requestAnimationFrame(() => refreshCards()); }
     if (el.classList.contains('w')) {
       const card = row.closest('.ex');
       card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value) wi.placeholder = el.value || wi.placeholder; } });
@@ -1061,10 +1242,17 @@ main.addEventListener('click', ev => {
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
     const v = rirB.dataset.rir; e.rir = e.rir === v ? '' : v;
     card.querySelectorAll('[data-rir]').forEach(b => { const on = b.dataset.rir === e.rir; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
-    return touch(rec);
+    touch(rec); refreshCards(ex.id); return;
   }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
+  const ch = UI2() && ev.target.closest('.ex.complete .ex-head, .ex.complete .ex-sum');
+  if (ch) {
+    const card = ch.closest('.ex'); const id = card.dataset.ex;
+    if (expanded.has(id)) expanded.delete(id); else expanded.add(id);
+    animHeight(card, () => card.classList.toggle('open', expanded.has(id)));
+    return;
+  }
   const ad = ev.target.closest('[data-addset]');
   if (ad) {
     const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
@@ -1081,7 +1269,7 @@ main.addEventListener('click', ev => {
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex); e.alt = !e.alt; touch(rec);
     altB.classList.toggle('on', e.alt); altB.setAttribute('aria-pressed', e.alt);
     altB.innerHTML = (e.alt ? 'امروز با جایگزین: ' : 'جایگزین: ') + `<span dir="ltr">${ex.alt}</span>`;
-    return;
+    refreshCards(); return;
   }
   const cd = ev.target.closest('[data-cdone]');
   if (cd) {
@@ -1123,13 +1311,15 @@ function onCheck(row) {
     row.classList.add('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'true');
     const card = row.closest('.ex');
     card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(s.w); } });
-    if (ex.ssRest && !ex.ssLast) toast('حالا: ' + ex.ssNext.name);
-    else startTimer(ex.ssRest || ex.rest, ex.name);
+    const isPR = UI2() && prIndex(ex, e) === i;
+    if (ex.ssRest && !ex.ssLast) toast((isPR ? 'رکورد جدید! · ' : '') + 'حالا: ' + ex.ssNext.name);
+    else { startTimer(ex.ssRest || ex.rest, ex.name); if (isPR) toast('رکورد جدید در این حرکت!'); }
     if (rec.done) rec.done = false;
   } else {
     s.d = 0; row.classList.remove('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'false');
   }
   touch(rec);
+  refreshCards(ex.id);
 }
 
 function handleAct(a) {
@@ -1248,7 +1438,7 @@ main.addEventListener('touchcancel', () => { if (sw) { sw = null; main.style.tra
 /* floating day pill once the session title scrolls away */
 const pill = $('#daypill');
 function updatePill() {
-  const h1 = main.querySelector('.shead h1'); if (!h1) return;
+  const h1 = main.querySelector(UI2() ? '.shead .prog' : '.shead h1'); if (!h1) return;
   const bar = document.querySelector('.appbar').getBoundingClientRect().bottom;
   const show = h1.getBoundingClientRect().bottom < bar;
   if (show) {
@@ -1258,6 +1448,13 @@ function updatePill() {
     pill.style.top = (bar + 8) + 'px';
   }
   pill.hidden = false;
+  if (UI2()) {
+    const ab = document.querySelector('.appbar').getBoundingClientRect();
+    pill.style.top = Math.round(ab.top + (ab.height - (pill.offsetHeight || 38)) / 2) + 'px';
+    const rx = Math.max(16, (window.innerWidth - 620) / 2 + 16) + 'px';
+    pill.style.right = rx; dmenu.style.right = rx;
+  } else { pill.style.right = ''; dmenu.style.right = ''; }
+  document.body.classList.toggle('pill-on', show);
   pill.classList.toggle('on', show);
   if (!show && typeof closeDayMenu === 'function') closeDayMenu();
 }
@@ -1341,7 +1538,7 @@ function tick() {
   const rem = T.lo - el;
   const hiTxt = T.hi > T.lo ? 'حداکثر ' + mmss(T.hi) : '';
   if (rem > 0) {
-    timerEl.className = 'timer';
+    timerEl.className = 'timer' + (UI2() && Date.now() > (T.big || T.start + 6000) ? ' mini' : '');
     $('#t-lbl').textContent = 'استراحت';
     $('#t-time').textContent = mmss(rem);
     $('#t-range').textContent = 'هدف ' + mmss(T.lo) + (hiTxt ? ' · ' + hiTxt : '');
@@ -1359,7 +1556,10 @@ function tick() {
   }
 }
 timerEl.addEventListener('click', ev => {
-  const b = ev.target.closest('[data-t]'); if (!b || !T) return;
+  if (!T) return;
+  const b = ev.target.closest('[data-t]');
+  if (!b) { if (timerEl.classList.contains('mini')) { T.big = Date.now() + 6000; tick(); } return; }
+  T.big = Date.now() + 6000;
   const v = b.dataset.t;
   if (v === 'stop') return stopTimer();
   const d = +v;
@@ -1413,11 +1613,43 @@ function recLines(r) {
   }
   return out;
 }
+function spark(vals) {
+  const W2 = 88, H2 = 30, p = 4;
+  const lo = Math.min(...vals), hi = Math.max(...vals), span = hi - lo || 1;
+  const xy = vals.map((v, i) => [vals.length === 1 ? W2 / 2 : p + i * (W2 - 2 * p) / (vals.length - 1), hi === lo ? H2 / 2 : H2 - p - (v - lo) / span * (H2 - 2 * p)]);
+  const last = xy[xy.length - 1];
+  return `<svg viewBox="0 0 ${W2} ${H2}" aria-hidden="true">${xy.length > 1 ? `<polyline points="${xy.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity=".85"/>` : ''}<circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3.2" fill="var(--accent)"/></svg>`;
+}
+function progHTML() {
+  const recs = Object.values(S.sessions).filter(r => !isDeload(r.date)).sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+  let out = '';
+  for (const d of DAYS) {
+    const rows = [];
+    for (const ex of dayExs(d)) {
+      const pts = [];
+      for (const r of recs) {
+        const e = r.ex && r.ex[ex.id]; if (!e || e.alt) continue;
+        let best = null, bs = null;
+        for (const st of e.sets) { if (!st || !setHas(st)) continue; const m = metric(st); if (!m) continue; if (!best || (m.k === best.k ? m.v > best.v : m.k === 'w')) { best = m; bs = st; } }
+        if (best) pts.push({ v: best.v, k: best.k, s: bs });
+      }
+      if (!pts.length) continue;
+      const k = pts[pts.length - 1].k; const q = pts.filter(x => x.k === k).slice(-12);
+      const ls = q[q.length - 1].s;
+      const pct = q.length > 1 ? Math.round((q[q.length - 1].v / q[0].v - 1) * 100) : null;
+      const dl = pct == null ? '' : pct > 0 ? `<span class="up">+${fa(pct)}٪</span>` : pct < 0 ? `<span class="dn">−${fa(-pct)}٪</span>` : '<span>۰٪</span>';
+      rows.push(`<div class="pg-row"><div><div class="n">${ex.name}</div><div class="m"><b>${ls.w !== '' ? fa(ls.w) + LRM + '×' + LRM : ''}${fa(ls.r)}</b>${dl}<span dir="rtl">${fa(q.length)} جلسه</span></div></div>${spark(q.map(x => x.v))}</div>`);
+    }
+    if (rows.length) out += `<div class="pg-day">${P[d].name} · ${P[d].short.replace(/ـ/g, '')}</div>` + rows.join('');
+  }
+  if (!out) return '';
+  return `<div class="sec" style="margin-top:12px"><h3>پیشرفت حرکت‌ها</h3><p>عدد پررنگ: بهترین ست آخرین جلسه. درصد و نمودار: تغییر قدرت تخمینی (از وزنه و تکرار) از اولین جلسه تا حالا؛ جلسه‌های جایگزین و دی‌لود حساب نمی‌شوند.</p>${out}</div>`;
+}
 function renderHistory() {
   const recs = sortedRecs().filter(recHas);
   const box = $('#history-list');
   if (!recs.length) { box.innerHTML = '<p class="empty">هنوز جلسه‌ای ثبت نشده. اولین ستی که ثبت کنی اینجا می‌آید.</p>'; return; }
-  box.innerHTML = recs.map(r => {
+  box.innerHTML = (UI2() ? progHTML() : '') + recs.map(r => {
     const k = rkey(r.date, r.day);
     const lines = recLines(r).map(({ ex, e }) => `<li><span class="en" dir="ltr">${ex.no}. ${ex.name}</span>${e.alt ? ' <span class="muted">(جایگزین)</span>' : ''}<div class="vals">${e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('')}${e.rir !== '' && e.rir != null ? `<span class="v" dir="ltr">RIR ${fa(e.rir)}</span>` : ''}</div></li>`).join('');
     const c = r.cardio || {};
@@ -1445,6 +1677,16 @@ let reportRange = 14;
 function renderSettings() {
   $('#start-date').value = S.start;
   $('#start-fa').textContent = fmtD(S.start, true);
+  const u2 = UI2();
+  $('#start-date').parentElement.hidden = u2; $('#start-row2').hidden = !u2;
+  if (u2) {
+    const base = dnum(satOf(todayIso())); const opts = [];
+    for (let k = -16; k <= 4; k++) { const d = parseIso(satOf(todayIso())); d.setDate(d.getDate() + k * 7); opts.push(isoOf(d)); }
+    if (!opts.includes(S.start)) opts.push(S.start);
+    opts.sort();
+    $('#start-sel').innerHTML = opts.map(o => `<option value="${o}"${o === S.start ? ' selected' : ''}>${['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'][parseIso(o).getDay()]} ${fmtD(o, true)}${dnum(o) === base ? ' (این هفته)' : ''}</option>`).join('');
+  }
+  const ub = $('#ui2-btn'); ub.textContent = u2 ? 'روشن است · خاموش کن' : 'خاموش است · روشن کن'; ub.className = 'btn' + (u2 ? ' acc' : '');
   const w = weekOf(todayIso());
   $('#week-now').textContent = 'امروز هفتهٔ ' + fa(w) + ' برنامه است.';
   const dl = isDeload(todayIso());
@@ -1457,6 +1699,8 @@ function renderSettings() {
   $('#share-report').hidden = IS_PREVIEW || !navigator.share;
   $('#report-box').hidden = true; $('#backup-box').hidden = true;
 }
+$('#start-sel').addEventListener('change', ev => { S.start = ev.target.value; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد'); });
+$('#ui2-btn').addEventListener('click', () => { S.ui2 = !UI2(); save(true); renderSettings(); render(); updatePill(); toast(S.ui2 ? 'طراحی آزمایشی روشن شد' : 'طراحی قبلی برگشت'); });
 $('#start-date').addEventListener('change', ev => {
   const v = ev.target.value; if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
   S.start = v; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد');
