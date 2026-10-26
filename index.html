@@ -516,7 +516,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v49</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v50</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -1188,8 +1188,8 @@ function goDay(d, dir) {
   const ease = 'cubic-bezier(.22,.75,.25,1)';
   main.style.transition = `transform .3s ${ease}`;
   main.style.transform = '';
-  ghost.style.transition = `transform .3s ${ease}, opacity .3s ${ease}`;
-  ghost.style.transform = `translateX(${dir * w * 0.9}px)`; ghost.style.opacity = '0.3';
+  ghost.style.transition = `transform .3s ${ease}, opacity .17s linear`;
+  ghost.style.transform = `translateX(${dir * (w + 20)}px)`; ghost.style.opacity = '0';
   navT = setTimeout(() => { navT = null; clearNav(); main.style.transition = ''; }, 320);
 }
 $('#tabs').addEventListener('click', ev => {
