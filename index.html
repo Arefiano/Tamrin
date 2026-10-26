@@ -462,7 +462,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .ex-sum .rir{font-size:13px;font-weight:700;color:var(--ink-2)}
 .ex-sum .alt-note{font-size:13px;color:var(--warn);direction:rtl;unicode-bidi:isolate}
 .ex-sum .open-h{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--ink-3);direction:rtl;unicode-bidi:isolate}
-.ui2 .ex.cur{border-color:var(--edge);box-shadow:inset -3px 0 0 var(--accent)}
+.ui2 .ex.pri{box-shadow:inset -3px 0 0 var(--accent)}
+.ui2 .ex.cur{border-color:#8E99A5;background:#181E24}
 .ui2 .rirpick.need .lbl{color:var(--accent)}
 .ui2 .rirpick.need .chip{border-color:var(--accent-line);animation:needPulse 1.8s ease-in-out infinite}
 @keyframes needPulse{50%{background:var(--accent-soft)}}
@@ -615,7 +616,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v52</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v53</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -1083,9 +1084,9 @@ function exCard(ex, ctx, rec, inSS) {
   let last = -1;
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
-  let h = `<article class="ex" data-ex="${ex.id}">
+  let h = `<article class="ex${ex.pri ? ' pri' : ''}" data-ex="${ex.id}">
     <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
-    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}${ex.pri && UI2() ? '<span class="pri-tag">اولویت</span>' : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
+    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
   if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
