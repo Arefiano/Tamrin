@@ -416,6 +416,11 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .daypill.on:active{transform:translate(-50%,0) scale(.96)}
 .daymenu[hidden],.daypill[hidden]{display:none}
 .dayshade{position:fixed;inset:0;z-index:21;background:transparent;touch-action:none}
+.set-n{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.rmset{min-width:26px;height:22px;padding:0 6px;border-radius:7px;border:1px solid var(--line-2);background:transparent;color:var(--ink-3);font-size:14px;font-weight:800;line-height:1}
+.rmset.armed{border-color:var(--danger);color:var(--danger);font-size:11.5px}
+.set.rowout{animation:rowOut .22s var(--ease-out) forwards}
+@keyframes rowOut{to{opacity:0;transform:translateX(-20px)}}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -507,7 +512,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v44</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v45</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -902,7 +907,7 @@ function exCard(ex, ctx, rec, inSS) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, (sug && sug.type === 'up') || (prev && !!prev.e.alt !== !!(e && e.alt)) ? null : prev, i);
     h += `<div class="set${s.d ? ' done' : ''}" data-ex="${ex.id}" data-i="${i}">
-      <span class="set-n">ست ${fa(i + 1)}</span>
+      <span class="set-n">ست ${fa(i + 1)}${i >= t.s ? `<button class="rmset" type="button" data-rmset aria-label="حذف ست ${fa(i + 1)}">×</button>` : ''}</span>
       <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}</button>
     </div>`;
@@ -1018,6 +1023,23 @@ main.addEventListener('click', ev => {
   }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
+  const rm = ev.target.closest('[data-rmset]');
+  if (rm) {
+    const row = rm.closest('.set'); const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
+    const rec = getRec(false); const e = rec && entry(rec, ex, false);
+    const st = e && e.sets[i];
+    if (st && (setHas(st) || st.d) && !rm.dataset.armed) {
+      rm.dataset.armed = '1'; rm.textContent = 'حذف؟'; rm.classList.add('armed');
+      setTimeout(() => { if (rm.isConnected) { delete rm.dataset.armed; rm.textContent = '×'; rm.classList.remove('armed'); } }, 3000);
+      return;
+    }
+    const finish = () => {
+      if (e) { e.sets.splice(i, 1); while (e.sets.length && !setHas(e.sets[e.sets.length - 1]) && !e.sets[e.sets.length - 1].d && !e.sets[e.sets.length - 1].x) e.sets.pop(); touch(rec); }
+      render();
+    };
+    if (RM) finish(); else { row.classList.add('rowout'); setTimeout(finish, 220); }
+    return;
+  }
   const ad = ev.target.closest('[data-addset]');
   if (ad) {
     const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
