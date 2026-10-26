@@ -515,7 +515,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v47</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v48</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -1156,27 +1156,37 @@ function setDay(d) {
   if (view.editing) view = { day: d, date: todayIso(), editing: false };
   else view.day = d;
 }
+let navOutT = null, navInT = null, navPendingDay = null;
 function slideIn(dir) {
   // dir = +1: new page enters from the left (moving right); -1: from the right
   main.style.transition = 'none';
-  main.style.transform = `translateX(${-dir * W() * 0.32}px)`; main.style.opacity = '0';
+  main.style.transform = `translateX(${-dir * W() * 0.28}px)`; main.style.opacity = '0';
   void main.offsetWidth;
-  main.style.transition = 'transform .32s var(--ease), opacity .26s var(--ease)';
+  main.style.transition = 'transform .26s var(--ease), opacity .2s var(--ease)';
   main.style.transform = ''; main.style.opacity = '';
-  setTimeout(() => { main.style.transition = ''; navBusy = false; if (navNext) { const n = navNext; navNext = null; goDay(n.d, n.dir); } }, 340);
+  navInT = setTimeout(() => { navInT = null; main.style.transition = ''; navBusy = false; if (navNext) { const n = navNext; navNext = null; goDay(n.d, n.dir); } }, 270);
+}
+// a new swipe can start at any moment: finish the running transition instantly
+function settleNav() {
+  if (!navBusy) return;
+  if (navOutT) { clearTimeout(navOutT); navOutT = null; setDay(navPendingDay); render(); restorePos(); updatePill(); }
+  if (navInT) { clearTimeout(navInT); navInT = null; }
+  main.style.transition = 'none'; main.style.transform = ''; main.style.opacity = '';
+  navBusy = false; navNext = null;
 }
 function goDay(d, dir, fromX) {
   if (navBusy) { navNext = { d, dir }; return; }
   if (!d || d === view.day) return;
   keepPos();
   if (RM || !dir) { setDay(d); render(); restorePos(); updatePill(); return; }
-  navBusy = true;
-  main.style.transition = 'transform .18s var(--ease-out), opacity .18s var(--ease-out)';
-  main.style.transform = `translateX(${dir * W() * 0.45}px)`; main.style.opacity = '0';
-  setTimeout(() => {
+  navBusy = true; navPendingDay = d;
+  main.style.transition = 'transform .14s var(--ease-out), opacity .14s var(--ease-out)';
+  main.style.transform = `translateX(${dir * W() * 0.4}px)`; main.style.opacity = '0';
+  navOutT = setTimeout(() => {
+    navOutT = null;
     setDay(d); render(); restorePos(); updatePill();
     slideIn(dir);
-  }, 170);
+  }, 130);
 }
 $('#tabs').addEventListener('click', ev => {
   const t = ev.target.closest('[data-day]'); if (!t) return;
@@ -1195,7 +1205,8 @@ main.addEventListener('animationend', ev => { if (ev.target === main) main.class
 /* swipe: the page follows the finger; let go past the threshold to change day, otherwise it springs back */
 let sw = null;
 main.addEventListener('touchstart', ev => {
-  if (ev.touches.length !== 1 || openId || !modal.hidden || navBusy) { sw = null; return; }
+  if (ev.touches.length !== 1 || openId || !modal.hidden) { sw = null; return; }
+  settleNav();
   const t = ev.touches[0]; sw = { x: t.clientX, y: t.clientY, t: Date.now(), lock: null, dx: 0 };
 }, { passive: true });
 main.addEventListener('touchmove', ev => {
