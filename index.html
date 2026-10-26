@@ -400,6 +400,19 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .h-item.h-out{height:0!important;opacity:0;transform:translateX(-24px);margin-top:0;padding-top:0;padding-bottom:0;overflow:hidden;border-width:0}
 .t-time{transition:color .35s var(--ease)}
 .t-bar i{transition:width .25s linear,background-color .35s var(--ease)}
+.daypill .chev{width:14px;height:14px;color:var(--ink-2);margin-inline-start:-2px;transition:transform .25s var(--ease)}
+.daypill[aria-expanded=true] .chev{transform:rotate(180deg)}
+.daymenu{position:fixed;left:50%;z-index:23;transform:translateX(-50%);min-width:220px;padding:6px;border-radius:18px;border:1px solid var(--line-2);background:rgba(27,33,40,.92);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);box-shadow:0 16px 40px rgba(0,0,0,.55);display:flex;flex-direction:column;gap:2px}
+.daymenu:not([hidden]){animation:menuIn .22s var(--ease)}
+.daymenu.out{animation:menuOut .16s var(--ease-out) forwards}
+@keyframes menuIn{from{opacity:0;transform:translate(-50%,-6px) scale(.96)}to{opacity:1;transform:translateX(-50%)}}
+@keyframes menuOut{from{opacity:1;transform:translateX(-50%)}to{opacity:0;transform:translate(-50%,-6px) scale(.97)}}
+.daymenu button{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:0;border-radius:12px;background:transparent;font-size:16px;text-align:right}
+.daymenu button b{font-weight:900}
+.daymenu button span{color:var(--ink-2);font-weight:700;font-size:14.5px}
+.daymenu button.on{background:var(--accent-soft)}
+.daymenu button.on b{color:var(--accent)}
+.daymenu button.top{justify-content:center;color:var(--ink-2);font-size:14px;font-weight:700;border-top:1px solid var(--line);border-radius:0 0 12px 12px;margin-top:2px}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -563,7 +576,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
   </div>
 </section>
 
-<button class="daypill" id="daypill" type="button" aria-label="برگشت به بالای جلسه" hidden><i></i><b></b><span></span></button>
+<button class="daypill" id="daypill" type="button" aria-label="رفتن به روز دیگر" aria-haspopup="true" aria-expanded="false" hidden><i></i><b></b><span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+<div class="daymenu" id="daymenu" role="menu" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
 <div class="modal" id="modal" hidden><div class="m-card" role="dialog" aria-modal="true" aria-labelledby="m-title" id="m-card"></div></div>
@@ -1175,10 +1189,33 @@ function updatePill() {
   }
   pill.hidden = false;
   pill.classList.toggle('on', show);
+  if (!show && typeof closeDayMenu === 'function') closeDayMenu();
 }
 let pillRaf = 0;
 window.addEventListener('scroll', () => { if (!pillRaf) pillRaf = requestAnimationFrame(() => { pillRaf = 0; updatePill(); }); }, { passive: true });
-pill.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+const dmenu = $('#daymenu');
+function closeDayMenu() {
+  if (dmenu.hidden) return;
+  pill.setAttribute('aria-expanded', 'false');
+  outThen(dmenu, () => { dmenu.hidden = true; });
+}
+pill.addEventListener('click', ev => {
+  ev.stopPropagation();
+  if (!dmenu.hidden) { closeDayMenu(); return; }
+  dmenu.innerHTML = DAYS.map(d => `<button type="button" role="menuitem" data-go="${d}"${d === view.day ? ' class="on" aria-current="true"' : ''}><b>${P[d].name}</b><span>${P[d].short}</span></button>`).join('')
+    + `<button type="button" role="menuitem" data-go="top" class="top">بالای همین جلسه</button>`;
+  dmenu.style.top = (pill.getBoundingClientRect().bottom + 8) + 'px';
+  dmenu._y = window.scrollY; cancelOut(dmenu); dmenu.hidden = false; pill.setAttribute('aria-expanded', 'true');
+});
+dmenu.addEventListener('click', ev => {
+  const b = ev.target.closest('[data-go]'); if (!b) return;
+  const d = b.dataset.go; closeDayMenu();
+  if (d === 'top') { window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' }); return; }
+  if (d === view.day) return;
+  goDay(d, DAYS.indexOf(d) > DAYS.indexOf(view.day) ? 1 : -1);
+});
+document.addEventListener('click', ev => { if (!dmenu.hidden && !ev.target.closest('#daymenu')) closeDayMenu(); });
+window.addEventListener('scroll', () => { if (!dmenu.hidden && Math.abs(window.scrollY - (dmenu._y ?? window.scrollY)) > 40) closeDayMenu(); }, { passive: true });
 $('#banners').addEventListener('click', ev => { const a = ev.target.closest('[data-act]'); if (a) handleAct(a.dataset.act); });
 
 function onWake() {
