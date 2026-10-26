@@ -1079,6 +1079,10 @@ function softRender() {
    then the new day slides in from the side the finger came from (RTL: next day sits to the left) */
 const W = () => Math.min(window.innerWidth, 620);
 let navBusy = false, navNext = null;
+// where you were on each day; kept only while the app is open (a fresh launch starts at the top)
+const dayScroll = {};
+const keepPos = () => { dayScroll[view.day] = window.scrollY; };
+const restorePos = () => window.scrollTo(0, dayScroll[view.day] || 0);
 function setDay(d) {
   if (view.editing) view = { day: d, date: todayIso(), editing: false };
   else view.day = d;
@@ -1095,12 +1099,13 @@ function slideIn(dir) {
 function goDay(d, dir, fromX) {
   if (navBusy) { navNext = { d, dir }; return; }
   if (!d || d === view.day) return;
-  if (RM || !dir) { setDay(d); render(); window.scrollTo(0, 0); updatePill(); return; }
+  keepPos();
+  if (RM || !dir) { setDay(d); render(); restorePos(); updatePill(); return; }
   navBusy = true;
   main.style.transition = 'transform .18s var(--ease-out), opacity .18s var(--ease-out)';
   main.style.transform = `translateX(${dir * W() * 0.45}px)`; main.style.opacity = '0';
   setTimeout(() => {
-    setDay(d); render(); window.scrollTo(0, 0); updatePill();
+    setDay(d); render(); restorePos(); updatePill();
     slideIn(dir);
   }, 170);
 }
