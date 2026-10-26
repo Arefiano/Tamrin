@@ -502,6 +502,13 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 @keyframes menuIn2{from{opacity:0;transform:translateY(-6px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes menuOut2{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px) scale(.97)}}
 .sec .row[hidden]{display:none}
+.appprog{display:none}
+.ui2 .appprog{display:block;position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--line);opacity:0;transition:opacity .25s var(--ease);pointer-events:none}
+.ui2 .appprog i{display:block;height:100%;width:0;background:var(--accent);border-radius:0 999px 999px 0;transition:width .45s var(--ease)}
+.ui2.pill-on .appprog{opacity:1}
+.ui2 .daypill span{color:var(--ink);font-weight:900;font-size:17px}
+.ui2 .daypill b{color:var(--ink-2);font-weight:700;font-size:14px}
+.ui2 .daypill b::before{content:"";display:inline-block;width:1px;height:14px;background:var(--line-2);margin-inline-end:8px;vertical-align:-2px}
 .sec select{height:44px;border-radius:12px;border:1px solid var(--edge);background:var(--field);padding:0 12px;font-size:16px;color:var(--ink);max-width:100%}
 .pg-day{margin-top:10px;font-size:13px;font-weight:800;color:var(--ink-2)}
 .pg-row{display:grid;grid-template-columns:minmax(0,1fr) 88px;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--line);direction:ltr}
@@ -518,7 +525,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 
 <div class="wrap" id="app">
   <header class="appbar">
-    <div class="brand"><b>دفتر تمرین</b><span class="pill" id="weekchip"></span></div>
+    <div class="appprog" aria-hidden="true"><i id="appprog"></i></div><div class="brand"><b>دفتر تمرین</b><span class="pill" id="weekchip"></span></div>
     <button class="icon-btn" type="button" id="open-guide" aria-label="راهنما"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"></path><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5"></path><path d="M9 8h7M9 12h5"></path></svg></button>
     <button class="icon-btn" type="button" id="open-history" aria-label="سابقه"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path><path d="M12 7v5l3 2"></path></svg></button>
     <button class="icon-btn" type="button" id="open-settings" aria-label="تنظیمات و پشتیبان"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></button>
@@ -608,7 +615,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v51</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v52</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -992,6 +999,7 @@ function render() {
 
 /* ---------- ui2 helpers: completion, current exercise, progress, records ---------- */
 const expanded = new Set();
+const PROG = { txt: '' };
 const dayExs = d => P[d].items.flatMap(b => b.ss ? b.items : (b.cardio ? [] : [b]));
 function exState(e, t) {
   const sets = e ? e.sets : [];
@@ -1059,6 +1067,9 @@ function updateProgress() {
   for (const ex of dayExs(view.day)) { const t = tgt(ex, ctx); tot += t.s; const e = entry(rec, ex, false); if (e) for (let i = 0; i < t.s; i++) if (e.sets[i] && e.sets[i].d) dn++; }
   const p = tot ? Math.round(dn / tot * 100) : 0;
   pill.style.setProperty('--p', p);
+  PROG.txt = fa(dn) + ' از ' + fa(tot);
+  $('#appprog').style.width = p + '%';
+  if (UI2() && pill.classList.contains('on')) pill.querySelector('b').textContent = PROG.txt;
   const pg = $('#prog'); if (!pg) return;
   pg.querySelector('i').style.width = p + '%';
   pg.querySelector('span').textContent = fa(dn) + ' از ' + fa(tot) + ' ست';
@@ -1443,8 +1454,8 @@ function updatePill() {
   const show = h1.getBoundingClientRect().bottom < bar;
   if (show) {
     const d = P[view.day];
-    pill.querySelector('span').textContent = d.name + (view.editing ? ' ' + fmtD(view.date) : '') + ':';
-    pill.querySelector('b').textContent = d.short;
+    if (UI2()) { pill.querySelector('span').textContent = d.short.replace(/ـ/g, '') + (view.editing ? ' ' + fmtD(view.date) : ''); pill.querySelector('b').textContent = PROG.txt; }
+    else { pill.querySelector('span').textContent = d.name + (view.editing ? ' ' + fmtD(view.date) : '') + ':'; pill.querySelector('b').textContent = d.short; }
     pill.style.top = (bar + 8) + 'px';
   }
   pill.hidden = false;
