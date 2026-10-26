@@ -416,9 +416,12 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .daypill.on:active{transform:translate(-50%,0) scale(.96)}
 .daymenu[hidden],.daypill[hidden]{display:none}
 .dayshade{position:fixed;inset:0;z-index:21;background:transparent;touch-action:none}
-.set-n{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
-.rmset{min-width:26px;height:22px;padding:0 6px;border-radius:7px;border:1px solid var(--line-2);background:transparent;color:var(--ink-3);font-size:14px;font-weight:800;line-height:1}
-.rmset.armed{border-color:var(--danger);color:var(--danger);font-size:11.5px}
+[data-chk]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.chk .xic{display:none;width:20px;height:20px}
+.set.rm .chk{background:rgba(255,138,122,.14);border-color:var(--danger);color:var(--danger)}
+.set.rm .chk > svg:first-child{display:none}
+.set.rm .chk .xic{display:block;animation:pop .3s var(--ease)}
+.set.rm .pair input{opacity:.55}
 .set.rowout{animation:rowOut .22s var(--ease-out) forwards}
 @keyframes rowOut{to{opacity:0;transform:translateX(-20px)}}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
@@ -512,7 +515,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v45</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v46</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -528,6 +531,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
         <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن.</li>
+        <li><b>ست اضافه:</b> با «+ ست اضافه» ست بیشتری بزن. برای حذفش، انگشتت را روی تیک همان ست نگه دار تا ضربدر شود و ضربدر را بزن؛ نگه داشتن دوباره، آن را به تیک برمی‌گرداند.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
         <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
       </ul>
@@ -906,10 +910,10 @@ function exCard(ex, ctx, rec, inSS) {
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, (sug && sug.type === 'up') || (prev && !!prev.e.alt !== !!(e && e.alt)) ? null : prev, i);
-    h += `<div class="set${s.d ? ' done' : ''}" data-ex="${ex.id}" data-i="${i}">
-      <span class="set-n">ست ${fa(i + 1)}${i >= t.s ? `<button class="rmset" type="button" data-rmset aria-label="حذف ست ${fa(i + 1)}">×</button>` : ''}</span>
+    h += `<div class="set${s.d ? ' done' : ''}${i >= t.s ? ' extra' : ''}" data-ex="${ex.id}" data-i="${i}">
+      <span class="set-n">ست ${fa(i + 1)}</span>
       <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
-      <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}</button>
+      <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}${i >= t.s ? '<svg class="xic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"></path></svg>' : ''}</button>
     </div>`;
   }
   h += `<button class="addset" type="button" data-addset>+ ست اضافه</button></div>`;
@@ -1010,9 +1014,46 @@ main.addEventListener('input', ev => {
   }
 });
 
+/* extra sets: long-press the check to turn it into ×, tap × to delete, long-press again to go back */
+let lpT = null, lpFired = false, lpPos = null;
+function removeSet(row) {
+  const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
+  const rec = getRec(false); const e = rec && entry(rec, ex, false);
+  const finish = () => {
+    if (e) {
+      e.sets.splice(i, 1);
+      const last = () => e.sets[e.sets.length - 1];
+      while (e.sets.length && !setHas(last()) && !last().d && !last().x) e.sets.pop();
+      touch(rec);
+    }
+    render();
+  };
+  if (RM) finish(); else { row.classList.add('rowout'); setTimeout(finish, 220); }
+}
+main.addEventListener('pointerdown', ev => {
+  const chk = ev.target.closest('.set.extra [data-chk]'); if (!chk) return;
+  lpPos = { x: ev.clientX, y: ev.clientY };
+  clearTimeout(lpT);
+  lpT = setTimeout(() => {
+    lpT = null; lpFired = true;
+    const row = chk.closest('.set'); const on = row.classList.toggle('rm');
+    chk.setAttribute('aria-label', on ? 'حذف این ست' : 'ثبت ست');
+    if (navigator.vibrate) navigator.vibrate(15);
+  }, 480);
+});
+const lpCancel = ev => { if (lpT && (!ev || ev.type !== 'pointermove' || Math.hypot(ev.clientX - lpPos.x, ev.clientY - lpPos.y) > 10)) { clearTimeout(lpT); lpT = null; } };
+main.addEventListener('pointermove', lpCancel);
+main.addEventListener('pointerup', () => { if (lpT) { clearTimeout(lpT); lpT = null; } });
+main.addEventListener('pointercancel', lpCancel);
+main.addEventListener('contextmenu', ev => { if (ev.target.closest('.set.extra [data-chk]')) ev.preventDefault(); });
 main.addEventListener('click', ev => {
   const chk = ev.target.closest('[data-chk]');
-  if (chk) { unlockAudio(); return onCheck(chk.closest('.set')); }
+  if (chk) {
+    if (lpFired) { lpFired = false; return; }
+    const row = chk.closest('.set');
+    if (row.classList.contains('rm')) return removeSet(row);
+    unlockAudio(); return onCheck(row);
+  }
   const rirB = ev.target.closest('[data-rir]');
   if (rirB) {
     const card = rirB.closest('.ex'); const ex = EX[card.dataset.ex];
@@ -1023,23 +1064,6 @@ main.addEventListener('click', ev => {
   }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
-  const rm = ev.target.closest('[data-rmset]');
-  if (rm) {
-    const row = rm.closest('.set'); const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
-    const rec = getRec(false); const e = rec && entry(rec, ex, false);
-    const st = e && e.sets[i];
-    if (st && (setHas(st) || st.d) && !rm.dataset.armed) {
-      rm.dataset.armed = '1'; rm.textContent = 'حذف؟'; rm.classList.add('armed');
-      setTimeout(() => { if (rm.isConnected) { delete rm.dataset.armed; rm.textContent = '×'; rm.classList.remove('armed'); } }, 3000);
-      return;
-    }
-    const finish = () => {
-      if (e) { e.sets.splice(i, 1); while (e.sets.length && !setHas(e.sets[e.sets.length - 1]) && !e.sets[e.sets.length - 1].d && !e.sets[e.sets.length - 1].x) e.sets.pop(); touch(rec); }
-      render();
-    };
-    if (RM) finish(); else { row.classList.add('rowout'); setTimeout(finish, 220); }
-    return;
-  }
   const ad = ev.target.closest('[data-addset]');
   if (ad) {
     const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
