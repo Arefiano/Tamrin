@@ -3,7 +3,7 @@
 // gets the latest version straight from the server (bypassing the HTTP cache);
 // offline, or if the network is slow, the cached copy opens instead.
 // Icons and the manifest are cache-first and refresh in the background.
-const CACHE = 'daftar-tamrin-v61';
+const CACHE = 'daftar-tamrin-v62';
 const FILES = [
   './',
   './index.html',

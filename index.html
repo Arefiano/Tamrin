@@ -616,15 +616,10 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
       <p>همهٔ جلسه‌های ثبت‌شده روی این گوشی پاک می‌شوند. اول پشتیبان بگیر.</p>
       <div class="row"><button class="btn danger" type="button" id="wipe-btn">پاک کردن همه</button></div>
     </div>
-    <div class="sec">
-      <h3>طراحی آزمایشی</h3>
-      <p>ظاهر جدید: جمع شدن حرکت‌های تمام‌شده، نوار پیشرفت جلسه، رکوردها، نمودار پیشرفت در سابقه و چند اصلاح دیگر. اگر خاموشش کنی ظاهر قبلی برمی‌گردد؛ داده‌ها دست نمی‌خورند.</p>
-      <div class="row"><button class="btn" type="button" id="ui2-btn"></button></div>
-    </div>
-
+    
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v61</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v62</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -639,7 +634,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
         <li>وزنه را در خانهٔ چپ و تکرار را در خانهٔ راست بنویس و تیک بزن. تایمر استراحت خودش شروع می‌شود.</li>
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
         <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
-        <li>بعد از آخرین ست، RIR همان ست را انتخاب کن.</li>
+        <li>بعد از آخرین ست، RIR همان ست را انتخاب کن. وقتی همهٔ ست‌ها و RIR ثبت شد، کارت حرکت جمع می‌شود؛ با زدن روی اسمش دوباره باز می‌شود.</li>
+        <li><b>نشانه‌ها:</b> حاشیهٔ سبز سمت راست = حرکت اولویت‌دار · قاب روشن‌تر = حرکت فعلی · طلایی = رکورد جدید (بهتر از همهٔ جلسه‌های قبلی همان حرکت) · علامت تعجب در کادر تکرار = کمتر از بازهٔ هدف.</li>
         <li><b>ست اضافه:</b> با «+ ست اضافه» ست بیشتری بزن. برای حذفش، انگشتت را روی تیک همان ست نگه دار تا ضربدر شود و ضربدر را بزن؛ نگه داشتن دوباره، آن را به تیک برمی‌گرداند.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
         <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
@@ -731,7 +727,7 @@ const num = v => { const t = toLat(v); if (!t) return null; const n = parseFloat
 const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const UI2 = () => S.ui2 !== false;
+const UI2 = () => true;
 const myNote = id => (S.exNotes && S.exNotes[id] && S.exNotes[id].t) ? S.exNotes[id].t : '';
 const EFF = [
   { max: 3, name: 'آسان', c: '#5AD27E', d: 'کم‌زحمت بود؛ راحت می‌شد حرف زد و انرژی زیادی باقی ماند.' },
@@ -1707,7 +1703,6 @@ function renderSettings() {
     opts.sort();
     $('#start-sel').innerHTML = opts.map(o => `<option value="${o}"${o === S.start ? ' selected' : ''}>${['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'][parseIso(o).getDay()]} ${fmtD(o, true)}${dnum(o) === base ? ' (این هفته)' : ''}</option>`).join('');
   }
-  const ub = $('#ui2-btn'); ub.textContent = u2 ? 'روشن است · خاموش کن' : 'خاموش است · روشن کن'; ub.className = 'btn' + (u2 ? ' acc' : '');
   const w = weekOf(todayIso());
   $('#week-now').textContent = 'امروز هفتهٔ ' + fa(w) + ' برنامه است.';
   const dl = isDeload(todayIso());
@@ -1721,7 +1716,6 @@ function renderSettings() {
   $('#report-box').hidden = true; $('#backup-box').hidden = true;
 }
 $('#start-sel').addEventListener('change', ev => { S.start = ev.target.value; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد'); });
-$('#ui2-btn').addEventListener('click', () => { S.ui2 = !UI2(); save(true); renderSettings(); render(); updatePill(); toast(S.ui2 ? 'طراحی آزمایشی روشن شد' : 'طراحی قبلی برگشت'); });
 $('#start-date').addEventListener('change', ev => {
   const v = ev.target.value; if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
   S.start = v; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد');
