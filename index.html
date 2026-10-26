@@ -354,8 +354,6 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .daypill span{color:var(--ink-2);font-weight:700}
 @keyframes slideL{from{opacity:.35;transform:translateX(-28px)}to{opacity:1;transform:none}}
 @keyframes slideR{from{opacity:.35;transform:translateX(28px)}to{opacity:1;transform:none}}
-#main.slide-l{animation:slideL .22s ease-out}
-#main.slide-r{animation:slideR .22s ease-out}
 /* motion: one easing and a few short durations everywhere */
 :root{--ease:cubic-bezier(.22,.8,.24,1);--ease-out:cubic-bezier(.4,0,1,1)}
 button,.btn,.chip,.chk,.tab,.alt,.addset,.info-btn,.eff-step{transition:transform .14s var(--ease),background-color .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease),opacity .2s var(--ease)}
@@ -393,8 +391,6 @@ details.warm[open] ul,details.cues[open] .ex-list{animation:fadeUp .24s var(--ea
 details.warm summary::after,details.cues summary::after{transition:transform .25s var(--ease)}
 .sugg,.my-note{animation:fadeUp .3s var(--ease)}
 .daypill{transition:opacity .25s var(--ease),transform .3s var(--ease)}
-#main.slide-l{animation:slideL .3s var(--ease)}
-#main.slide-r{animation:slideR .3s var(--ease)}
 .t-bar i{transition:width .25s linear}
 #main.soft{animation:fadeIn .26s var(--ease)}
 details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s var(--ease-out) forwards}
@@ -1079,19 +1075,39 @@ function softRender() {
   render();
   main.classList.remove('soft'); void main.offsetWidth; main.classList.add('soft');
 }
-function goDay(d, from) {
-  if (!d || d === view.day) return;
+/* day changes: the current page slides out, the page jumps to the top while invisible,
+   then the new day slides in from the side the finger came from (RTL: next day sits to the left) */
+const W = () => Math.min(window.innerWidth, 620);
+let navBusy = false, navNext = null;
+function setDay(d) {
   if (view.editing) view = { day: d, date: todayIso(), editing: false };
   else view.day = d;
-  const far = window.scrollY > 0;
-  render(); if (far) window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' });
-  if (from) { main.classList.remove('slide-l', 'slide-r'); void main.offsetWidth; main.classList.add(from === 'l' ? 'slide-l' : 'slide-r'); }
-  updatePill();
+}
+function slideIn(dir) {
+  // dir = +1: new page enters from the left (moving right); -1: from the right
+  main.style.transition = 'none';
+  main.style.transform = `translateX(${-dir * W() * 0.32}px)`; main.style.opacity = '0';
+  void main.offsetWidth;
+  main.style.transition = 'transform .32s var(--ease), opacity .26s var(--ease)';
+  main.style.transform = ''; main.style.opacity = '';
+  setTimeout(() => { main.style.transition = ''; navBusy = false; if (navNext) { const n = navNext; navNext = null; goDay(n.d, n.dir); } }, 340);
+}
+function goDay(d, dir, fromX) {
+  if (navBusy) { navNext = { d, dir }; return; }
+  if (!d || d === view.day) return;
+  if (RM || !dir) { setDay(d); render(); window.scrollTo(0, 0); updatePill(); return; }
+  navBusy = true;
+  main.style.transition = 'transform .18s var(--ease-out), opacity .18s var(--ease-out)';
+  main.style.transform = `translateX(${dir * W() * 0.45}px)`; main.style.opacity = '0';
+  setTimeout(() => {
+    setDay(d); render(); window.scrollTo(0, 0); updatePill();
+    slideIn(dir);
+  }, 170);
 }
 $('#tabs').addEventListener('click', ev => {
   const t = ev.target.closest('[data-day]'); if (!t) return;
   const a = DAYS.indexOf(view.day), b2 = DAYS.indexOf(t.dataset.day);
-  goDay(t.dataset.day, b2 > a ? 'l' : 'r');
+  goDay(t.dataset.day, b2 > a ? 1 : -1);
 });
 main.addEventListener('click', ev => {
   const sm = ev.target.closest('details.warm > summary, details.cues > summary'); if (!sm) return;
@@ -1100,22 +1116,45 @@ main.addEventListener('click', ev => {
   d.classList.add('closing');
   setTimeout(() => { d.open = false; d.classList.remove('closing'); }, 170);
 });
-main.addEventListener('animationend', ev => { if (ev.target === main) main.classList.remove('slide-l', 'slide-r', 'soft'); });
+main.addEventListener('animationend', ev => { if (ev.target === main) main.classList.remove('soft'); });
 
-/* swipe between days: in RTL the next day sits to the left, so dragging right moves forward */
+/* swipe: the page follows the finger; let go past the threshold to change day, otherwise it springs back */
 let sw = null;
 main.addEventListener('touchstart', ev => {
-  if (ev.touches.length !== 1 || openId || !modal.hidden) { sw = null; return; }
-  const t = ev.touches[0]; sw = { x: t.clientX, y: t.clientY, t: Date.now() };
+  if (ev.touches.length !== 1 || openId || !modal.hidden || navBusy) { sw = null; return; }
+  const t = ev.touches[0]; sw = { x: t.clientX, y: t.clientY, t: Date.now(), lock: null, dx: 0 };
 }, { passive: true });
+main.addEventListener('touchmove', ev => {
+  if (!sw) return;
+  const t = ev.touches[0]; const dx = t.clientX - sw.x, dy = t.clientY - sw.y;
+  if (!sw.lock) {
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+    sw.lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'h' : 'v';
+    if (sw.lock === 'h') main.style.transition = 'none';
+  }
+  if (sw.lock !== 'h') return;
+  ev.preventDefault();
+  const i = DAYS.indexOf(view.day);
+  const can = dx > 0 ? i < DAYS.length - 1 : i > 0;
+  const x = can ? dx : dx * 0.25;            // resistance at the first and last day
+  sw.dx = dx;
+  if (RM) return;
+  main.style.transform = `translateX(${x}px)`;
+  main.style.opacity = String(1 - Math.min(Math.abs(x) / (W() * 1.4), 0.4));
+}, { passive: false });
 main.addEventListener('touchend', ev => {
   if (!sw) return;
-  const t = ev.changedTouches[0]; const dx = t.clientX - sw.x, dy = t.clientY - sw.y, dt = Date.now() - sw.t; sw = null;
-  if (Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8 || dt > 700) return;
+  const s0 = sw; sw = null;
+  if (s0.lock !== 'h') return;
+  const dx = s0.dx, v = Math.abs(dx) / Math.max(1, Date.now() - s0.t);
   const i = DAYS.indexOf(view.day);
-  if (dx > 0 && i < DAYS.length - 1) goDay(DAYS[i + 1], 'l');
-  else if (dx < 0 && i > 0) goDay(DAYS[i - 1], 'r');
+  const target = dx > 0 ? DAYS[i + 1] : DAYS[i - 1];
+  if (target && (Math.abs(dx) > 80 || (Math.abs(dx) > 30 && v > 0.45))) { goDay(target, dx > 0 ? 1 : -1); return; }
+  main.style.transition = 'transform .28s var(--ease), opacity .28s var(--ease)';
+  main.style.transform = ''; main.style.opacity = '';
+  setTimeout(() => { main.style.transition = ''; }, 300);
 }, { passive: true });
+main.addEventListener('touchcancel', () => { if (sw) { sw = null; main.style.transition = 'transform .28s var(--ease), opacity .28s var(--ease)'; main.style.transform = ''; main.style.opacity = ''; } });
 
 /* floating day pill once the session title scrolls away */
 const pill = $('#daypill');
