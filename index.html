@@ -350,8 +350,8 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .daypill{position:fixed;left:50%;z-index:22;transform:translate(-50%,-8px) scale(.96);opacity:0;pointer-events:none;display:inline-flex;align-items:center;gap:7px;padding:6px 14px 6px 16px;border-radius:999px;border:1px solid var(--line-2);background:rgba(27,33,40,.86);-webkit-backdrop-filter:blur(14px) saturate(1.3);backdrop-filter:blur(14px) saturate(1.3);box-shadow:0 8px 24px rgba(0,0,0,.45);font-size:15px;color:var(--ink);transition:opacity .2s,transform .2s;white-space:nowrap}
 .daypill.on{opacity:1;transform:translate(-50%,0) scale(1);pointer-events:auto}
 .daypill i{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
-.daypill b{font-weight:900}
-.daypill span{color:var(--ink-2);font-weight:700}
+.daypill b{font-weight:900;font-size:17px;color:var(--ink)}
+.daypill span{color:var(--ink-2);font-weight:600;font-size:14px}
 @keyframes slideL{from{opacity:.35;transform:translateX(-28px)}to{opacity:1;transform:none}}
 @keyframes slideR{from{opacity:.35;transform:translateX(28px)}to{opacity:1;transform:none}}
 /* motion: one easing and a few short durations everywhere */
@@ -408,8 +408,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 @keyframes menuIn{from{opacity:0;transform:translate(-50%,-6px) scale(.96)}to{opacity:1;transform:translateX(-50%)}}
 @keyframes menuOut{from{opacity:1;transform:translateX(-50%)}to{opacity:0;transform:translate(-50%,-6px) scale(.97)}}
 .daymenu button{display:flex;align-items:center;gap:8px;min-height:44px;padding:0 14px;border:0;border-radius:12px;background:transparent;font-size:16px;text-align:right}
-.daymenu button b{font-weight:900}
-.daymenu button span{color:var(--ink-2);font-weight:700;font-size:14.5px}
+.daymenu button b{font-weight:900;font-size:17px}
+.daymenu button span{color:var(--ink-2);font-weight:600;font-size:14.5px;min-width:66px}
 .daymenu button.on{background:var(--accent-soft)}
 .daymenu button.on b{color:var(--accent)}
 .daymenu button.top{justify-content:center;color:var(--ink-2);font-size:14px;font-weight:700;border-top:1px solid var(--line);border-radius:0 0 12px 12px;margin-top:2px}
@@ -515,7 +515,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v46</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v47</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -593,7 +593,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
   </div>
 </section>
 
-<button class="daypill" id="daypill" type="button" aria-label="رفتن به روز دیگر" aria-haspopup="true" aria-expanded="false" hidden><i></i><b></b><span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
+<button class="daypill" id="daypill" type="button" aria-label="رفتن به روز دیگر" aria-haspopup="true" aria-expanded="false" hidden><i></i><span></span><b></b><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></button>
 <div class="dayshade" id="dayshade" hidden></div>
 <div class="daymenu" id="daymenu" role="menu" hidden></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
@@ -672,7 +672,7 @@ const P = {
     { id: 'mon6', pl: 1, pz: '۱&lrm;–&lrm;۲ ثانیه در پایین', name: 'Seated Calf Raise', s: 2, r: [12, 20], rir: [0, 1], rest: [60, 60], note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.'] },
     { cardio: 'treadint', id: 'mon7' }
   ] },
-  wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
+  wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پـــــا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
     { id: 'wed1', pz: '۱ ثانیه روی زمین', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift', note: ['<b>آماده:</b> وسط میله، دستهٔ بلند؛ باسن عقب، کمر صاف، بازوها صاف.', '<b>اجرا:</b> زمین را هل بده، باسن و شانه با هم بالا؛ بالا بایست، لگن را جلو نده.', '<b>هر تکرار:</b> صفحه‌ها آرام روی زمین، ۱ ثانیه مکث، دوباره نفس و سفت کردن شکم.', '<b>کمر:</b> اگر گرد شد، ست تمام است؛ RIR هیچ‌وقت زیر ۲.'] },
     { id: 'wed2', name: 'Split Squat', tag: 'هر پا', s: 2, r: [8, 12], rir: [2, 2], rest: [120, 120], comp: 1, db: 1, note: ['<b>اجرا:</b> اول پای راست جلو، تکیه با دست چپ، زانو به داخل نرود؛ بعد پای چپ. فقط تا عمق راحت.', '<b>استراحت:</b> بین دو پا تا ۴۵ ثانیه (اختیاری)؛ تیک را بعد از پای دوم بزن.', '<b>وزنه:</b> بدون دمبل، خانه را خالی بگذار.', '<b>پیشرفت:</b> تکرار بیشتر، کمک کمتر از دست، بعد دمبل سبک.'], alt: 'Single-Leg Leg Press' },
     { id: 'wed3', name: 'Leg Press', pl: 1, s: 3, r: [8, 12], rir: [2, 2], rest: [120, 180], comp: 1, alt: 'Hack Squat', note: ['<b>پا:</b> عرض لگن، وسط صفحه؛ زانو در راستای پنجه.', '<b>عمق:</b> لگن و کمر به پشتی چسبیده بمانند؛ تکراری که لگن بلند شود حساب نیست.'] },
@@ -1238,8 +1238,8 @@ function updatePill() {
   const show = h1.getBoundingClientRect().bottom < bar;
   if (show) {
     const d = P[view.day];
-    pill.querySelector('b').textContent = d.name + ':';
-    pill.querySelector('span').textContent = d.short + (view.editing ? ' · ' + fmtD(view.date) : '');
+    pill.querySelector('span').textContent = d.name + (view.editing ? ' ' + fmtD(view.date) : '') + ':';
+    pill.querySelector('b').textContent = d.short;
     pill.style.top = (bar + 8) + 'px';
   }
   pill.hidden = false;
@@ -1258,7 +1258,7 @@ function closeDayMenu() {
 pill.addEventListener('click', ev => {
   ev.stopPropagation();
   if (!dmenu.hidden) { closeDayMenu(); return; }
-  dmenu.innerHTML = DAYS.map(d => `<button type="button" role="menuitem" data-go="${d}"${d === view.day ? ' class="on" aria-current="true"' : ''}><b>${P[d].name}</b><span>${P[d].short}</span></button>`).join('')
+  dmenu.innerHTML = DAYS.map(d => `<button type="button" role="menuitem" data-go="${d}"${d === view.day ? ' class="on" aria-current="true"' : ''}><span>${P[d].name}</span><b>${P[d].short}</b></button>`).join('')
     + `<button type="button" role="menuitem" data-go="top" class="top">بالای همین جلسه</button>`;
   dmenu.style.top = (pill.getBoundingClientRect().bottom + 8) + 'px';
   dmenu._y = window.scrollY; cancelOut(dmenu); dmenu.hidden = false; clearTimeout($('#dayshade')._t); $('#dayshade').hidden = false; pill.setAttribute('aria-expanded', 'true');
