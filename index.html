@@ -866,7 +866,7 @@ function cardioCard(day, ctx, rec, b) {
   const alt = tread ? 'Stationary Bike' : 'Elliptical';
   return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
     <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span></div>
-    <p class="c-tgt">${target}</p><p class="c-desc">${desc} بعد از وزنه.</p>
+    <p class="c-tgt">${target}</p><p class="c-desc">${desc} بعد از وزنه.</p><p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
     <div class="crow" style="grid-template-columns:repeat(${fields.length},minmax(0,1fr)) 48px">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button></div>
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">${alt}</span></button>
   </article>`;
