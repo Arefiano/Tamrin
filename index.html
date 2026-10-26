@@ -396,6 +396,14 @@ details.warm summary::after,details.cues summary::after{transition:transform .25
 #main.slide-l{animation:slideL .3s var(--ease)}
 #main.slide-r{animation:slideR .3s var(--ease)}
 .t-bar i{transition:width .25s linear}
+#main.soft{animation:fadeIn .26s var(--ease)}
+details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s var(--ease-out) forwards}
+@keyframes fadeDown{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px)}}
+.set.rowin{animation:fadeUp .28s var(--ease)}
+.h-item{transition:height .28s var(--ease),opacity .2s var(--ease),transform .28s var(--ease),margin .28s var(--ease),padding .28s var(--ease)}
+.h-item.h-out{height:0!important;opacity:0;transform:translateX(-24px);margin-top:0;padding-top:0;padding-bottom:0;overflow:hidden;border-width:0}
+.t-time{transition:color .35s var(--ease)}
+.t-bar i{transition:width .25s linear,background-color .35s var(--ease)}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -998,7 +1006,7 @@ main.addEventListener('click', ev => {
     while (e.sets.length < n) e.sets.push({ w: '', r: '', d: 0 });
     e.sets.splice(n, e.sets.length - n, { w: '', r: '', d: 0, x: 1 });
     touch(rec); render();
-    const inp = document.getElementById('w-' + ex.id + '-' + n); if (inp) inp.focus({ preventScroll: false });
+    const inp = document.getElementById('w-' + ex.id + '-' + n); if (inp) { inp.closest('.set').classList.add('rowin'); inp.focus({ preventScroll: false }); }
     return;
   }
   const altB = ev.target.closest('[data-alt]');
@@ -1017,11 +1025,11 @@ main.addEventListener('click', ev => {
     return;
   }
   const ca = ev.target.closest('[data-calt]');
-  if (ca) { const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.alt = !rec.cardio.alt; touch(rec); return render(); }
+  if (ca) { const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.alt = !rec.cardio.alt; touch(rec); return softRender(); }
   if (ev.target.closest('#finish')) {
     const rec = getRec(true);
     if (!rec.done) { openFinish(false); return; }
-    rec.done = false; touch(rec); save(true); render();
+    rec.done = false; touch(rec); save(true); softRender();
     return;
   }
   const act = ev.target.closest('[data-act]');
@@ -1067,19 +1075,32 @@ function handleAct(a) {
   else if (a === 'edit-meta') { openFinish(true); }
 }
 
+function softRender() {
+  render();
+  main.classList.remove('soft'); void main.offsetWidth; main.classList.add('soft');
+}
 function goDay(d, from) {
   if (!d || d === view.day) return;
   if (view.editing) view = { day: d, date: todayIso(), editing: false };
   else view.day = d;
-  render(); window.scrollTo(0, 0);
+  const far = window.scrollY > 0;
+  render(); if (far) window.scrollTo({ top: 0, behavior: RM ? 'auto' : 'smooth' });
   if (from) { main.classList.remove('slide-l', 'slide-r'); void main.offsetWidth; main.classList.add(from === 'l' ? 'slide-l' : 'slide-r'); }
   updatePill();
 }
 $('#tabs').addEventListener('click', ev => {
   const t = ev.target.closest('[data-day]'); if (!t) return;
-  goDay(t.dataset.day);
+  const a = DAYS.indexOf(view.day), b2 = DAYS.indexOf(t.dataset.day);
+  goDay(t.dataset.day, b2 > a ? 'l' : 'r');
 });
-main.addEventListener('animationend', () => main.classList.remove('slide-l', 'slide-r'));
+main.addEventListener('click', ev => {
+  const sm = ev.target.closest('details.warm > summary, details.cues > summary'); if (!sm) return;
+  const d = sm.parentElement; if (!d.open || RM) return;
+  ev.preventDefault();
+  d.classList.add('closing');
+  setTimeout(() => { d.open = false; d.classList.remove('closing'); }, 170);
+});
+main.addEventListener('animationend', ev => { if (ev.target === main) main.classList.remove('slide-l', 'slide-r', 'soft'); });
 
 /* swipe between days: in RTL the next day sits to the left, so dragging right moves forward */
 let sw = null;
@@ -1255,7 +1276,12 @@ $('#history-list').addEventListener('click', ev => {
   if (o) { const r = S.sessions[o.dataset.open]; if (!r) return; view = { day: r.day, date: r.date, editing: r.date !== todayIso() }; closeSheet(); render(); window.scrollTo(0, 0); return; }
   const d = ev.target.closest('[data-del]');
   if (d) {
-    if (d.dataset.armed) { delete S.sessions[d.dataset.del]; save(true); renderHistory(); render(); toast('جلسه حذف شد'); }
+    if (d.dataset.armed) {
+      delete S.sessions[d.dataset.del]; save(true); render(); toast('جلسه حذف شد');
+      const item = d.closest('.h-item');
+      if (RM || !item) renderHistory();
+      else { item.style.height = item.offsetHeight + 'px'; void item.offsetWidth; item.classList.add('h-out'); setTimeout(renderHistory, 280); }
+    }
     else { d.dataset.armed = '1'; d.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { if (d.isConnected) { delete d.dataset.armed; d.textContent = 'حذف'; } }, 4000); }
   }
 });
@@ -1424,7 +1450,7 @@ mCard.addEventListener('click', ev => {
   if (m.dataset.m === 'save-note') {
     const t = $('#m-note').value.trim(); const id = mState.id;
     if (t) S.exNotes[id] = { t, upd: Date.now() }; else delete S.exNotes[id];
-    save(true); hideModal(); render(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
+    save(true); hideModal(); softRender(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
     return;
   }
   if (m.dataset.m === 'save-finish') {
@@ -1434,7 +1460,7 @@ mCard.addEventListener('click', ev => {
     if (mState.rpe) rec.rpe = mState.rpe; else delete rec.rpe;
     const wasEdit = mState.edit;
     if (!wasEdit) { rec.done = true; stopTimer(); }
-    touch(rec); save(true); hideModal(); render();
+    touch(rec); save(true); hideModal(); softRender();
     if (!wasEdit) { toast('جلسه ثبت شد'); window.scrollTo({ top: 0, behavior: 'smooth' }); } else toast('ذخیره شد');
   }
 });
