@@ -27,7 +27,8 @@
   --font:'Yekan Bakh', -apple-system, 'SF Arabic', 'Geeza Pro', Tahoma, sans-serif;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;background:var(--bg)}
+html{-webkit-text-size-adjust:100%;background:var(--bg);overflow-x:clip}
+body{overflow-x:clip}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-tap-highlight-color:transparent}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
 body.lock{overflow:hidden}
@@ -515,7 +516,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     </div>
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v48</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v49</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
@@ -1156,37 +1157,40 @@ function setDay(d) {
   if (view.editing) view = { day: d, date: todayIso(), editing: false };
   else view.day = d;
 }
-let navOutT = null, navInT = null, navPendingDay = null;
-function slideIn(dir) {
-  // dir = +1: new page enters from the left (moving right); -1: from the right
-  main.style.transition = 'none';
-  main.style.transform = `translateX(${-dir * W() * 0.28}px)`; main.style.opacity = '0';
-  void main.offsetWidth;
-  main.style.transition = 'transform .26s var(--ease), opacity .2s var(--ease)';
-  main.style.transform = ''; main.style.opacity = '';
-  navInT = setTimeout(() => { navInT = null; main.style.transition = ''; navBusy = false; if (navNext) { const n = navNext; navNext = null; goDay(n.d, n.dir); } }, 270);
+/* day change = two pages moving together: a frozen copy of the current day slides away while the
+   real page, already showing the new day (at its remembered scroll spot), slides in behind it */
+let ghost = null, navT = null;
+function clearNav() {
+  if (navT) { clearTimeout(navT); navT = null; }
+  if (ghost) { ghost.remove(); ghost = null; }
+  main.style.transition = 'none'; main.style.transform = ''; main.style.opacity = ''; main.style.willChange = '';
+  navBusy = false;
 }
-// a new swipe can start at any moment: finish the running transition instantly
-function settleNav() {
-  if (!navBusy) return;
-  if (navOutT) { clearTimeout(navOutT); navOutT = null; setDay(navPendingDay); render(); restorePos(); updatePill(); }
-  if (navInT) { clearTimeout(navInT); navInT = null; }
-  main.style.transition = 'none'; main.style.transform = ''; main.style.opacity = '';
-  navBusy = false; navNext = null;
-}
-function goDay(d, dir, fromX) {
-  if (navBusy) { navNext = { d, dir }; return; }
+function settleNav() { if (navBusy) clearNav(); }
+function goDay(d, dir) {
   if (!d || d === view.day) return;
+  settleNav();
   keepPos();
   if (RM || !dir) { setDay(d); render(); restorePos(); updatePill(); return; }
-  navBusy = true; navPendingDay = d;
-  main.style.transition = 'transform .14s var(--ease-out), opacity .14s var(--ease-out)';
-  main.style.transform = `translateX(${dir * W() * 0.4}px)`; main.style.opacity = '0';
-  navOutT = setTimeout(() => {
-    navOutT = null;
-    setDay(d); render(); restorePos(); updatePill();
-    slideIn(dir);
-  }, 130);
+  navBusy = true;
+  const r = main.getBoundingClientRect();
+  const cur = new DOMMatrixReadOnly(getComputedStyle(main).transform).m41 || 0;   // where the finger left it
+  ghost = main.cloneNode(true);
+  ghost.removeAttribute('id'); ghost.setAttribute('aria-hidden', 'true');
+  ghost.querySelectorAll('[id]').forEach(n => n.removeAttribute('id'));
+  Object.assign(ghost.style, { position: 'fixed', left: (r.left - cur) + 'px', top: r.top + 'px', width: r.width + 'px', margin: '0', pointerEvents: 'none', zIndex: '5', transition: 'none', transform: `translateX(${cur}px)`, opacity: main.style.opacity || '1', willChange: 'transform, opacity' });
+  document.body.appendChild(ghost);
+  setDay(d); render(); restorePos(); updatePill();
+  const w = W();
+  main.style.transition = 'none'; main.style.willChange = 'transform';
+  main.style.transform = `translateX(${-dir * w * 0.9}px)`; main.style.opacity = '1';
+  void main.offsetWidth;
+  const ease = 'cubic-bezier(.22,.75,.25,1)';
+  main.style.transition = `transform .3s ${ease}`;
+  main.style.transform = '';
+  ghost.style.transition = `transform .3s ${ease}, opacity .3s ${ease}`;
+  ghost.style.transform = `translateX(${dir * w * 0.9}px)`; ghost.style.opacity = '0.3';
+  navT = setTimeout(() => { navT = null; clearNav(); main.style.transition = ''; }, 320);
 }
 $('#tabs').addEventListener('click', ev => {
   const t = ev.target.closest('[data-day]'); if (!t) return;
@@ -1215,7 +1219,7 @@ main.addEventListener('touchmove', ev => {
   if (!sw.lock) {
     if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
     sw.lock = Math.abs(dx) > Math.abs(dy) * 1.2 ? 'h' : 'v';
-    if (sw.lock === 'h') main.style.transition = 'none';
+    if (sw.lock === 'h') { main.style.transition = 'none'; main.style.willChange = 'transform, opacity'; }
   }
   if (sw.lock !== 'h') return;
   ev.preventDefault();
@@ -1225,7 +1229,7 @@ main.addEventListener('touchmove', ev => {
   sw.dx = dx;
   if (RM) return;
   main.style.transform = `translateX(${x}px)`;
-  main.style.opacity = String(1 - Math.min(Math.abs(x) / (W() * 1.4), 0.4));
+  main.style.opacity = String(1 - Math.min(Math.abs(x) / (W() * 2.5), 0.15));
 }, { passive: false });
 main.addEventListener('touchend', ev => {
   if (!sw) return;
@@ -1237,7 +1241,7 @@ main.addEventListener('touchend', ev => {
   if (target && (Math.abs(dx) > 80 || (Math.abs(dx) > 30 && v > 0.45))) { goDay(target, dx > 0 ? 1 : -1); return; }
   main.style.transition = 'transform .28s var(--ease), opacity .28s var(--ease)';
   main.style.transform = ''; main.style.opacity = '';
-  setTimeout(() => { main.style.transition = ''; }, 300);
+  setTimeout(() => { main.style.transition = ''; main.style.willChange = ''; }, 300);
 }, { passive: true });
 main.addEventListener('touchcancel', () => { if (sw) { sw = null; main.style.transition = 'transform .28s var(--ease), opacity .28s var(--ease)'; main.style.transform = ''; main.style.opacity = ''; } });
 
