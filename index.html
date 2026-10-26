@@ -427,7 +427,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 @keyframes rowOut{to{opacity:0;transform:translateX(-20px)}}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 /* ---------- ui2: experimental redesign (switch in settings; off = previous look) ---------- */
-:root{--edge:#5C6672;--gold:#2ED8C3}
+:root{--edge:#5C6672;--gold:#FFD66B;--gold-grad:linear-gradient(110deg,#A8781F 0%,#E9B949 22%,#FFF1BF 38%,#E9B949 52%,#B8862A 70%,#FFE08A 86%,#A8781F 100%)}
 .ui2 .tab[aria-selected=true]{background:#262E37;border-color:var(--edge);color:var(--ink)}
 .ui2 .tab[aria-selected=true] small{color:var(--ink-2)}
 .ui2 .tab .today,.ui2 .tab[aria-selected=true] .today{background:var(--ink-2)}
@@ -458,7 +458,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .ui2 .ex.complete .ex-head,.ui2 .ex.complete .ex-sum{cursor:pointer}
 .ui2 .ex.complete:not(.open) .ex-sum{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin-top:6px;padding-left:34px;direction:ltr}
 .ex-sum .v{background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:7px;padding:0 7px;font-weight:800;font-size:14px;color:var(--ink)}
-.ex-sum .v.pr{border-color:var(--gold);color:var(--gold)}
+.ex-sum .v.pr{border-color:#8F6B22}
 .ex-sum .rir{font-size:13px;font-weight:700;color:var(--ink-2)}
 .ex-sum .alt-note{font-size:13px;color:var(--warn);direction:rtl;unicode-bidi:isolate}
 .ex-sum .open-h{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--ink-3);direction:rtl;unicode-bidi:isolate}
@@ -470,9 +470,13 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .ui2 .pair input{border-color:var(--edge)}
 .ui2 .set.done .pair input{border-color:var(--accent-line)}
 .ui2 .crow input{border-color:#3D7088}
-.ui2 .set.pr .set-n{color:var(--gold);line-height:1.15}
+.ui2 .set.pr .set-n{line-height:1.15}
 .ui2 .set.pr .set-n::after{content:"رکورد";display:block;font-size:10.5px;font-weight:900}
-.ui2 .set.pr .pair input{border-color:#1E8F82;color:var(--gold)}
+.ui2 .set.pr .pair input{border-color:transparent;color:var(--gold);text-shadow:0 0 10px rgba(255,200,90,.35);background:linear-gradient(#262010,#262010) padding-box,var(--gold-grad) border-box;background-size:100% 100%,300% 100%;animation:goldBorder 3.2s linear infinite}
+@keyframes goldBorder{from{background-position:0 0,0% 0}to{background-position:0 0,300% 0}}
+@keyframes goldText{from{background-position:0% 0}to{background-position:300% 0}}
+.ui2 .set.pr .set-n::after,.ex-sum .v.pr{background:var(--gold-grad);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:goldText 3.2s linear infinite}
+.ui2 .set.pr .set-n{color:var(--gold)}
 .ui2 .ss{border-color:var(--line-2);background:rgba(255,255,255,.02)}
 .ui2 .ss-head .pill.acc{background:transparent;color:var(--ink);border-color:var(--edge)}
 .ui2 .guide h3{color:var(--ink)}
@@ -617,7 +621,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">v57</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">v58</b>. اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
   </div>
