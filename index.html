@@ -500,9 +500,9 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
       <h3>هوازی</h3>
       <ul>
         <li><b>منطقهٔ ۲:</b> فقط جملهٔ کوتاه می‌توانی بگویی؛ سختی حدود ۵ تا ۶ از ۱۰.</li>
-        <li><b>دوشنبه:</b> Stationary Bike؛ ۳ دقیقه آرام، بعد ۳ بار ۳ دقیقه منطقهٔ ۲ با ۱ دقیقه آرام بین‌شان.</li>
+        <li><b>دوشنبه:</b> Treadmill اینتروال؛ ۳ دقیقه آرام، بعد ۳ بار ۳ دقیقه منطقهٔ ۲ با ۱ دقیقه آرام بین‌شان (۱۴ دقیقه).</li>
         <li><b>جمعه:</b> Treadmill روی شیب؛ ۳ دقیقه آرام، بعد ۱۵ دقیقه پیوسته منطقهٔ ۲، کم‌کم تا ۲۰ دقیقه. دستگیره را نگیر.</li>
-        <li>ضربان را معیار نگیر؛ داروها ضربان را بالا می‌برند. معیار شدت تست صحبت است.</li>
+        <li>معیار اصلی شدت تست صحبت است؛ داروها ضربان را بالا می‌برند. ضربان شخصی منطقهٔ ۲ تو حدود ۱۵۰&lrm;–&lrm;۱۶۵ است.</li>
         <li>اینتروال منطقهٔ ۳ بعد از چند هفته منطقهٔ ۲. دویدن فعلاً نه.</li>
         <li>بعد از ناهار و شام ۵ تا ۱۰ دقیقه پیاده‌روی؛ قدم روزانه هر هفته حدود ۱۰۰۰ تا بیشتر، تا ۷۰۰۰.</li>
       </ul>
@@ -618,7 +618,7 @@ for (const d of DAYS) {
   }
 }
 const WARM = [
-  ['Stationary Bike / Treadmill', '۳ دقیقه سبک'],
+  ['Treadmill', '۳ دقیقه سبک'],
   ['Band External Rotation', '۱۵ تکرار هر دست'],
   ['Band Face Pull', '۱۵ تکرار'],
   ['Standing Wall Calf Stretch', '۳۰ ثانیه هر پا'],
@@ -866,7 +866,6 @@ function cardioCard(day, ctx, rec, b) {
     <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span></div>
     <p class="c-tgt">۱۴ دقیقه، اینتروال</p>
     <p class="c-desc">۳ دقیقه آرام، بعد ۳ بار: ۳ دقیقه منطقهٔ ۲ و ۱ دقیقه آرام (دور آخر بدون آرام). بعد از وزنه؛ دستگیره را نگیر.</p>
-    <div class="c-plan"><span><b>منطقهٔ ۲</b> شیب <span dir="ltr">${R2(6, 10)}</span> · سرعت <span dir="ltr">${R2(4.5, 5.5)}</span></span><span><b>آرام</b> شیب <span dir="ltr">${R2(0, 2)}</span> · سرعت حدود ${fa(4)}</span></div>
     <p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
     <div class="crow" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px">${inp('min', 'دقیقهٔ کل', 1)}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button>${inp('inc2', 'شیب منطقهٔ ۲')}${inp('spd2', 'سرعت منطقهٔ ۲')}<span></span>${inp('inc1', 'شیب آرام')}${inp('spd1', 'سرعت آرام')}<span></span></div>
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">Stationary Bike</span></button>
