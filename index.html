@@ -345,6 +345,8 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .t-pause svg{width:16px;height:16px;flex:none}
 .pair input.r.low,.set.done .pair input.r.low{border-color:var(--warn);background:var(--warn-soft);color:var(--warn)}
 .addset{align-self:flex-start;margin-inline-start:44px;min-height:30px;padding:0 10px;border-radius:9px;border:1px dashed var(--line-2);background:transparent;color:var(--ink-2);font-size:13px;font-weight:700}
+.c-plan{display:flex;flex-direction:column;gap:2px;margin-top:6px;padding:6px 10px;border-radius:10px;background:#0B161C;border:1px solid var(--cardio-line);font-size:13.5px;color:var(--cardio-ink)}
+.c-plan b{color:var(--cardio);font-weight:900;margin-inline-end:4px}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
 </style>
@@ -574,7 +576,7 @@ const P = {
       { id: 'sat7', name: 'Seated Leg Curl', s: 3, r: [10, 15], rir: [0, 1], alt: 'Lying Leg Curl', note: ['<b>تنظیم:</b> زانو هم‌راستای محور دستگاه؛ پد بالای مچ.', '<b>اجرا:</b> کمی به جلو خم بنشین تا پشت ران بیشتر کشیده شود؛ بالا کامل صاف.'] },
       { id: 'sat8', pz: '۲ ثانیه دست‌ها صاف', name: 'Pallof Press', tag: 'هر سمت', s: 2, r: [10, 15], rir: null, ctl: 'کنترل‌شده', note: ['<b>اجرا:</b> پهلو به دستگاه، دسته جلوی سینه؛ دست‌ها را صاف کن، ۲ ثانیه نگه دار، برگرد.', '<b>هدف:</b> تنه نچرخد؛ اول یک سمت کامل، بعد سمت دیگر.'] } ] }
   ] },
-  mon: { key: 'mon', name: 'دوشنبه', n: 2, short: 'سینه', focus: 'اولویت سینه', sub: 'فشاری · ۵۷ دقیقه + هوازی', items: [
+  mon: { key: 'mon', name: 'دوشنبه', n: 2, short: 'سینه', focus: 'اولویت سینه', sub: 'فشاری · ۵۷ دقیقه + ۱۴ دقیقه تردمیل', items: [
     { id: 'mon1', name: 'Neutral-Grip Dumbbell Bench Press', s: 4, r: [6, 10], rir: [2, 3], rest: [120, 180], pri: 1, comp: 1, db: 1, alt: 'Machine Chest Press', note: ['<b>آماده‌سازی:</b> دمبل‌ها را با زانو بالا بیاور و آخر ست روی ران‌ها برگردان؛ نینداز.', '<b>اجرا:</b> کف دست‌ها رو به هم، آرنج ۳۰ تا ۴۵ درجه از بدن، دمبل تا کنار سینه.', '<b>شانه:</b> اگر رساندن دمبل اذیت کرد، بازه را ۸ تا ۱۲ کن.'] },
     { id: 'mon2', name: 'Incline Dumbbell Press', s: 3, r: [8, 12], rir: [2, 3], rest: [120, 120], pri: 1, comp: 1, db: 1, alt: 'Incline Machine Press', note: ['<b>نیمکت:</b> ۱۵ تا ۳۰ درجه؛ شیب کمتر به شانه راحت‌تر است.', '<b>شانه:</b> اگر اذیت شد، کف دست‌ها را کمی رو به هم بچرخان.'] },
     { id: 'mon3', name: 'Machine Lat Pulldown', s: 4, r: [6, 10], rir: [1, 2], rest: [120, 120], comp: 1, alt: 'Neutral-Grip Lat Pulldown', note: ['<b>اجرا:</b> دسته کمی پهن‌تر از شانه؛ بالا کامل کشیده شو، دسته تا بالای سینه، همیشه جلوی سر.', '<b>شانه:</b> اگر شانهٔ راست با مسیر دستگاه راحت نبود، با Lat Pulldown سیم‌کش شنبه جابه‌جا کن.'] },
@@ -582,7 +584,7 @@ const P = {
       { id: 'mon4', name: 'Dumbbell Lateral Raise', s: 3, r: [12, 20], rir: [0, 1], db: 1, alt: 'Cable Lateral Raise', note: ['<b>اجرا:</b> کمی به جلو خم، دمبل‌ها کمی جلوتر از بدن؛ تا ارتفاع شانه، بدون تاب.'] },
       { id: 'mon5', name: 'Rope Triceps Pressdown', s: 3, r: [10, 15], rir: [0, 1], note: ['<b>اجرا:</b> آرنج‌ها ثابت کنار بدن؛ پایین طناب را از هم باز کن.'] } ] },
     { id: 'mon6', pl: 1, pz: '۱&lrm;–&lrm;۲ ثانیه در پایین', name: 'Seated Calf Raise', s: 2, r: [12, 20], rir: [0, 1], rest: [60, 60], note: ['<b>پا:</b> فقط سینهٔ پا روی لبهٔ صفحه، پاشنه بیرون.', '<b>اجرا:</b> پایین ۱ تا ۲ ثانیه مکث در کشش کامل؛ بالا تا آخر روی پنجه، بدون فنری.', '<b>ست آخر:</b> بعد از ناتوانی، چند تکرار نیمه در نیمهٔ پایینی.'] },
-    { cardio: 'bike', id: 'mon7' }
+    { cardio: 'treadint', id: 'mon7' }
   ] },
   wed: { key: 'wed', name: 'چهارشنبه', n: 3, short: 'پا', focus: 'پایین‌تنه', sub: 'حدود ۶۰ دقیقه', ohs: 1, items: [
     { id: 'wed1', pz: '۱ ثانیه روی زمین', name: 'Trap Bar Deadlift', tag: 'دستهٔ بلند', s: 3, r: [5, 8], rir: [2, 3], rest: [180, 180], comp: 1, tb: 1, alt: 'Dumbbell Romanian Deadlift', note: ['<b>آماده:</b> وسط میله، دستهٔ بلند؛ باسن عقب، کمر صاف، بازوها صاف.', '<b>اجرا:</b> زمین را هل بده، باسن و شانه با هم بالا؛ بالا بایست، لگن را جلو نده.', '<b>هر تکرار:</b> صفحه‌ها آرام روی زمین، ۱ ثانیه مکث، دوباره نفس و سفت کردن شکم.', '<b>کمر:</b> اگر گرد شد، ست تمام است؛ RIR هیچ‌وقت زیر ۲.'] },
@@ -852,11 +854,24 @@ function placeholders(ex, e, prev, i) {
 
 function cardioName(day, c) {
   const b = P[day].items.find(x => x.cardio);
-  const tread = b && b.cardio === 'tread';
+  const tread = b && (b.cardio === 'tread' || b.cardio === 'treadint');
   return c && c.alt ? (tread ? 'Stationary Bike' : 'Elliptical') : (tread ? 'Treadmill' : 'Stationary Bike');
 }
 function cardioCard(day, ctx, rec, b) {
   const c = (rec && rec.cardio) || {};
+  if (b.cardio === 'treadint') {
+    const inp = (k, l, span) => `<label for="c-${k}"${span ? ' style="grid-column:span 2"' : ''}>${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`;
+    const R2 = (a, b2) => `${fa(a)}${LRM}–${LRM}${fa(b2)}`;
+    return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
+    <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span></div>
+    <p class="c-tgt">۱۴ دقیقه، اینتروال</p>
+    <p class="c-desc">۳ دقیقه آرام، بعد ۳ بار: ۳ دقیقه منطقهٔ ۲ و ۱ دقیقه آرام (دور آخر بدون آرام). بعد از وزنه؛ دستگیره را نگیر.</p>
+    <div class="c-plan"><span><b>منطقهٔ ۲</b> شیب <span dir="ltr">${R2(6, 10)}</span> · سرعت <span dir="ltr">${R2(4.5, 5.5)}</span></span><span><b>آرام</b> شیب <span dir="ltr">${R2(0, 2)}</span> · سرعت حدود ${fa(4)}</span></div>
+    <p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
+    <div class="crow" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr) 48px">${inp('min', 'دقیقهٔ کل', 1)}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button>${inp('inc2', 'شیب منطقهٔ ۲')}${inp('spd2', 'سرعت منطقهٔ ۲')}<span></span>${inp('inc1', 'شیب آرام')}${inp('spd1', 'سرعت آرام')}<span></span></div>
+    <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">Stationary Bike</span></button>
+  </article>`;
+  }
   const tread = b.cardio === 'tread';
   const target = tread ? '۳ دقیقه آرام، بعد ۱۵ دقیقه پیوسته' : '۳ دقیقه آرام، بعد ۳ بار ۳ دقیقه';
   const desc = tread
@@ -878,6 +893,8 @@ function cardioText(c, latin) {
   if (c.lvl) parts.push('سطح ' + n(c.lvl));
   if (c.inc) parts.push('شیب ' + n(c.inc));
   if (c.spd) parts.push('سرعت ' + n(c.spd));
+  if (c.inc2 || c.spd2) parts.push('منطقهٔ ۲: ' + [c.inc2 ? 'شیب ' + n(c.inc2) : '', c.spd2 ? 'سرعت ' + n(c.spd2) : ''].filter(Boolean).join(' '));
+  if (c.inc1 || c.spd1) parts.push('آرام: ' + [c.inc1 ? 'شیب ' + n(c.inc1) : '', c.spd1 ? 'سرعت ' + n(c.spd1) : ''].filter(Boolean).join(' '));
   return parts.join(latin ? '، ' : ' · ');
 }
 
@@ -906,7 +923,7 @@ main.addEventListener('input', ev => {
     touch(rec);
   } else if (el.id === 'note') {
     const rec = getRec(true); rec.note = el.value; touch(rec);
-  } else if (/^c-(min|lvl|inc|spd)$/.test(el.id)) {
+  } else if (/^c-(min|lvl|inc|spd|inc1|spd1|inc2|spd2)$/.test(el.id)) {
     faInput(el);
     const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio[el.id.slice(2)] = toLat(el.value); touch(rec);
   }
