@@ -314,6 +314,15 @@ textarea{min-height:64px;border-radius:12px;font-size:17px}
 .eff-bar button.on{opacity:1}
 .eff-bands{display:grid;grid-template-columns:3fr 3fr 2fr 2fr;gap:4px;font-size:12px;font-weight:800;text-align:center;color:var(--ink-2)}
 .eff-bands span{border-top:2px solid var(--c);padding-top:3px;white-space:nowrap}
+.eff2{gap:8px;padding:10px 12px}
+.eff-h{display:flex;align-items:baseline;gap:8px}
+.eff-h b{font-size:16px;font-weight:900;color:var(--ink)}
+.eff-h span{font-size:13px;color:var(--ink-2);font-weight:600}
+.eff2 .eff-val b{font-size:34px}
+.eff2 .eff-bar{height:38px}
+.eff2 .eff-top{grid-template-columns:40px 1fr 40px}
+.eff2 .eff-step{width:40px;height:40px;font-size:22px}
+.eff2 .eff-desc{min-height:0}
 .eff-desc{margin:0;min-height:42px;font-size:14px;color:var(--ink-2);line-height:1.6;text-align:center}
 /* exercise cards read left to right: number, English name, info at the right edge; targets under the name */
 .ex-head{direction:ltr;align-items:center}
@@ -622,8 +631,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.0.1</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.1</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -643,7 +652,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
         <li><b>نشانه‌ها:</b> حاشیهٔ سبز سمت راست = حرکت اولویت‌دار · قاب روشن‌تر = حرکت فعلی · طلایی = رکورد جدید (بهتر از همهٔ جلسه‌های قبلی همان حرکت) · علامت تعجب در کادر تکرار = کمتر از بازهٔ هدف.</li>
         <li><b>ست اضافه:</b> با «+ ست اضافه» ست بیشتری بزن. برای حذفش، انگشتت را روی تیک همان ست نگه دار تا ضربدر شود و ضربدر را بزن؛ نگه داشتن دوباره، آن را به تیک برمی‌گرداند.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
-        <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی کل جلسه از ۱ تا ۱۰ را ثبت کن.</li>
+        <li>با <b>پایان جلسه</b>، مدت تمرین اصلی به دقیقه و سختی جلسه را در دو شاخص بدنی و روانی، هرکدام از ۱ تا ۱۰، ثبت کن.</li>
       </ul>
     </div>
     <div class="sec">
@@ -740,8 +749,14 @@ const EFF = [
   { max: 8, name: 'سخت', c: '#FF9A3D', d: 'به خودت فشار آوردی؛ ست‌های آخر سنگین بودند و فقط چند کلمه می‌شد حرف زد.' },
   { max: 10, name: 'حداکثر توان', short: 'حداکثر', c: '#FF5B5B', d: 'تا آخرین توان؛ دیگر چیزی در باک نماند.' }
 ];
+const EFFM = [
+  'ذهنت آزاد بود؛ شروع و ادامه دادن بی‌زحمت بود.',
+  'کمی تمرکز و اراده لازم داشت، ولی ذهنت همراه بود.',
+  'برای ادامه دادن با خودت کلنجار رفتی؛ نگه داشتن تمرکز سخت بود.',
+  'ذهنی کاملاً خالی شدی؛ فقط با اراده تمامش کردی.'
+];
 const effOf = v => EFF.find(e => v <= e.max);
-const metaText = r => [r.min ? fa(r.min) + ' دقیقه' : '', r.rpe ? 'سختی ' + fa(r.rpe) + ' از ۱۰ · ' + effOf(r.rpe).name : ''].filter(Boolean).join(' · ');
+const metaText = r => [r.min ? fa(r.min) + ' دقیقه' : '', r.rpe ? 'بدنی ' + fa(r.rpe) + ' از ۱۰' + (r.rpm ? '' : ' · ' + effOf(r.rpe).name) : '', r.rpm ? 'روانی ' + fa(r.rpm) + ' از ۱۰' : ''].filter(Boolean).join(' · ');
 function restText(r) {
   const [a, b] = r;
   if (a % 60 === 0 && b % 60 === 0 && a >= 120) return (a === b ? fa(a / 60) : rng(a / 60, b / 60)) + ' دقیقه';
@@ -1746,7 +1761,7 @@ function reportText() {
   const L = ['دفتر تمرین — گزارش برای مربی', 'برنامه: نسخهٔ ۲٫۵ · شروع: ' + S.start + ' (' + fmtD(S.start, true) + ')', 'بازه: ' + (reportRange ? reportRange / 7 + ' هفتهٔ اخیر' : 'همه') + ' · ' + recs.length + ' جلسه', ''];
   for (const r of recs) {
     L.push('■ ' + P[r.day].name + ' ' + r.date + ' (' + fmtD(r.date) + ') · هفتهٔ ' + weekOf(r.date) + (isDeload(r.date) ? ' · دی‌لود' : '') + (r.done ? '' : ' · ناتمام'));
-    if (r.min || r.rpe) L.push('مدت تمرین اصلی: ' + (r.min ? r.min + ' دقیقه' : '-') + ' · سختی جلسه: ' + (r.rpe ? r.rpe + '/10 (' + effOf(r.rpe).name + ')' : '-'));
+    if (r.min || r.rpe || r.rpm) L.push('مدت تمرین اصلی: ' + (r.min ? r.min + ' دقیقه' : '-') + ' · سختی بدنی: ' + (r.rpe ? r.rpe + '/10 (' + effOf(r.rpe).name + ')' : '-') + ' · سختی روانی: ' + (r.rpm ? r.rpm + '/10 (' + effOf(r.rpm).name + ')' : '-'));
     for (const { ex, e } of recLines(r)) {
       const t = e.t || tgt(ex, ctxOf(r.date));
       const sets = e.sets.filter(setHas).map(s => (s.w !== '' ? s.w : '-') + '×' + (s.r !== '' ? s.r : '-') + (s.d ? '' : '?')).join(', ');
@@ -1841,35 +1856,39 @@ function openNote(id) {
 function openFinish(edit) {
   const rec = getRec(true);
   const est = rec.t0 && rec.t1 && rec.t1 > rec.t0 ? Math.max(1, Math.round((rec.t1 - rec.t0) / 60000)) : null;
-  mState = { kind: 'finish', edit, rpe: rec.rpe || null, est };
+  mState = { kind: 'finish', edit, rpe: rec.rpe || null, rpm: rec.rpm || null, est };
+  const box = (k, title, hint) => `<div class="eff eff2" data-k="${k}">
+      <div class="eff-h"><b>${title}</b><span>${hint}</span></div>
+      <div class="eff-top" dir="ltr"><button class="eff-step" type="button" data-step="-1" aria-label="کمتر">−</button><div class="eff-val" aria-live="polite"><b class="eff-n"></b><span class="eff-c"></span></div><button class="eff-step" type="button" data-step="1" aria-label="بیشتر">+</button></div>
+      <div class="eff-bar" dir="ltr" role="group" aria-label="${title} از ۱ تا ۱۰">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => `<button type="button" data-rpe="${v}" aria-label="${fa(v)}" style="--c:${effOf(v).c};--h:${32 + v * 7}%"></button>`).join('')}</div>
+      <div class="eff-bands" dir="ltr">${EFF.map(e => `<span style="--c:${e.c}">${e.short || e.name}</span>`).join('')}</div>
+      <p class="eff-desc"></p>
+    </div>`;
   showModal(`<h2 id="m-title">${edit ? 'مدت و سختی جلسه' : 'پایان جلسه'}</h2>
     <label class="m-lbl" for="m-min">مدت تمرین اصلی (دقیقه)</label>
     <div class="m-num"><input id="m-min" inputmode="numeric" autocomplete="off" value="${rec.min ? fa(rec.min) : ''}" placeholder="${est ? fa(est) : ''}"><span class="m-sub">${est ? 'از اولین تا آخرین ست حدود ' + fa(est) + ' دقیقه شد؛ اگر خالی بگذاری، همین ثبت می‌شود.' : 'بدون گرم‌کردن و هوازی'}</span></div>
-    <span class="m-lbl">سختی کل جلسه</span>
-    <div class="eff" id="eff">
-      <div class="eff-top" dir="ltr"><button class="eff-step" type="button" data-step="-1" aria-label="کمتر">−</button><div class="eff-val" aria-live="polite"><b id="eff-n"></b><span id="eff-c"></span></div><button class="eff-step" type="button" data-step="1" aria-label="بیشتر">+</button></div>
-      <div class="eff-bar" dir="ltr" role="group" aria-label="سختی از ۱ تا ۱۰">${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => `<button type="button" data-rpe="${v}" aria-label="${fa(v)}" style="--c:${effOf(v).c};--h:${32 + v * 7}%"></button>`).join('')}</div>
-      <div class="eff-bands" dir="ltr">${EFF.map(e => `<span style="--c:${e.c}">${e.short || e.name}</span>`).join('')}</div>
-      <p class="eff-desc" id="eff-d"></p>
-    </div>
+    ${box('rpe', 'سختی بدنی', 'عضله‌ها، نفس، خستگی بدن')}
+    ${box('rpm', 'سختی روانی', 'تمرکز، انگیزه، اراده')}
     <div class="m-act"><button class="btn acc" type="button" data-m="save-finish">${edit ? 'ذخیره' : 'ثبت و پایان'}</button><button class="btn" type="button" data-m="close">انصراف</button></div>`);
   paintEff();
 }
 function paintEff() {
-  const v = mState && mState.rpe; const e = v ? effOf(v) : null;
-  const box = $('#eff'); if (!box) return;
-  box.style.setProperty('--eff', e ? e.c : '');
-  $('#eff-n').textContent = v ? fa(v) : '–';
-  $('#eff-c').textContent = e ? e.name : 'از ۱ تا ۱۰ انتخاب کن';
-  $('#eff-d').textContent = e ? e.d : 'روی ستون‌ها بزن یا با − و + تنظیم کن.';
-  box.querySelectorAll('[data-rpe]').forEach(b => { const on = v && +b.dataset.rpe <= v; b.classList.toggle('on', !!on); b.setAttribute('aria-pressed', +b.dataset.rpe === v); });
+  if (!mState) return;
+  mCard.querySelectorAll('.eff[data-k]').forEach(box => {
+    const k = box.dataset.k; const v = mState[k]; const e = v ? effOf(v) : null;
+    box.style.setProperty('--eff', e ? e.c : '');
+    box.querySelector('.eff-n').textContent = v ? fa(v) : '–';
+    box.querySelector('.eff-c').textContent = e ? e.name : 'از ۱ تا ۱۰ انتخاب کن';
+    box.querySelector('.eff-desc').textContent = e ? (k === 'rpm' ? EFFM[EFF.indexOf(e)] : e.d) : 'روی ستون‌ها بزن یا با − و + تنظیم کن.';
+    box.querySelectorAll('[data-rpe]').forEach(b => { const on = v && +b.dataset.rpe <= v; b.classList.toggle('on', !!on); b.setAttribute('aria-pressed', +b.dataset.rpe === v); });
+  });
 }
 mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min') faInput(ev.target); });
 mCard.addEventListener('click', ev => {
   const rb = ev.target.closest('[data-rpe]');
-  if (rb && mState) { mState.rpe = +rb.dataset.rpe; paintEff(); return; }
+  if (rb && mState) { mState[rb.closest('.eff').dataset.k] = +rb.dataset.rpe; paintEff(); return; }
   const st = ev.target.closest('[data-step]');
-  if (st && mState) { mState.rpe = Math.min(10, Math.max(1, (mState.rpe || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
+  if (st && mState) { const k = st.closest('.eff').dataset.k; mState[k] = Math.min(10, Math.max(1, (mState[k] || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
   if (m.dataset.m === 'save-note') {
@@ -1883,6 +1902,7 @@ mCard.addEventListener('click', ev => {
     let v = num(inp.value); if (v == null && mState.est) v = mState.est;
     if (v != null) rec.min = Math.round(v); else delete rec.min;
     if (mState.rpe) rec.rpe = mState.rpe; else delete rec.rpe;
+    if (mState.rpm) rec.rpm = mState.rpm; else delete rec.rpm;
     const wasEdit = mState.edit;
     if (!wasEdit) { rec.done = true; stopTimer(); }
     touch(rec); save(true); hideModal(); softRender();
