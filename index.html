@@ -427,6 +427,9 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .daypill.on:active{transform:translate(-50%,0) scale(.96)}
 .daymenu[hidden],.daypill[hidden]{display:none}
 .dayshade{position:fixed;inset:0;z-index:21;background:transparent;touch-action:none}
+[data-ss]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;cursor:pointer}
+.ss.off{border-style:dashed!important;background:transparent!important}
+.ss.off .ss-head .pill.acc{border-style:dashed}
 [data-chk]{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .chk .xic{display:none;width:20px;height:20px}
 .set.rm .chk{background:rgba(255,138,122,.14);border-color:var(--danger);color:var(--danger)}
@@ -632,8 +635,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.1.2</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.2</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -650,6 +653,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
         <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن. وقتی همهٔ ست‌ها و RIR ثبت شد، کارت حرکت جمع می‌شود؛ با زدن روی اسمش دوباره باز می‌شود.</li>
+        <li><b>جدا کردن سوپرست:</b> اگر یکی از دستگاه‌ها اشغال بود، انگشتت را روی برچسب «سوپرست» نگه دار تا حرکت‌ها فقط برای همان جلسه جدا شوند و هرکدام استراحت خودش را بگیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li>
         <li><b>نشانه‌ها:</b> حاشیهٔ سبز سمت راست = حرکت اولویت‌دار · قاب روشن‌تر = حرکت فعلی · طلایی = رکورد جدید (بهتر از همهٔ جلسه‌های قبلی همان حرکت) · علامت تعجب در کادر تکرار = کمتر از بازهٔ هدف.</li>
         <li><b>ست اضافه:</b> با «+ ست اضافه» ست بیشتری بزن. برای حذفش، انگشتت را روی تیک همان ست نگه دار تا ضربدر شود و ضربدر را بزن؛ نگه داشتن دوباره، آن را به تیک برمی‌گرداند.</li>
         <li>دکمهٔ <b>i</b> کنار اسم هر حرکت: نکتهٔ خودت را برای آن حرکت بنویس (مثلاً ارتفاع صندلی). زیر حرکت نمایش داده می‌شود.</li>
@@ -743,6 +747,7 @@ const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const UI2 = () => true;
+const isSplit = ex => { const r = S.sessions[view.date + '|' + view.day]; return !!(ex && ex.ssKey && r && r.ssOff && r.ssOff[ex.ssKey]); };
 const myNote = id => (S.exNotes && S.exNotes[id] && S.exNotes[id].t) ? S.exNotes[id].t : '';
 const EFF = [
   { max: 3, name: 'آسان', c: '#5AD27E', d: 'کم‌زحمت بود؛ راحت می‌شد حرف زد و انرژی زیادی باقی ماند.' },
@@ -826,7 +831,7 @@ const EX = {};
 for (const d of DAYS) {
   let n = 0;
   for (const b of P[d].items) {
-    if (b.ss) { b.items.forEach((it, k) => { it.no = ++n; it.day = d; it.ssRest = b.rest; it.ssLast = k === b.items.length - 1; it.ssNext = b.items[k + 1] || null; EX[it.id] = it; }); }
+    if (b.ss) { b.items.forEach((it, k) => { it.no = ++n; it.day = d; it.ssRest = b.rest; it.ssLast = k === b.items.length - 1; it.ssNext = b.items[k + 1] || null; it.ssKey = b.items[0].id; EX[it.id] = it; }); }
     else if (!b.cardio) { b.no = ++n; b.day = d; EX[b.id] = b; }
   }
 }
@@ -1011,7 +1016,10 @@ function render() {
   h += '<div class="list">';
   for (const b of day.items) {
     if (b.ss) {
-      h += `<section class="ss" aria-label="سوپرست"><div class="ss-head"><span class="pill acc">سوپرست</span><span class="muted" style="font-size:15px">دو حرکت پشت‌سرهم</span><span class="rest">${ICON.clock}${restText(b.rest)}<small>بعد از هر دور</small></span></div>${b.items.map(it => exCard(it, ctx, rec, true)).join('')}</section>`;
+      const off = isSplit(b.items[0]);
+      h += off
+        ? `<section class="ss off" aria-label="سوپرستِ جداشده"><div class="ss-head"><span class="pill acc" data-ss="${b.items[0].id}">جدا · فقط این جلسه</span><span class="muted" style="font-size:14px">برای وصل دوباره، روی برچسب نگه دار</span></div>${b.items.map(it => exCard(it, ctx, rec, false)).join('')}</section>`
+        : `<section class="ss" aria-label="سوپرست"><div class="ss-head"><span class="pill acc" data-ss="${b.items[0].id}">سوپرست</span><span class="muted" style="font-size:15px">دو حرکت پشت‌سرهم</span><span class="rest">${ICON.clock}${restText(b.rest)}<small>بعد از هر دور</small></span></div>${b.items.map(it => exCard(it, ctx, rec, true)).join('')}</section>`;
     } else if (b.cardio) h += cardioCard(day, ctx, rec, b);
     else h += exCard(b, ctx, rec, false);
   }
@@ -1112,7 +1120,7 @@ function exCard(ex, ctx, rec, inSS) {
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex${ex.pri ? ' pri' : ''}" data-ex="${ex.id}">
     <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
-    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
+    <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest || ex.ssRest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
   if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
@@ -1265,6 +1273,23 @@ const lpCancel = ev => { if (lpT && (!ev || ev.type !== 'pointermove' || Math.hy
 main.addEventListener('pointermove', lpCancel);
 main.addEventListener('pointerup', () => { if (lpT) { clearTimeout(lpT); lpT = null; } });
 main.addEventListener('pointercancel', lpCancel);
+let ssT = null, ssPos = null, ssFired = false;
+main.addEventListener('pointerdown', ev => {
+  const pl = ev.target.closest('[data-ss]'); if (!pl) return;
+  ssPos = { x: ev.clientX, y: ev.clientY }; clearTimeout(ssT);
+  ssT = setTimeout(() => {
+    ssT = null; ssFired = true;
+    const key = pl.dataset.ss; const rec = getRec(true); rec.ssOff = rec.ssOff || {};
+    if (rec.ssOff[key]) delete rec.ssOff[key]; else rec.ssOff[key] = 1;
+    touch(rec); keepPos(); softRender(); restorePos();
+    toast(rec.ssOff[key] ? 'برای این جلسه جدا شدند' : 'دوباره سوپرست شدند');
+  }, 550);
+});
+const ssCancel = ev => { if (ssT && (!ev || ev.type !== 'pointermove' || Math.hypot(ev.clientX - ssPos.x, ev.clientY - ssPos.y) > 10)) { clearTimeout(ssT); ssT = null; } };
+main.addEventListener('pointermove', ssCancel);
+main.addEventListener('pointerup', () => { if (ssT) { clearTimeout(ssT); ssT = null; } });
+main.addEventListener('pointercancel', ssCancel);
+main.addEventListener('contextmenu', ev => { if (ev.target.closest('[data-ss]')) ev.preventDefault(); });
 main.addEventListener('contextmenu', ev => { if (ev.target.closest('.set.extra [data-chk]')) ev.preventDefault(); });
 main.addEventListener('click', ev => {
   const chk = ev.target.closest('[data-chk]');
@@ -1282,6 +1307,8 @@ main.addEventListener('click', ev => {
     card.querySelectorAll('[data-rir]').forEach(b => { const on = b.dataset.rir === e.rir; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     touch(rec); refreshCards(ex.id); return;
   }
+  const sp = ev.target.closest('[data-ss]');
+  if (sp) { if (ssFired) { ssFired = false; return; } toast(sp.closest('.ss.off') ? 'برای وصل دوباره، نگه دار' : 'برای جدا کردن در این جلسه، نگه دار'); return; }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
   const ch = UI2() && ev.target.closest('.ex.complete .ex-head, .ex.complete .ex-sum');
@@ -1350,7 +1377,7 @@ function onCheck(row) {
     const card = row.closest('.ex');
     card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(s.w); } });
     const isPR = UI2() && prIndex(ex, e) === i;
-    if (ex.ssRest && !ex.ssLast) toast((isPR ? 'رکورد جدید! · ' : '') + 'حالا: ' + ex.ssNext.name);
+    if (ex.ssRest && !ex.ssLast && !isSplit(ex)) toast((isPR ? 'رکورد جدید! · ' : '') + 'حالا: ' + ex.ssNext.name);
     else { startTimer(ex.restLast && i >= tgt(ex, ctxOf(view.date)).s - 1 ? ex.restLast : (ex.ssRest || ex.rest), ex.name); if (isPR) toast('رکورد جدید در این حرکت!'); }
     if (rec.done) rec.done = false;
   } else {
