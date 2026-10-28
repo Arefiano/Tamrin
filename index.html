@@ -520,6 +520,16 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 @keyframes menuIn2{from{opacity:0;transform:translateY(-6px) scale(.96)}to{opacity:1;transform:none}}
 @keyframes menuOut2{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px) scale(.97)}}
 .sec .row[hidden]{display:none}
+.barrow{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin-top:10px}
+.barchip{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 12px;border-radius:999px;border:1px solid var(--edge);background:var(--surface-2);font-size:14px;font-weight:800;color:var(--ink);-webkit-user-select:none;user-select:none}
+.barchip svg{width:14px;height:14px;color:var(--ink-2);flex:none}
+.barchip.unset{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+.barchip.unset svg{color:var(--warn)}
+.barrow .muted{font-size:12.5px;font-weight:600}
+.wbox.tbx input{padding-right:40px}
+.wbox .unit.tot{font-size:12.5px;letter-spacing:0;font-weight:900;color:var(--ink-2)}
+.wbox .unit.tot.ph{opacity:.5}
+.set.done .wbox .unit.tot{color:var(--accent)}
 .appprog{display:none}
 .ui2 .appprog{display:block;position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--line);opacity:0;transition:opacity .25s var(--ease);pointer-events:none}
 .ui2 .appprog i{display:block;height:100%;width:0;background:var(--accent);border-radius:0 999px 999px 0;transition:width .45s var(--ease)}
@@ -635,8 +645,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.3</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.4</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -651,7 +661,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
       <ul>
         <li>وزنه را در خانهٔ چپ و تکرار را در خانهٔ راست بنویس و تیک بزن. تایمر استراحت خودش شروع می‌شود.</li>
         <li>عدد کم‌رنگ داخل خانه‌ها مقدار دفعهٔ قبل است. اگر همان را زدی، خانه را خالی بگذار و فقط تیک بزن.</li>
-        <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، وزن کل با خود میله · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
+        <li><b>وزنه:</b> دمبل، وزن یک دمبل · لندماین، فقط صفحه‌های روی هالتر · Trap Bar Deadlift، فقط مجموع صفحه‌ها (وزن میله را یک بار با دکمهٔ «میله» بالای ست‌ها وارد کن؛ اپ جمع می‌زند و عدد نهایی را ثبت می‌کند) · Leg Press، جمع صفحه‌های دو طرف بدون وزن سورتمه · دستگاه و سیم‌کش، عدد روی دستگاه.</li>
         <li>بعد از آخرین ست، RIR همان ست را انتخاب کن. وقتی همهٔ ست‌ها و RIR ثبت شد، کارت حرکت جمع می‌شود؛ با زدن روی اسمش دوباره باز می‌شود.</li>
         <li><b>جدا کردن سوپرست:</b> اگر یکی از دستگاه‌ها اشغال بود، انگشتت را روی برچسب «سوپرست» نگه دار تا حرکت‌ها فقط برای همان جلسه جدا شوند و هرکدام استراحت خودش را بگیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li>
         <li><b>نشانه‌ها:</b> حاشیهٔ سبز سمت راست = حرکت اولویت‌دار · قاب روشن‌تر = حرکت فعلی · طلایی = رکورد جدید (بهتر از همهٔ جلسه‌های قبلی همان حرکت) · علامت تعجب در کادر تکرار = کمتر از بازهٔ هدف.</li>
@@ -747,6 +757,20 @@ const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const UI2 = () => true;
+/* trap bar: the plates are typed in, the bar weight (set once) is added and the total is what gets stored */
+const barW = () => (S.tbBar != null && S.tbBar !== '' && Number.isFinite(+S.tbBar)) ? +S.tbBar : null;
+const rnd2 = x => String(Math.round(x * 100) / 100);
+const toPlates = w => (w === '' || w == null) ? '' : (barW() != null ? rnd2(Math.max(0, num(w) - barW())) : String(w));
+const totalOf = pl => pl === '' ? '' : rnd2(num(pl) + (barW() || 0));
+const platesOf = st => (st && st.p != null && st.p !== '') ? st.p : toPlates(st ? st.w : '');
+const PENCIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>';
+function tbUnit(row) {
+  const inp = row.querySelector('.w'); const u = row.querySelector('.unit.tot'); if (!inp || !u) return;
+  const v = toLat(inp.value); const ph = toLat(inp.placeholder);
+  const pl = v !== '' ? v : ph;
+  u.textContent = pl !== '' ? '=' + fa(totalOf(pl)) : '';
+  u.classList.toggle('ph', v === '');
+}
 const isSplit = ex => { const r = S.sessions[view.date + '|' + view.day]; return !!(ex && ex.ssKey && r && r.ssOff && r.ssOff[ex.ssKey]); };
 /* personal notes are keyed by exercise name, so the same exercise shares one note on every day */
 const nk = id => EX[id] ? 'n:' + EX[id].name : id;
@@ -1139,19 +1163,20 @@ function exCard(ex, ctx, rec, inSS) {
   if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
   else if (sug && sug.type === 'up') h += ex.db
     ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
-    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
+    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
   else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
   if (prev) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'کل با میله' : ex.pl ? 'جمع صفحه‌ها' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
+  if (ex.tb) h += `<div class="barrow"><button class="barchip${barW() == null ? ' unset' : ''}" type="button" data-bar>${barW() == null ? 'وزن میله را وارد کن' : 'میله: ' + fa(barW()) + ' کیلو'}${PENCIL}</button><span class="muted">عدد نهایی = صفحه‌ها + میله</span></div>`;
+  h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'صفحه‌ها' : ex.pl ? 'جمع صفحه‌ها' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
     const s = (e && e.sets[i]) || { w: '', r: '', d: 0 };
     const ph = placeholders(ex, e, (sug && sug.type === 'up') || (prev && !!prev.e.alt !== !!(e && e.alt)) ? null : prev, i);
     h += `<div class="set${s.d ? ' done' : ''}${i >= t.s ? ' extra' : ''}" data-ex="${ex.id}" data-i="${i}">
       <span class="set-n">ست ${fa(i + 1)}</span>
-      <div class="pair"><span class="wbox"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، وزنه به کیلو" value="${faV(s.w)}" placeholder="${faV(ph.w)}"><i class="unit" aria-hidden="true">KG</i></span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
+      <div class="pair"><span class="wbox${ex.tb ? ' tbx' : ''}"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.tb ? 'مجموع صفحه‌ها' : 'وزنه'} به کیلو" value="${ex.tb ? faV(platesOf(s)) : faV(s.w)}" placeholder="${ex.tb ? faV(toPlates(ph.w)) : faV(ph.w)}">${ex.tb ? (() => { const pl = platesOf(s) !== '' ? platesOf(s) : toPlates(ph.w); return `<i class="unit tot${platesOf(s) === '' ? ' ph' : ''}" aria-hidden="true">${pl !== '' ? '=' + fa(totalOf(pl)) : ''}</i>`; })() : '<i class="unit" aria-hidden="true">KG</i>'}</span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}${i >= t.s ? '<svg class="xic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"></path></svg>' : ''}</button>
     </div>`;
   }
@@ -1239,12 +1264,14 @@ main.addEventListener('input', ev => {
     const row = el.closest('.set'); const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
     while (e.sets.length <= i) e.sets.push({ w: '', r: '', d: 0 });
-    e.sets[i][el.classList.contains('w') ? 'w' : 'r'] = toLat(el.value);
+    if (ex.tb && el.classList.contains('w')) { const pl = toLat(el.value); const st = e.sets[i]; st.p = pl; st.b = barW(); st.w = totalOf(pl); tbUnit(row); }
+    else e.sets[i][el.classList.contains('w') ? 'w' : 'r'] = toLat(el.value);
     if (el.classList.contains('r')) markLow(el, ex);
     if (row.classList.contains('done') && UI2()) { cancelAnimationFrame(row._rf); row._rf = requestAnimationFrame(() => refreshCards()); }
     if (el.classList.contains('w')) {
       const card = row.closest('.ex');
       card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value) wi.placeholder = el.value || wi.placeholder; } });
+      if (ex.tb) card.querySelectorAll('.set').forEach(tbUnit);
     }
     touch(rec);
   } else if (el.id === 'note') {
@@ -1322,6 +1349,7 @@ main.addEventListener('click', ev => {
   }
   const sp = ev.target.closest('[data-ss]');
   if (sp) { if (ssFired) { ssFired = false; return; } toast(sp.closest('.ss.off') ? 'برای وصل دوباره، نگه دار' : 'برای جدا کردن در این جلسه، نگه دار'); return; }
+  if (ev.target.closest('[data-bar]')) { openBar(); return; }
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
   const ch = UI2() && ev.target.closest('.ex.complete .ex-head, .ex.complete .ex-sum');
@@ -1379,7 +1407,10 @@ function onCheck(row) {
   const s = e.sets[i];
   const wIn = row.querySelector('.w'), rIn = row.querySelector('.r');
   if (!s.d) {
-    if (s.w === '' && wIn.placeholder) { s.w = toLat(wIn.placeholder); wIn.value = faV(s.w); }
+    if (s.w === '' && wIn.placeholder) {
+      if (ex.tb) { s.p = toLat(wIn.placeholder); s.b = barW(); s.w = totalOf(s.p); wIn.value = faV(s.p); tbUnit(row); }
+      else { s.w = toLat(wIn.placeholder); wIn.value = faV(s.w); }
+    }
     if (s.r === '' && rIn.placeholder) { s.r = toLat(rIn.placeholder); rIn.value = faV(s.r); }
     markLow(rIn, ex);
     if (s.r === '') { rIn.focus(); toast('تعداد ' + (ex.unit || 'تکرار') + ' را بنویس'); return; }
@@ -1388,7 +1419,8 @@ function onCheck(row) {
     rec.t1 = Date.now();
     row.classList.add('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'true');
     const card = row.closest('.ex');
-    card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(s.w); } });
+    card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(ex.tb ? platesOf(s) : s.w); } });
+    if (ex.tb) card.querySelectorAll('.set').forEach(tbUnit);
     const isPR = UI2() && prIndex(ex, e) === i;
     if (ex.ssRest && !ex.ssLast && !isSplit(ex)) toast((isPR ? 'رکورد جدید! · ' : '') + 'حالا: ' + ex.ssNext.name);
     else { startTimer(ex.restLast && i >= tgt(ex, ctxOf(view.date)).s - 1 ? ex.restLast : (ex.ssRest || ex.rest), ex.name); if (isPR) toast('رکورد جدید در این حرکت!'); }
@@ -1899,6 +1931,13 @@ function openNote(id) {
     <p class="m-sub">این نکته برای همین حرکت ذخیره می‌شود و هر روزی که این حرکت در برنامه باشد، زیرش نمایش داده می‌شود.</p>
     <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, myNote(id) ? null : '#m-note', true);
 }
+function openBar() {
+  mState = { kind: 'bar' };
+  showModal(`<h2 id="m-title">وزن میلهٔ <span class="en">Trap Bar</span></h2>
+    <div class="m-num"><input id="m-bar" inputmode="decimal" autocomplete="off" aria-label="وزن میله به کیلو" value="${barW() != null ? fa(barW()) : ''}" placeholder="۲۰"><span class="m-sub">کیلو</span></div>
+    <p class="m-sub">از این به بعد فقط مجموع صفحه‌ها را بنویس؛ این عدد خودکار اضافه می‌شود و عدد نهایی ثبت می‌شود. اگر روی میله نوشته نشده، از باشگاه بپرس یا یک بار با ترازو بسنج.</p>
+    <div class="m-act"><button class="btn acc" type="button" data-m="save-bar">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, '#m-bar', true);
+}
 function openFinish(edit) {
   const rec = getRec(true);
   const est = rec.t0 && rec.t1 && rec.t1 > rec.t0 ? Math.max(1, Math.round((rec.t1 - rec.t0) / 60000)) : null;
@@ -1929,7 +1968,7 @@ function paintEff() {
     box.querySelectorAll('[data-rpe]').forEach(b => { const on = v && +b.dataset.rpe <= v; b.classList.toggle('on', !!on); b.setAttribute('aria-pressed', +b.dataset.rpe === v); });
   });
 }
-mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min') faInput(ev.target); });
+mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min' || ev.target.id === 'm-bar') faInput(ev.target); });
 mCard.addEventListener('click', ev => {
   const rb = ev.target.closest('[data-rpe]');
   if (rb && mState) { mState[rb.closest('.eff').dataset.k] = +rb.dataset.rpe; paintEff(); return; }
@@ -1937,6 +1976,19 @@ mCard.addEventListener('click', ev => {
   if (st && mState) { const k = st.closest('.eff').dataset.k; mState[k] = Math.min(10, Math.max(1, (mState[k] || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
+  if (m.dataset.m === 'save-bar') {
+    const v = num($('#m-bar').value);
+    if (v == null || v < 0 || v > 80) { toast('وزن میله را به کیلو بنویس'); return; }
+    S.tbBar = v;
+    // sets typed as plates before the bar weight was known (or in this session) get their total recomputed
+    const cur = curKey();
+    for (const [k, r] of Object.entries(S.sessions)) for (const [id, e] of Object.entries(r.ex || {})) {
+      if (!EX[id] || !EX[id].tb) continue;
+      for (const st of e.sets) if (st && st.p != null && st.p !== '' && (st.b == null || k === cur)) { st.b = v; st.w = totalOf(st.p); }
+    }
+    save(true); hideModal(); softRender(); toast('وزن میله ذخیره شد');
+    return;
+  }
   if (m.dataset.m === 'save-note') {
     const t = $('#m-note').value.trim(); const id = mState.id;
     if (t) S.exNotes[nk(id)] = { t, upd: Date.now() }; else delete S.exNotes[nk(id)];
