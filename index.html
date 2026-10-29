@@ -249,9 +249,11 @@ textarea:focus{border-color:var(--accent);outline:none}
 .guide-cues li::before{counter-increment:cue;content:counter(cue,persian);color:var(--accent);font-weight:800;flex:none}
 .guide-error{margin:12px 0;padding:10px 12px;border-inline-start:3px solid var(--ink-2);background:var(--field);border-radius:10px;font-size:14px;color:var(--ink-2)}
 .guide-program{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:14px}.guide-program ul{padding-inline-start:20px;margin:5px 0}
-.guide-personal{border:1px solid var(--line-2);border-radius:14px;padding:12px;margin-top:14px}.guide-personal-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.guide-personal-head .btn{min-height:44px;font-size:14px;padding:6px 12px}
+.guide-personal{border:1px solid var(--line-2);border-radius:14px;padding:12px;margin-top:14px}.guide-personal-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.guide-personal-head .btn{display:flex;align-items:center;gap:6px;min-height:44px;font-size:14px;padding:6px 12px}
+.guide-personal-head .btn svg{width:18px;height:18px}
 .guide-personal p{white-space:pre-line;font-size:14px;margin:8px 0;color:var(--accent);overflow-wrap:anywhere}
 .guide-personal textarea{margin:8px 0;min-height:110px}.guide-personal .m-sub{color:var(--ink-2);font-size:12px}
+.guide-swipe-hint{flex:none;text-align:center;font-size:12px;color:var(--ink-2);margin:0;padding:4px 10px;border-top:1px solid var(--line)}
 .guide-nav{display:flex;direction:rtl;flex:none;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));gap:4px;border-top:1px solid var(--line-2);background:var(--surface)}
 .guide-tab{flex:1;position:relative;min-height:62px;border:0;border-radius:12px;background:transparent;color:var(--ink-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800;font-size:14px}
 .guide-tab svg{width:24px;height:24px}.guide-tab[aria-selected=true]{color:var(--accent);background:var(--accent-soft)}
@@ -1111,7 +1113,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "دسته‌ها را جلوی بدن پایین بکش",
         "آرام و بدون عقب‌رفتن زیاد تنه برگرد"
       ],
-      "error": "دستگاهِ اهرمی را با لت کابل یا کشیدن پشت گردن اشتباه نکنیم.",
+      "error": "دسته را پشت گردن نکش و برای پایین‌آوردنش تنه را تاب نده.",
       "image": null,
       "visual": "نمای سه‌ربع جلو با محور اهرم و دسته‌های واقعی، دست بالا ← کنار بالای سینه؛ لت؛ گیرش متناسب با وسیله.",
       "sources": [
@@ -1215,7 +1217,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "یک دست فشار بده و تنه ثابت بماند",
         "کنترل‌شده برگرد"
       ],
-      "error": "دستگاهِ دسته‌های به‌هم‌متصل را تک‌دست فرض نکنیم.",
+      "error": "برای اجرای تک‌دست فقط از دستگاه با دسته‌های مستقل استفاده کن.",
       "image": null,
       "visual": "دستگاه با بازوهای مستقل؛ یک دست فعال، پشت روی پشتی؛ سینه.",
       "sources": [
@@ -1276,7 +1278,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "مچ‌ها در امتداد ساعد",
         "پایین‌رفتن و پرس در دامنهٔ راحت"
       ],
-      "error": "شیب زیاد را با همین نام و همین تصویر جایگزین نکنیم؛ کمر را برای جبران قوس نده.",
+      "error": "برای جبران وزنه، کمر را قوس نده و شیب نیمکت را زیاد نکن.",
       "image": null,
       "visual": "سه‌ربع کنار؛ شیب ۱۵–۳۰ درجه انتخاب برنامه است، نه مقدار بهینهٔ قطعی؛ تأکید شماتیک بخش ترقوه‌ای سینه.",
       "sources": [
@@ -1297,7 +1299,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "پشت روی پشتی",
         "دسته‌ها را بدون بالاانداختن شانه جلو/بالا ببر"
       ],
-      "error": "اشتباه گرفتن با پرس سرشانهٔ دستگاه.",
+      "error": "پشت روی پشتی بماند؛ دسته‌ها را در مسیر مایل پرس سینه جلو ببر، بدون بالاانداختن شانه.",
       "image": null,
       "visual": "سه‌ربع کنار با دسته و ریل واقعی؛ مسیر مایل سینه؛ بخش بالایی سینه.",
       "sources": [
@@ -1436,7 +1438,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "یک دست میله را بالا و جلو فشار دهد",
         "بدون قوس اضافهٔ کمر برگرد"
       ],
-      "error": "تصویرِ دو دست، لانج عمیق یا فشار عمودی کامل را جایگزین نکنیم.",
+      "error": "میله را یک‌دست به بالا و جلو فشار بده؛ با قوس کمر یا لانج عمیق جبران نکن.",
       "image": null,
       "visual": "سه‌ربع کنار دست فعال؛ تمام میله و محور زمین داخل قاب؛ یک دست کنار شانه ← بالا/جلو؛ دلتوئید قدامی، سینهٔ بالایی کمکی.",
       "sources": [
@@ -1456,7 +1458,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "لگن و تنه پایدار",
         "یک‌دست میله را بالا و جلو فشار بده"
       ],
-      "error": "جای زانوی روی زمین و پای جلو را بین دو فریم عوض نکنیم.",
+      "error": "هنگام فشار، لگن نچرخد و جای زانو و پای جلو ثابت بماند.",
       "image": null,
       "visual": "سه‌ربع کنار؛ زانو/پا و تک‌دست‌بودن واضح؛ دلتوئید قدامی، سینه کمکی.",
       "sources": [
@@ -1532,7 +1534,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "لگن روی صندلی",
         "زانوها را خم کن و آرام باز کن"
       ],
-      "error": "بلندشدن لگن یا مجبورکردن کاربر به خم‌شدن زیاد به جلو.",
+      "error": "لگن روی صندلی بماند؛ برای کامل‌کردن تکرار به جلو پرتاب نشو.",
       "image": null,
       "visual": "نمای کنار؛ پد ران و پد پشت پایین ساق مشخص؛ زانوی بازِ راحت ← خم؛ همسترینگ.",
       "sources": [
@@ -1644,7 +1646,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "زانو در راستای پنجه",
         "با دامنه‌ای که لگن ثابت می‌ماند حرکت کن"
       ],
-      "error": "چرخش لگن یا نمایش پای آزاد در مسیر صفحه.",
+      "error": "لگن نچرخد؛ پای آزاد را بیرون مسیر صفحه و سورتمه نگه دار.",
       "image": null,
       "visual": "سه‌ربع جلو+نمای کنار کوچک؛ جای پای فعال و پای آزاد امن؛ چهارسر و باسن.",
       "sources": [
@@ -1662,7 +1664,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "با کمک دست تعادل بگیر",
         "پایین برو و با پای جلو بلند شو"
       ],
-      "error": "تصویر بلغاری با پای عقب روی نیمکت، یا لانجِ همراه قدم‌برداشتن.",
+      "error": "پای عقب روی زمین بماند؛ جای پاها ثابت است و بین تکرارها قدم برنمی‌داری.",
       "image": null,
       "visual": "سه‌ربع کنار؛ پای عقب روی زمین و دست روی تکیه‌گاه؛ بالا ← پایین؛ چهارسر و باسن پای جلو.",
       "sources": [
@@ -1737,7 +1739,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "زانوها در وضعیت ثابت",
         "فقط مچ را آرام پایین و بالا ببر"
       ],
-      "error": "رهاکردن ضامن یا لغزش کف پا از صفحه؛ نمایش حرکت اسکواتی زانو.",
+      "error": "ضامن بسته و سینهٔ پا محکم روی لبه بماند؛ حرکت از مچ باشد، نه خم‌و‌راست‌کردن زانو.",
       "image": null,
       "visual": "کنار+کلوزآپ پا؛ پاشنه پایین/بالا، صفحه و مهار امن دستگاه؛ دوقلو و نعلی.",
       "sources": [
@@ -1779,7 +1781,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "دست‌ها جلو بروند و تنه ثابت بماند",
         "مکث و بازگشت آرام"
       ],
-      "error": "تصویر نباید چرخش تنه را آموزش دهد؛ مقاومت ضدچرخش است.",
+      "error": "با کشش کابل نچرخ؛ تنه در طول جلو‌بردن و برگرداندن دست‌ها ثابت بماند.",
       "image": null,
       "visual": "نمای سه‌ربع جلو؛ کابل از کنار، دسته کنار سینه ← جلوی سینه؛ خط جهت نیرو جدا از فلش دست؛ دیوارهٔ شکم با توضیح تثبیت.",
       "sources": [
@@ -1796,7 +1798,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "قامت متعادل و شانه‌ها کنترل‌شده",
         "قدم‌های کوتاه و آرام، سپس سمت دیگر"
       ],
-      "error": "دو دمبل آن را به Farmer’s Carry تبدیل می‌کند؛ خم‌شدن به طرفین نمایش داده نشود.",
+      "error": "دمبل فقط در یک دست باشد؛ هنگام قدم‌زدن به طرفین خم نشو.",
       "image": null,
       "visual": "نمای جلو برای راستای تنه و نمای کنار کوچک برای قدم؛ دو فریم قدم‌زدن، نه خم‌شدن جانبی؛ میان‌تنه و ساعد؛ نه عضلهٔ سطحی ساختگی برای عمقی‌ها.",
       "sources": [
@@ -1885,7 +1887,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "زانوها کمی خم و لگن ثابت",
         "گام‌های جانبی کوتاه بدون جمع‌شدن کامل پاها"
       ],
-      "error": "تصویر را مثل اسکوات راه‌رفتنی عمیق یا تاب‌دادن تنه نکشیم.",
+      "error": "تنه را تاب نده و به اسکوات عمیق تبدیلش نکن؛ گام‌ها کوتاه و کنترل‌شده باشند.",
       "image": null,
       "visual": "نمای جلو، سه حالت پا کنارهمِ با فاصله/گام باز/دنبال‌کردن؛ فلش افقی؛ باسن میانی با تأکید کنترل لگن.",
       "sources": [
@@ -1904,7 +1906,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "قامت طبیعی و قدم‌های قابل‌کنترل",
         "سرعت/شیب را تدریجی تنظیم کن"
       ],
-      "error": "آویزان‌شدن از دسته‌ها یا استفاده از تصویر دویدن برای برنامهٔ پیاده‌روی.",
+      "error": "برای این برنامه راه برو؛ از دسته‌ها آویزان نشو و سرعت را فراتر از کنترل قدم‌ها نبر.",
       "image": null,
       "visual": "نمای کنارِ پیاده‌روی، تسمه و گیرهٔ ایمنی؛ تصویر عضلات غالب لازم نیست. برنامهٔ اینتروال و پیوسته متن مستقل دارند.",
       "sources": [
@@ -1934,7 +1936,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
         "حرکت روان و مقاومت مناسب",
         "دسته‌ها بدون کشیدن شدید تنه همراه شوند"
       ],
-      "error": "پا خارج از پد یا تصویر دستگاه استپر به‌جای الپتیکال.",
+      "error": "کف پا از پد جدا نشود و تنه با کشیدن دسته‌ها به جلو و عقب تاب نخورد.",
       "image": null,
       "visual": "نمای سه‌ربع کنار؛ مسیر بیضوی پد، دو وضعیتِ واقعی همان دستگاه؛ تصویر عضلات جدا لازم نیست.",
       "sources": [
@@ -3530,7 +3532,7 @@ const GUIDE_PROGRAM = {
 function guideData(name){return (Object.hasOwn(G.exercises,name)?G.exercises[name]:null) || {cues:[],primary:[],secondary:[],sources:[],image:null};}
 function guideExecutionHTML(ex,id,rec){
   const g=guideData(ex.name),e=id?rec?.ex[id]:null;
-  const program=id&&!e?.alt?(GUIDE_PROGRAM[id]||[]):[];
+  const program=id&&!e?.alt&&ex.name===(EX[id]||OLD_EX[id])?.name?(GUIDE_PROGRAM[id]||[]):[];
   const muscles=(g.primary||[]).map(x=>`<span>اصلی: ${esc(x)}</span>`).concat((g.secondary||[]).map(x=>`<span class="secondary">کمکی: ${esc(x)}</span>`)).join('');
   const sources=(g.sources||[]).filter(k=>G.sources[k]);
   return `<div class="guide-image" data-image-slot="${esc(ex.name)}" role="img" aria-label="جای خالی تصویر اجرای ${esc(ex.name)}؛ شروع سمت راست و پایان سمت چپ"><span>شروع</span><span>پایان</span></div>
@@ -3561,7 +3563,7 @@ function openExerciseGuide(name,id=null){
   if(id)panels.push(guideWeightHTML(ex,rec),`<h3>مقایسه با جلسهٔ قبل</h3>${comparisonHTML(ex,rec,view.date).replace('<details','<details open')}<p class="m-sub">مقایسه بر اساس همین حرکت، واحد ثبت، هدف و فاصله از ناتوانی انجام می‌شود؛ ثابت بودن وسیله و تنظیمات اجرا فرض شده است.</p>`);
   showModal(`<div class="guide-handle" aria-hidden="true"></div><header class="guide-head"><div><h2 id="m-title">راهنمای حرکت</h2><span class="en" dir="ltr">${esc(ex.name)}</span></div><button class="guide-close" type="button" data-m="close" aria-label="بستن راهنمای حرکت">×</button></header>
     <div class="guide-viewport"><div class="guide-track">${panels.map((p,i)=>`<section class="guide-panel" role="tabpanel" id="guide-panel-${i}" aria-labelledby="guide-tab-${i}" tabindex="0"${i?' inert aria-hidden="true"':''}>${p}</section>`).join('')}</div></div>
-    <nav class="guide-nav" role="tablist" aria-label="بخش‌های راهنمای حرکت">${keys.map((k,i)=>`<button class="guide-tab" type="button" role="tab" id="guide-tab-${i}" aria-controls="guide-panel-${i}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-guide-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GUIDE_ICONS[k]}</svg><span>${labels[i]}</span></button>`).join('')}</nav>`,'.guide-close');
+    ${id?'<p class="guide-swipe-hint">برای جابه‌جایی بین بخش‌ها، به چپ یا راست بکش ↔</p>':''}<nav class="guide-nav" role="tablist" aria-label="بخش‌های راهنمای حرکت">${keys.map((k,i)=>`<button class="guide-tab" type="button" role="tab" id="guide-tab-${i}" aria-controls="guide-panel-${i}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-guide-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GUIDE_ICONS[k]}</svg><span>${labels[i]}</span></button>`).join('')}</nav>`,'.guide-close');
   modal.classList.add('exercise-guide');
 }
 // Kept as the movement-aware note entry point for existing callers.

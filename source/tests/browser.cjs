@@ -80,12 +80,12 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
      const layout=await fp.evaluate(()=>{const g=document.querySelector('.exercise-guide .m-card'),v=g.querySelector('.guide-viewport').getBoundingClientRect(),n=g.querySelector('.guide-nav').getBoundingClientRect();return {overflow:document.documentElement.scrollWidth>innerWidth,below:n.top>=v.bottom-1,visible:n.bottom<=innerHeight+1,panelOverflow:g.scrollWidth>g.clientWidth+1};});
      assert.deepEqual(layout,{overflow:false,below:true,visible:true,panelOverflow:false});
    }
-   await fp.setViewportSize({width:390,height:844});await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-execution.png')});
+   await fp.setViewportSize({width:390,height:844});await fp.locator('#guide-panel-0').evaluate(el=>el.scrollTop=0);await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-execution.png')});
    await fp.locator('[data-guide-tab="1"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-weight.png')});
    await fp.locator('[data-guide-tab="2"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-comparison.png')});
    await closeGuide();await fp.screenshot({path:path.resolve('test-results/'+name+'-compact-card.png')});
    // Warmups and cardio alternatives share the same catalog, with no bogus load tabs.
-   await fp.locator('details.warm summary').click();await fp.locator('[data-movement-guide="Band External Rotation"]').click();assert.equal(await fp.locator('[role=tab]').count(),1);assert.ok((await fp.locator('#guide-panel-0').textContent()).includes('تحت‌خاری'));await closeGuide();
+   await fp.locator('details.warm summary').click();await fp.locator('[data-movement-guide="Band External Rotation"]').click();assert.equal(await fp.locator('.guide-tab').count(),1);assert.ok((await fp.locator('#guide-panel-0').textContent()).includes('تحت‌خاری'));await closeGuide();
    await fp.locator('[data-calt]').click();await fp.locator('.cardio [data-movement-guide]').click();assert.equal(await fp.locator('.guide-head .en').textContent(),'Stationary Bike');await closeGuide();await fp.locator('[data-calt]').click();
    assert.equal(await fp.locator('#main .cues, #main .why, #main [data-comparison]').count(),0);
    // Persist, reload and restore a backup that contains notes for absent future movements.
