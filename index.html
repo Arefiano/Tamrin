@@ -1064,6 +1064,7 @@ function freezeEntries(state) {
     const base=EX[id]||OLD_EX[id];if(!base)continue;
     if(!e.spec)e.spec=exerciseSpec(base,e.alt);
     if(!e.t){const week=Math.max(1,Math.floor((dnum(r.date)-dnum(state.start||r.date))/7)+1);e.t=tgt(effective(base,e),{week,deload:state.deload.includes(satOf(r.date))});}
+    if(e.t)delete e.t.mode;
   }
   return state;
 }

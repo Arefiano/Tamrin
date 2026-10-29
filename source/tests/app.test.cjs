@@ -27,3 +27,4 @@ test('last unmatched superset round starts rest instead of suggesting completed 
  const card={querySelectorAll:()=>[]},button={setAttribute(){}};const inp=v=>({value:v,placeholder:'',setAttribute(){},classList:{toggle(){}},focus(){}});const w=inp('20'),r=inp('12');const row={dataset:{ex:'sat7',i:'2'},querySelector:q=>q==='.w'?w:q==='.r'?r:button,closest:()=>card,classList:{add(){},remove(){}}};
  h.api.onCheck(row);a.ok(h.ctx.started,JSON.stringify({toast:h.ctx.lastToast,rec}));a.equal(h.ctx.started.l,'Seated Leg Curl');
 });
+test('legacy snapshots reimport without false conflicts from transient target mode',()=>{const h=harness();const raw=makeState({'2026-10-26|mon':{date:'2026-10-26',day:'mon',ex:{mon1:{sets:[{w:'20',r:'8',d:1}],rir:'2',alt:false}}}});const first=h.api.freezeEntries(C.normalize(raw)),incoming=h.api.freezeEntries(C.normalize(raw));const m=C.merge(C.normalize(first),incoming);a.equal(m.counts.conflicts,0);});
