@@ -350,8 +350,6 @@ details.cues .ex-list{margin-top:4px;font-size:13.5px;color:var(--ink-2)}
 .daypill i{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
 .daypill b{font-weight:900;font-size:17px;color:var(--ink)}
 .daypill span{color:var(--ink-2);font-weight:600;font-size:14px}
-@keyframes slideL{from{opacity:.35;transform:translateX(-28px)}to{opacity:1;transform:none}}
-@keyframes slideR{from{opacity:.35;transform:translateX(28px)}to{opacity:1;transform:none}}
 /* motion: one easing and a few short durations everywhere */
 :root{--ease:cubic-bezier(.22,.8,.24,1);--ease-out:cubic-bezier(.4,0,1,1)}
 button,.btn,.chip,.chk,.tab,.alt,.addset,.info-btn,.eff-step{transition:transform .14s var(--ease),background-color .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease),box-shadow .2s var(--ease),opacity .2s var(--ease)}
@@ -389,7 +387,6 @@ details.warm[open] ul,details.cues[open] .ex-list{animation:fadeUp .24s var(--ea
 details.warm summary::after,details.cues summary::after{transition:transform .25s var(--ease)}
 .sugg,.my-note{animation:fadeUp .3s var(--ease)}
 .daypill{transition:opacity .25s var(--ease),transform .3s var(--ease)}
-.t-bar i{transition:width .25s linear}
 #main.soft{animation:fadeIn .26s var(--ease)}
 details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s var(--ease-out) forwards}
 @keyframes fadeDown{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-6px)}}
@@ -426,7 +423,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .set.rowout{animation:rowOut .22s var(--ease-out) forwards}
 @keyframes rowOut{to{opacity:0;transform:translateX(-20px)}}
 .toast{position:fixed;z-index:50;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 72px);max-width:calc(100% - 32px);background:var(--ink);color:var(--bg);font-weight:800;font-size:16px;padding:10px 16px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
-/* ---------- ui2: experimental redesign (switch in settings; off = previous look) ---------- */
+/* ---------- current card design; base layout rules above remain shared ---------- */
 :root{--edge:#5C6672;--gold:#FFD66B;--gold-grad:linear-gradient(110deg,#A8781F 0%,#E9B949 22%,#FFF1BF 38%,#E9B949 52%,#B8862A 70%,#FFE08A 86%,#A8781F 100%)}
 .ui2 .tab[aria-selected=true]{background:#262E37;border-color:var(--edge);color:var(--ink)}
 .ui2 .tab[aria-selected=true] small{color:var(--ink-2)}
@@ -473,8 +470,6 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .ui2 .set.pr .set-n{line-height:1.15}
 .ui2 .set.pr .set-n::after{content:"رکورد";display:block;font-size:10.5px;font-weight:900}
 .ui2 .set.pr .pair input{border-color:transparent;color:var(--gold);text-shadow:0 0 10px rgba(255,200,90,.35);background:linear-gradient(#262010,#262010) padding-box,var(--gold-grad) border-box;background-size:100% 100%,100% 100%}
-@keyframes goldBorder{from{background-position:0 0,0% 0}to{background-position:0 0,300% 0}}
-@keyframes goldText{from{background-position:0% 0}to{background-position:300% 0}}
 .ui2 .set.pr .set-n::after,.ex-sum .v.pr{background:var(--gold-grad);background-size:100% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
 .ui2 .set.pr .set-n{color:var(--gold)}
 .ui2 .ss{border-color:var(--line-2);background:rgba(255,255,255,.02)}
