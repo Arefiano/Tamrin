@@ -26,10 +26,11 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
    if(name==='webkit')networkUnavailable=true;else await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);networkUnavailable=false;await ctx.setOffline(false);
 
-   // Independent profile/insight/resume fixture, with synthetic local dates.
+   // Independent legacy-migration/insight/resume fixture, with synthetic local dates.
    const fx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),fp=await fx.newPage();
    fp.on('pageerror',e=>errors.push(e.message));
    await fx.addInitScript(()=>{
+     if(localStorage.getItem('daftar-tamrin-v1'))return;
      const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const now=new Date(),prior=new Date(now);prior.setDate(prior.getDate()-7);
      const today=iso(now),previous=iso(prior),spec={name:'Neutral-Grip Dumbbell Bench Press',db:1},equipment={label:'نیمکت الف',seat:'۱',handle:'خنثی',note:'',upd:1},t={s:4,r:[6,10],rir:[2,3]};
      const old={date:previous,day:'mon',ex:{mon1:{alt:false,spec,equipment,t,rir:'2',sets:Array.from({length:4},()=>({w:'30',r:'10',d:1}))}},cardio:{},done:true,rpm:6,upd:1};
@@ -40,15 +41,25 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    const primary=fp.locator('.ex[data-ex=mon1]');await primary.locator('.why summary').click();assert.ok((await primary.locator('.why').textContent()).includes('هر ۴ ست'));
    for(const [i,r]of [[1,'10'],[2,'10'],[3,'12']]){await fp.locator('#w-mon1-'+i).fill('30');await fp.locator('#r-mon1-'+i).fill(r);}
    await fp.waitForFunction(()=>document.querySelector('[data-comparison="mon1"]').textContent.includes('۲ تکرار بیشتر'));
-   await primary.locator('[data-equipment]').click();await fp.locator('#eq-label').fill('نیمکت ب');await fp.locator('[data-m=save-equipment]').click();assert.equal(await fp.locator('[data-m=save-equipment]').isVisible(),true);await fp.locator('#eq-confirm').check();await fp.locator('[data-m=save-equipment]').click();
-   assert.ok((await primary.locator('[data-comparison]').textContent()).includes('وسیله یا تنظیمات متفاوت'));assert.equal(await primary.locator('.sugg.up').count(),0);
-   let profileState=await fp.evaluate(()=>JSON.parse(localStorage.getItem('daftar-tamrin-v1')));const historic=Object.values(profileState.sessions).find(r=>r.done);assert.equal(historic.ex.mon1.equipment.label,'نیمکت الف');
-   await primary.locator('[data-equipment]').click();await fp.locator('#eq-label').fill('نیمکت الف');await fp.locator('#eq-confirm').check();await fp.locator('[data-m=save-equipment]').click();assert.ok((await primary.locator('[data-comparison]').textContent()).includes('۲ تکرار بیشتر'));
+   assert.equal(await fp.locator('[data-equipment]').count(),0);
+   assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت الف'));
+   await primary.locator('[data-info]').click();assert.ok((await fp.locator('#m-title').textContent()).includes('Neutral-Grip Dumbbell Bench Press'));await fp.locator('#m-note').fill('نیمکت خودم، صندلی ۴');await fp.locator('[data-m=save-note]').click();
+   assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت خودم'));
+   assert.ok((await primary.locator('[data-comparison]').textContent()).includes('۲ تکرار بیشتر'));
+   // One actual movement shares its note across days and a different slot's alternative.
+   await fp.locator('[data-day=mon]').click();const lateral=fp.locator('.ex[data-ex=mon4]');await lateral.locator('[data-info]').click();await fp.locator('#m-note').fill('ارتفاع ۴ <img src=x onerror=alert(1)>');await fp.locator('[data-m=save-note]').click();
+   await fp.locator('[data-day=wed]').click();assert.ok((await fp.locator('.ex[data-ex=wed7] .my-note').textContent()).includes('ارتفاع ۴ <img'));assert.equal(await fp.locator('.my-note img').count(),0);
+   await fp.locator('[data-day=fri]').click();const landmine=fp.locator('.ex[data-ex=fri2]');assert.equal(await landmine.locator('.my-note').count(),0);await landmine.locator('[data-alt]').click();assert.ok((await landmine.locator('.my-note').textContent()).includes('ارتفاع ۴'));
+   await landmine.locator('[data-info]').click();assert.ok((await fp.locator('#m-title').textContent()).includes('Dumbbell Lateral Raise'));await fp.locator('#m-note').fill('تنظیم تازه');await fp.locator('[data-m=save-note]').click();await landmine.locator('[data-alt]').click();assert.equal(await landmine.locator('.my-note').count(),0);
+   // Persist, reload and restore a backup that contains notes for absent future movements.
+   await fp.reload();if(await fp.locator('#resume-panel').isVisible())await fp.locator('[data-resume-go]').click();await fp.locator('[data-day=mon]').click();assert.ok((await fp.locator('.ex[data-ex=mon4] .my-note').textContent()).includes('تنظیم تازه'));assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت خودم'));
+   await fp.locator('#open-settings').click();await fp.locator('#import-text').fill(JSON.stringify({sessions:{},exNotes:{'n:Future Press':{t:'بماند برای برنامهٔ بعد',upd:2}}}));await fp.locator('#import-btn').click();await fp.locator('[data-m=apply-import]').click();await fp.locator('#sh-settings [data-close]').click();
+   const migrated=await fp.evaluate(()=>JSON.parse(localStorage.getItem('daftar-tamrin-v1')));assert.equal(migrated.exNotes['n:Future Press'].t,'بماند برای برنامهٔ بعد');assert.equal(migrated.exNotes['n:Dumbbell Lateral Raise'].t,'تنظیم تازه');assert.equal(migrated.equipment&&Object.keys(migrated.equipment).length||0,0);
    await primary.locator('[data-rir="3"]').click();assert.ok((await primary.locator('[data-comparison]').textContent()).includes('فاصله از ناتوانی متفاوت'));await primary.locator('[data-rir="2"]').click();
    await fp.locator('#finish').click();await fp.locator('[data-k=rpm] [data-rpe="4"]').click();await fp.locator('[data-k=rpe] [data-rpe="5"]').click();await fp.locator('[data-m=save-finish]').click();await fp.locator('[data-m=save-finish]').click();assert.ok((await fp.locator('.session-summary').textContent()).includes('۱ حرکت بهتر'));assert.ok((await fp.locator('.session-summary').textContent()).includes('سختی روانی کمتر'));
    await fp.screenshot({path:path.resolve('test-results/'+name+'-insights.png'),fullPage:true});
    await fx.close();
-   assert.deepEqual(errors,[]);console.log(name+': browser flows, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
+   assert.deepEqual(errors,[]);console.log(name+': persistent movement notes, legacy migration, browser flows, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
   }catch(e){await page.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
  }
 })().then(()=>server.close()).catch(e=>{console.error(e);server.close();process.exitCode=1;});

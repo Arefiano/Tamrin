@@ -138,15 +138,40 @@
   }
   const labelKey=s=>digits(s).replace(/ك/g,'ک').replace(/ي/g,'ی').replace(/\s+/g,' ').trim().toLocaleLowerCase();
   function equipmentKey(o){return o?.label?.trim()?JSON.stringify([o.label,o.seat||'',o.handle||''].map(labelKey)):'';}
+  const noteKey=name=>'n:'+name.trim().replace(/\s+/g,' ');
+  // Retire the old structured field without discarding anything the owner entered.
+  // Unresolved entries and notes that would exceed the backup limit stay intact.
+  function equipmentToNotes(state,resolveName=()=>null){
+    state.exNotes=state.exNotes||{};
+    const move=(holder,key,name)=>{
+      const eq=holder[key];if(!eq){delete holder[key];return;}
+      if(!name)return;
+      const parts=[eq.label,eq.seat?'صندلی: '+eq.seat:'',eq.handle?'دسته: '+eq.handle:'',eq.note].filter(Boolean);
+      if(parts.length){
+        const k=noteKey(name),old=state.exNotes[k],block='وسیله و تنظیمات قبلی: '+parts.join(' · ');
+        const t=old?.t?.includes(block)?old.t:[old?.t,block].filter(Boolean).join('\n\n');
+        if(t.length>10000)return;
+        state.exNotes[k]={t,upd:Math.max(old?.upd||0,eq.upd||0)};
+      }
+      delete holder[key];
+    };
+    for(const name of Object.keys(state.equipment||{}))move(state.equipment,name,name);
+    if(state.equipment&&!Object.keys(state.equipment).length)delete state.equipment;
+    const visit=(e,id)=>{
+      move(e,'equipment',e.spec?.name||resolveName(id,e.alt));
+      for(const v of Object.values(e.variants||{}))visit(v,id);
+    };
+    for(const r of [...Object.values(state.sessions),...(state.conflicts||[]).map(x=>x.rec)])for(const [id,e]of Object.entries(r.ex))visit(e,id);
+    return state;
+  }
   function contextMatch(a,b){
     if(!!a?.alt!==!!b?.alt)return {ok:false,verified:false,reason:'variant'};
     const as=a?.spec||{},bs=b?.spec||{};
     if(as.name&&bs.name&&as.name!==bs.name)return {ok:false,verified:false,reason:'movement'};
     for(const k of ['db','lm','tb','pl','carry'])if(as.name&&bs.name&&!!as[k]!==!!bs[k])return {ok:false,verified:false,reason:'unit'};
     if(as.name&&bs.name&&(as.unit||'')!==(bs.unit||''))return {ok:false,verified:false,reason:'unit'};
-    const ak=equipmentKey(a?.equipment),bk=equipmentKey(b?.equipment);
-    if(ak!==bk)return {ok:false,verified:false,reason:'equipment'};
-    return {ok:true,verified:!!ak,reason:ak?'same':'unspecified'};
+    // Device details are free-form personal notes now; never infer equality from them.
+    return {ok:true,verified:false,reason:'unspecified'};
   }
   function comparison(current,previous,t){
     if(!previous)return {status:'no_history'};
@@ -205,5 +230,5 @@
     return {up:counted.filter(c=>c.verdict==='up').length,down:counted.filter(c=>c.verdict==='down').length,same:counted.filter(c=>c.verdict==='same').length,unknown:comparisons.length-counted.length,assumed:counted.filter(c=>!c.verified).length,mental:number(currentRpm)>0&&number(previousRpm)>0?number(currentRpm)-number(previousRpm):null};
   }
 
-  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal,equipment,equipmentKey,contextMatch,comparison,progression,latestSet,summarize};
+  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal,equipment,equipmentKey,noteKey,equipmentToNotes,contextMatch,comparison,progression,latestSet,summarize};
 });
