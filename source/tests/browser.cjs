@@ -25,6 +25,29 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    // Check offline reload after the service worker has controlled this page.
    await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
    if(name==='webkit')networkUnavailable=true;else await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);networkUnavailable=false;await ctx.setOffline(false);
+
+   // Independent profile/insight/resume fixture, with synthetic local dates.
+   const fx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),fp=await fx.newPage();
+   fp.on('pageerror',e=>errors.push(e.message));
+   await fx.addInitScript(()=>{
+     const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const now=new Date(),prior=new Date(now);prior.setDate(prior.getDate()-7);
+     const today=iso(now),previous=iso(prior),spec={name:'Neutral-Grip Dumbbell Bench Press',db:1},equipment={label:'نیمکت الف',seat:'۱',handle:'خنثی',note:'',upd:1},t={s:4,r:[6,10],rir:[2,3]};
+     const old={date:previous,day:'mon',ex:{mon1:{alt:false,spec,equipment,t,rir:'2',sets:Array.from({length:4},()=>({w:'30',r:'10',d:1}))}},cardio:{},done:true,rpm:6,upd:1};
+     const current={date:today,day:'mon',ex:{mon1:{alt:false,spec,equipment,t,rir:'2',sets:[{w:'30',r:'10',d:1,at:Date.now()-240000}]}},cardio:{},done:false,upd:2};
+     localStorage.setItem('daftar-tamrin-v1',JSON.stringify({v:1,schema:3,start:previous,sessions:{[previous+'|mon']:old,[today+'|mon']:current},equipment:{[spec.name]:equipment},deload:[],exNotes:{},mig1:1,mig2:1,backupMode:'manual'}));
+   });
+   await fp.goto(url);assert.equal(await fp.locator('#resume-panel').isVisible(),true);assert.ok((await fp.locator('#resume-panel').textContent()).includes('۴ دقیقه'));await fp.locator('[data-resume-go]').click();assert.equal(await fp.locator('#resume-panel').isVisible(),false);
+   const primary=fp.locator('.ex[data-ex=mon1]');await primary.locator('.why summary').click();assert.ok((await primary.locator('.why').textContent()).includes('هر ۴ ست'));
+   for(const [i,r]of [[1,'10'],[2,'10'],[3,'12']]){await fp.locator('#w-mon1-'+i).fill('30');await fp.locator('#r-mon1-'+i).fill(r);}
+   await fp.waitForFunction(()=>document.querySelector('[data-comparison="mon1"]').textContent.includes('۲ تکرار بیشتر'));
+   await primary.locator('[data-equipment]').click();await fp.locator('#eq-label').fill('نیمکت ب');await fp.locator('[data-m=save-equipment]').click();assert.equal(await fp.locator('[data-m=save-equipment]').isVisible(),true);await fp.locator('#eq-confirm').check();await fp.locator('[data-m=save-equipment]').click();
+   assert.ok((await primary.locator('[data-comparison]').textContent()).includes('وسیله یا تنظیمات متفاوت'));assert.equal(await primary.locator('.sugg.up').count(),0);
+   let profileState=await fp.evaluate(()=>JSON.parse(localStorage.getItem('daftar-tamrin-v1')));const historic=Object.values(profileState.sessions).find(r=>r.done);assert.equal(historic.ex.mon1.equipment.label,'نیمکت الف');
+   await primary.locator('[data-equipment]').click();await fp.locator('#eq-label').fill('نیمکت الف');await fp.locator('#eq-confirm').check();await fp.locator('[data-m=save-equipment]').click();assert.ok((await primary.locator('[data-comparison]').textContent()).includes('۲ تکرار بیشتر'));
+   await primary.locator('[data-rir="3"]').click();assert.ok((await primary.locator('[data-comparison]').textContent()).includes('فاصله از ناتوانی متفاوت'));await primary.locator('[data-rir="2"]').click();
+   await fp.locator('#finish').click();await fp.locator('[data-k=rpm] [data-rpe="4"]').click();await fp.locator('[data-k=rpe] [data-rpe="5"]').click();await fp.locator('[data-m=save-finish]').click();await fp.locator('[data-m=save-finish]').click();assert.ok((await fp.locator('.session-summary').textContent()).includes('۱ حرکت بهتر'));assert.ok((await fp.locator('.session-summary').textContent()).includes('سختی روانی کمتر'));
+   await fp.screenshot({path:path.resolve('test-results/'+name+'-insights.png'),fullPage:true});
+   await fx.close();
    assert.deepEqual(errors,[]);console.log(name+': browser flows, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
   }catch(e){await page.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
  }

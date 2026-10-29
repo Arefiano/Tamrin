@@ -30,7 +30,7 @@
   function spec(o) {
     if (!obj(o)) throw Error('مشخصات حرکت نامعتبر');
     const clean=(v,max)=>{const t=text(v,max);if(/[<>\"']/.test(t))throw Error('مشخصات حرکت شامل متن نامعتبر است');return t;};
-    const z = {name:clean(o.name,200)};
+    const z = {name:clean(o.name,200)};if(!z.name.trim()||!safeKey(z.name))throw Error('نام حرکت نامعتبر');
     for (const k of ['db','lm','tb','pl','carry']) if (o[k]) z[k]=1;
     for (const k of ['unit','tag','pz']) if (o[k] != null) z[k]=clean(o[k],300);
     if(o.r){if(!Array.isArray(o.r)||o.r.length!==2||o.r.some(n=>!Number.isInteger(n)||n<1||n>1000)||o.r[0]>o.r[1])throw Error('بازهٔ حرکت نامعتبر');z.r=o.r.slice();}
@@ -44,10 +44,12 @@
       const st={w:numeric(s.w), r:numeric(s.r, false, 1000), d:s.d?1:0};
       // Historic fractional distances are valid. Live repeat fields enforce integers.
       if(s.x) st.x=1;
+      if(s.at!=null){const n=number(s.at,false,1e16);if(n==null)throw Error('زمان ست نامعتبر');st.at=n;}
       if(s.p!=null) st.p=numeric(s.p);
       if(s.b!=null && s.b!=='') st.b=Number(numeric(s.b,false,80));
       return st;
     })};
+    if(Object.prototype.hasOwnProperty.call(e,'equipment'))z.equipment=e.equipment==null?null:equipment(e.equipment);
     if (e.t) z.t=target(e.t);
     if (e.spec) z.spec=spec(e.spec);
     if (e.variants && !depth) { z.variants={}; for(const k of ['main','alt'])if(e.variants[k])z.variants[k]=entry(e.variants[k],1); }
@@ -67,8 +69,8 @@
   }
   function normalize(raw) {
     if(!obj(raw)||!obj(raw.sessions)||Object.keys(raw.sessions).length>10000)throw Error('این فایل پشتیبان دفتر تمرین نیست');
-    if(raw.schema!=null && raw.schema>2)throw Error('این پشتیبان مربوط به نسخهٔ جدیدتری است؛ ابتدا اپ را به‌روزرسانی کن');
-    const d={v:1,schema:2,sessions:{},deload:[],exNotes:{}};
+    if(raw.schema!=null && raw.schema>3)throw Error('این پشتیبان مربوط به نسخهٔ جدیدتری است؛ ابتدا اپ را به‌روزرسانی کن');
+    const d={v:1,schema:3,sessions:{},deload:[],exNotes:{}};
     for(const [k,r] of Object.entries(raw.sessions))d.sessions[k]=session(r,k);
     if(raw.start!=null){if(!iso(raw.start))throw Error('تاریخ شروع نامعتبر');d.start=raw.start;}
     if(raw.deload!=null){if(!Array.isArray(raw.deload)||raw.deload.some(x=>!iso(x)))throw Error('هفتهٔ دی‌لود نامعتبر');d.deload=[...new Set(raw.deload)];}
@@ -78,6 +80,7 @@
     for(const k of ['lastBackup','lastShortcutAttempt','backupPending'])if(raw[k]!=null){const n=number(raw[k],false,1e16);if(n==null)throw Error('زمان پشتیبان نامعتبر');d[k]=n;}
     if(raw.backupMode)d.backupMode=['shortcut','manual'].includes(raw.backupMode)?raw.backupMode:'manual';
     if(raw.shortcutName!=null)d.shortcutName=text(raw.shortcutName,150);
+    if(raw.equipment!=null){if(!obj(raw.equipment)||Object.keys(raw.equipment).length>1000)throw Error('مشخصات دستگاه نامعتبر');d.equipment={};for(const [k,v]of Object.entries(raw.equipment)){if(!safeKey(k)||k.length>200)throw Error('نام حرکت نامعتبر');d.equipment[k]=equipment(v);}}
     // Migrate the incoming state, independent of the receiving device's flags.
     if(!raw.mig2)for(const r of Object.values(d.sessions)){const e=r.ex.sat1;if(e&&!e.alt&&r.date<='2026-10-24')e.alt=true;}
     if(!raw.mig1)for(const r of Object.values(d.sessions)){const e=r.ex.mon1;if(e&&e.alt&&r.date<'2026-10-20')e.alt=false;}
@@ -106,11 +109,13 @@
     }
     for(const x of incoming.conflicts||[])if(!out.conflicts.some(y=>y.key===x.key&&canonical(y.rec)===canonical(x.rec)))out.conflicts.push(clone(x));
     for(const [k,n]of Object.entries(incoming.exNotes))if(!out.exNotes[k]||n.upd>out.exNotes[k].upd)out.exNotes[k]=clone(n);
+    out.equipment=out.equipment||{};
+    for(const [k,v]of Object.entries(incoming.equipment||{}))if(!out.equipment[k]||v.upd>out.equipment[k].upd)out.equipment[k]=clone(v);
     out.deload=[...new Set(out.deload.concat(incoming.deload))];
     const empty=Object.keys(current.sessions).length===0;
     if(empty&&incoming.start)out.start=incoming.start;
     if(incoming.tbBar!=null && (empty || out.tbBar==null))out.tbBar=incoming.tbBar;
-    out.schema=2;out.mig1=1;out.mig2=1;
+    out.schema=3;out.mig1=1;out.mig2=1;
     return {data:out,counts,barConflict:incoming.tbBar!=null && current.tbBar!=null && incoming.tbBar!==current.tbBar};
   }
   function metric(st, exercise) {
@@ -123,5 +128,82 @@
     if(st && st.w!=='' && number(st.w)!=null)return String(number(st.w));
     return st?.p!=='' && number(st?.p)!=null ? String(number(st.p)+(st.b??fallback??0)):'';
   }
-  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal};
+
+  function equipment(o){
+    if(!obj(o))throw Error('مشخصات دستگاه نامعتبر');
+    const out={label:text(o.label??'',100),seat:text(o.seat??'',60),handle:text(o.handle??'',100),note:text(o.note??'',500),upd:0};
+    if(!out.label.trim()&&(out.seat.trim()||out.handle.trim()||out.note.trim()))throw Error('نام دستگاه یا وسیله را هم بنویس');
+    if(o.upd!=null){const n=number(o.upd,false,1e16);if(n==null)throw Error('زمان مشخصات نامعتبر');out.upd=n;}
+    return out;
+  }
+  const labelKey=s=>digits(s).replace(/ك/g,'ک').replace(/ي/g,'ی').replace(/\s+/g,' ').trim().toLocaleLowerCase();
+  function equipmentKey(o){return o?.label?.trim()?JSON.stringify([o.label,o.seat||'',o.handle||''].map(labelKey)):'';}
+  function contextMatch(a,b){
+    if(!!a?.alt!==!!b?.alt)return {ok:false,verified:false,reason:'variant'};
+    const as=a?.spec||{},bs=b?.spec||{};
+    if(as.name&&bs.name&&as.name!==bs.name)return {ok:false,verified:false,reason:'movement'};
+    for(const k of ['db','lm','tb','pl','carry'])if(as.name&&bs.name&&!!as[k]!==!!bs[k])return {ok:false,verified:false,reason:'unit'};
+    if(as.name&&bs.name&&(as.unit||'')!==(bs.unit||''))return {ok:false,verified:false,reason:'unit'};
+    const ak=equipmentKey(a?.equipment),bk=equipmentKey(b?.equipment);
+    if(ak!==bk)return {ok:false,verified:false,reason:'equipment'};
+    return {ok:true,verified:!!ak,reason:ak?'same':'unspecified'};
+  }
+  function comparison(current,previous,t){
+    if(!previous)return {status:'no_history'};
+    const match=contextMatch(current,previous);
+    if(!match.ok)return {status:'context_changed',reason:match.reason,verified:false};
+    const pt=previous.t||t;
+    if(!t||!pt||pt.s!==t.s||canonical(pt.r)!==canonical(t.r))return {status:'target_changed'};
+    const read=(e,n)=>(e?.sets||[]).slice(0,n).map(st=>({w:number(st.w),r:number(st.r)}));
+    const now=read(current,t.s),before=read(previous,t.s);
+    if(now.length<t.s||before.length<t.s||now.concat(before).some(st=>st.w==null||st.r==null||st.r<=0))return {status:'incomplete'};
+    if(t.rir){
+      if(current.rir===''||current.rir==null||previous.rir===''||previous.rir==null)return {status:'rir_missing'};
+      if(number(current.rir)!==number(previous.rir))return {status:'rir_changed',currentRir:number(current.rir),previousRir:number(previous.rir)};
+    }
+    const close=(a,b)=>Math.abs(a-b)<0.001;
+    const sameWeights=now.every((st,i)=>close(st.w,before[i].w));
+    const sameReps=now.every((st,i)=>close(st.r,before[i].r));
+    let kind,delta;
+    if(sameWeights){kind=(current.spec?.unit==='متر'||current.spec?.carry)?'distance':'reps';delta=now.reduce((n,st,i)=>n+st.r-before[i].r,0);}
+    else if(sameReps){
+      const differences=now.map((st,i)=>st.w-before[i].w);
+      if(!differences.every(d=>close(d,differences[0])))return {status:'mixed'};
+      kind='weight';delta=differences[0];
+    }else return {status:'mixed'};
+    delta=Math.round(delta*100)/100;
+    return {status:'compared',kind,delta,verdict:delta>0?'up':delta<0?'down':'same',verified:match.verified,count:t.s};
+  }
+  function progression(previous,t,current){
+    if(!previous)return {type:'info',reason:'no_history'};
+    const match=contextMatch(current,previous);
+    if(!match.ok)return {type:'info',reason:'context_changed'};
+    const pt=previous.t||t;
+    if(pt.s!==t.s||canonical(pt.r)!==canonical(t.r))return {type:'info',reason:'target_changed'};
+    const done=(previous.sets||[]).slice(0,pt.s);
+    if(done.length<pt.s||done.some(st=>!st.d||number(st.w)==null||number(st.w)<=0||number(st.r)==null))return {type:'info',reason:'incomplete'};
+    if(pt.rir&&(previous.rir===''||previous.rir==null||number(previous.rir)==null))return {type:'info',reason:'rir_missing'};
+    if(pt.rir&&number(previous.rir)<pt.rir[0])return {type:'info',reason:'rir_low'};
+    if(done.some(st=>number(st.r)<pt.r[1]))return {type:'info',reason:'reps_low',cap:pt.r[1]};
+    const w=number(done[0].w);
+    if(done.some(st=>Math.abs(number(st.w)-w)>0.001))return {type:'info',reason:'mixed_weights'};
+    return {type:'up',w0:w,bottom:t.r[0],count:pt.s,cap:pt.r[1],rir:previous.rir,verified:match.verified};
+  }
+  function latestSet(sessions,today,now=Date.now()){
+    let last=null;
+    for(const rec of Object.values(sessions)){
+      if(rec.done||rec.date!==today)continue;
+      for(const [id,e]of Object.entries(rec.ex||{}))for(const [index,st]of (e.sets||[]).entries()){
+        if(!st.d||!st.at||st.at>now||now-st.at>12*60*60*1000)continue;
+        if(!last||st.at>last.at)last={rec,id,index,at:st.at};
+      }
+    }
+    return last;
+  }
+  function summarize(comparisons,currentRpm,previousRpm){
+    const counted=comparisons.filter(c=>c.status==='compared');
+    return {up:counted.filter(c=>c.verdict==='up').length,down:counted.filter(c=>c.verdict==='down').length,same:counted.filter(c=>c.verdict==='same').length,unknown:comparisons.length-counted.length,assumed:counted.filter(c=>!c.verified).length,mental:number(currentRpm)>0&&number(previousRpm)>0?number(currentRpm)-number(previousRpm):null};
+  }
+
+  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal,equipment,equipmentKey,contextMatch,comparison,progression,latestSet,summarize};
 });
