@@ -90,7 +90,7 @@ details.warm[open] summary::after{transform:rotate(-135deg)}
 .warm ul{margin:0;padding:0 16px 14px;list-style:none;display:flex;flex-direction:column;gap:6px}
 .warm li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:16px}
 .warm li .en{font-weight:700}
-.warm li .muted{font-size:15px}
+.warm li .muted{font-size:15px}.warm li .info-btn{margin-inline-start:auto}.warm li .my-note{flex-basis:100%;padding-inline-start:0}
 
 /* exercise list */
 .list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
@@ -228,6 +228,38 @@ textarea:focus{border-color:var(--accent);outline:none}
 .m-prog{margin:0;font-size:14px;color:var(--ink-2);background:var(--surface-2);border-radius:12px;padding:8px 10px;line-height:1.6}
 .m-act{display:flex;gap:8px}
 .m-act .btn{flex:1;min-height:46px;font-size:16px}
+/* Movement guide: the body scrolls; the thumb controls stay at the bottom. */
+.modal.exercise-guide{place-items:end center;padding:0;overscroll-behavior:contain}
+.exercise-guide .m-card{max-width:560px;height:min(88dvh,850px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px);overflow:hidden;padding:0;gap:0;border-radius:24px 24px 0 0}
+.guide-handle{height:4px;width:38px;border-radius:9px;background:var(--line-2);margin:9px auto 2px;flex:none}
+.guide-head{display:flex;align-items:center;gap:12px;padding:10px 16px 12px;flex:none;border-bottom:1px solid var(--line)}
+.guide-head>div{flex:1;min-width:0}.guide-head h2{font-size:19px}.guide-head .en{display:block;font-size:14px;line-height:1.4;margin-top:4px;color:var(--ink-2);overflow-wrap:anywhere}
+.guide-close{width:44px;height:44px;flex:none;border:1px solid var(--line-2);background:var(--surface-2);border-radius:12px;font-size:30px;line-height:1;color:var(--ink-2)}
+.guide-viewport{min-height:0;flex:1;overflow:hidden;touch-action:pan-y;overscroll-behavior:contain}
+.guide-track{display:flex;direction:rtl;width:100%;height:100%;transform:translateX(0);transition:transform .24s var(--ease)}
+.guide-panel{flex:0 0 100%;min-width:0;overflow-y:auto;overscroll-behavior-y:contain;padding:14px 16px 20px;scrollbar-width:thin;line-height:1.7}
+.guide-panel:focus{outline:none}.guide-panel h3{margin:14px 0 8px;font-size:16px}
+.guide-image{aspect-ratio:3/2;border:1px dashed var(--line-2);border-radius:16px;background:var(--field);position:relative;display:flex;justify-content:space-between;padding:12px;color:var(--ink-2);font-size:13px}
+.guide-image::after{content:'جای تصویر اجرای حرکت';position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-2);font-size:13px;opacity:.65}
+.guide-muscles{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.guide-muscles span{border:1px solid currentColor;border-radius:9px;padding:3px 8px;color:#C5F04A}.guide-muscles .secondary{color:#8FCFFF}
+.guide-hint{font-size:12px;color:var(--ink-2);margin:8px 0 12px}
+.guide-cues{list-style:none;margin:12px 0;padding:0;display:grid;gap:8px;counter-reset:cue}
+.guide-cues li{display:flex;align-items:baseline;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:15px}
+.guide-cues li::before{counter-increment:cue;content:counter(cue,persian);color:var(--accent);font-weight:800;flex:none}
+.guide-error{margin:12px 0;padding:10px 12px;border-inline-start:3px solid var(--ink-2);background:var(--field);border-radius:10px;font-size:14px;color:var(--ink-2)}
+.guide-program{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:14px}.guide-program ul{padding-inline-start:20px;margin:5px 0}
+.guide-personal{border:1px solid var(--line-2);border-radius:14px;padding:12px;margin-top:14px}.guide-personal-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.guide-personal-head .btn{min-height:44px;font-size:14px;padding:6px 12px}
+.guide-personal p{white-space:pre-line;font-size:14px;margin:8px 0;color:var(--accent);overflow-wrap:anywhere}
+.guide-personal textarea{margin:8px 0;min-height:110px}.guide-personal .m-sub{color:var(--ink-2);font-size:12px}
+.guide-nav{display:flex;direction:rtl;flex:none;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));gap:4px;border-top:1px solid var(--line-2);background:var(--surface)}
+.guide-tab{flex:1;position:relative;min-height:62px;border:0;border-radius:12px;background:transparent;color:var(--ink-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800;font-size:14px}
+.guide-tab svg{width:24px;height:24px}.guide-tab[aria-selected=true]{color:var(--accent);background:var(--accent-soft)}
+.guide-tab[aria-selected=true]::after{content:'';position:absolute;bottom:0;left:18%;right:18%;height:3px;background:var(--accent);border-radius:5px}
+.guide-panel .insight{margin:12px 0;padding:12px}.guide-panel .insight p{margin:8px 0}.guide-panel .prev{flex-wrap:wrap}
+.guide-sources{font-size:13px;margin-top:16px;color:var(--ink-2)}.guide-sources ul{padding-inline-start:20px}.guide-sources a{color:var(--ink-2)}
+@media(min-width:600px){.modal.exercise-guide{padding-bottom:16px}.exercise-guide .m-card{border-radius:24px}}
+@media(prefers-reduced-motion:reduce){.guide-track{transition:none}}
 .m-num{display:flex;align-items:center;gap:10px}
 .m-num input{width:110px;height:52px;border-radius:12px;border:1px solid var(--line-2);background:var(--field);text-align:center;font-size:25px;font-weight:800;direction:ltr;-webkit-appearance:none;appearance:none}
 .m-num input::placeholder{color:#5D6670}
@@ -682,8 +714,8 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
 
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.7.1</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.7.1</b><span class="muted"> · ۷ آبان</span><br>حذف ثبت جداگانهٔ وسیله و تنظیمات؛ انتقال اطلاعات قبلی به نکتهٔ حرکت. نکته‌ها مستقل از روز و برنامه، برای خود حرکت اصلی یا جایگزین حفظ می‌شوند.</li><li><b dir="ltr">3.7.0</b><span class="muted"> · ۷ آبان</span><br>دلیل پیشنهاد وزنه، مقایسهٔ هم‌شرایط، ادامهٔ سریع جلسه، مشخصات دستگاه و جمع‌بندی پایان جلسه.</li><li><b dir="ltr">3.6.0</b><span class="muted"> · ۷ آبان</span><br>بازگردانی امن و نسخهٔ نجات، حفظ تعارض‌ها، برگشت از اشتباه، مشخصات مستقل جایگزین‌ها، محاسبات دقیق‌تر، پشتیبان با میان‌بر و به‌روزرسانی امن. محاسبهٔ ست‌های تیک‌نخورده حفظ شد.</li><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.8.0</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.8.0</b><span class="muted"> · ۷ آبان</span><br>راهنمای حرکت در پنجرهٔ پایین؛ اجرا، وزنه و مقایسه با تب‌های پایین و اسلاید مستقل. نکات پژوهش‌شده و جای خالی تصاویر برای حرکت اصلی، جایگزین و گرم‌کردن.</li><li><b dir="ltr">3.7.1</b><span class="muted"> · ۷ آبان</span><br>حذف ثبت جداگانهٔ وسیله و تنظیمات؛ انتقال اطلاعات قبلی به نکتهٔ حرکت. نکته‌ها مستقل از روز و برنامه، برای خود حرکت اصلی یا جایگزین حفظ می‌شوند.</li><li><b dir="ltr">3.7.0</b><span class="muted"> · ۷ آبان</span><br>دلیل پیشنهاد وزنه، مقایسهٔ هم‌شرایط، ادامهٔ سریع جلسه، مشخصات دستگاه و جمع‌بندی پایان جلسه.</li><li><b dir="ltr">3.6.0</b><span class="muted"> · ۷ آبان</span><br>بازگردانی امن و نسخهٔ نجات، حفظ تعارض‌ها، برگشت از اشتباه، مشخصات مستقل جایگزین‌ها، محاسبات دقیق‌تر، پشتیبان با میان‌بر و به‌روزرسانی امن. محاسبهٔ ست‌های تیک‌نخورده حفظ شد.</li><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -1006,6 +1038,1050 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
 
   return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal,equipment,equipmentKey,noteKey,equipmentToNotes,contextMatch,comparison,progression,latestSet,summarize};
 });
+
+/* Researched exercise guides, 2026-10-29. Image slots intentionally empty.
+   Visual specs describe future assets; primary/secondary colors are schematic roles, not EMG. */
+(function(root){
+  const data = {
+  "exercises": {
+    "Chest-Supported Dumbbell Row": {
+      "cues": [
+        "سینه روی نیمکت و پاها ثابت",
+        "آرنج‌ها را به سمت پهلو عقب ببر",
+        "با بازشدن کنترل‌شدهٔ دست‌ها برگرد"
+      ],
+      "error": "برای بالا آوردن دمبل سینه را از پشتی جدا نکن.",
+      "image": null,
+      "visual": "نمای سه‌ربعِ پشت؛ دست‌های آویزان ← دمبل کنار تنه؛ نمای کوچک گیرش خنثی. لت و بخش میانی پشت سبز؛ دو دمبل و تماس سینه واضح.",
+      "sources": [
+        "S1"
+      ],
+      "primary": [
+        "لت و پشت میانی"
+      ],
+      "secondary": [
+        "جلو بازو",
+        "دلتوئید خلفی"
+      ]
+    },
+    "Chest-Supported Machine Row": {
+      "cues": [
+        "صندلی و پد را برای دسترسی راحت تنظیم کن",
+        "بدون جداشدن سینه دسته‌ها را بکش",
+        "دسته‌ها را آرام جلو ببر"
+      ],
+      "error": "عقب‌کشیدن تنه برای کامل‌کردن تکرار.",
+      "image": null,
+      "visual": "نمای سه‌ربع کنار؛ پد سینه و مسیر اهرم واقعی دیده شود؛ لت و بخش میانی پشت.",
+      "sources": [
+        "S2",
+        "S3"
+      ],
+      "primary": [
+        "لت و پشت میانی"
+      ],
+      "secondary": [
+        "جلو بازو",
+        "دلتوئید خلفی"
+      ]
+    },
+    "Neutral-Grip Lat Pulldown": {
+      "cues": [
+        "پد ران ثابت و کف دست‌ها روبه‌هم",
+        "آرنج‌ها را پایین و نزدیک پهلو بیاور",
+        "دسته را آرام بالا ببر و دامنهٔ راحت شانه را حفظ کن"
+      ],
+      "error": "تاب‌دادن تنه یا کشیدن پشت گردن.",
+      "image": null,
+      "visual": "سه‌ربع جلو؛ دستهٔ موازی، کابل از بالا، دست‌های بالا ← دسته مقابل بالای سینه؛ لت سبز. رسیدن دسته به سینه اجباری ترسیم نشود.",
+      "sources": [
+        "S4"
+      ],
+      "primary": [
+        "لت"
+      ],
+      "secondary": [
+        "خم‌کننده‌های آرنج",
+        "عضلات کمکی کتف"
+      ]
+    },
+    "Machine Lat Pulldown": {
+      "cues": [
+        "صندلی و پد ران متناسب با دسترسی دسته",
+        "دسته‌ها را جلوی بدن پایین بکش",
+        "آرام و بدون عقب‌رفتن زیاد تنه برگرد"
+      ],
+      "error": "دستگاهِ اهرمی را با لت کابل یا کشیدن پشت گردن اشتباه نکنیم.",
+      "image": null,
+      "visual": "نمای سه‌ربع جلو با محور اهرم و دسته‌های واقعی، دست بالا ← کنار بالای سینه؛ لت؛ گیرش متناسب با وسیله.",
+      "sources": [
+        "S4"
+      ],
+      "primary": [
+        "لت"
+      ],
+      "secondary": [
+        "خم‌کننده‌های آرنج",
+        "عضلات کمکی کتف"
+      ]
+    },
+    "Neutral-Grip Assisted Pull-Up": {
+      "cues": [
+        "دستهٔ موازی و تکیه‌گاه کمکی را درست بگیر",
+        "بدون تاب بدن را بالا ببر",
+        "پایین‌رفتن را کنترل کن"
+      ],
+      "error": "رهاکردن ناگهانی تکیه‌گاه یا جلوکشیدن گردن برای عبور چانه.",
+      "image": null,
+      "visual": "سه‌ربع جلو؛ دستگاه کمکی، محل زانو/پا و جهت کمک دستگاه مشخص؛ لت، بازو کمکی.",
+      "sources": [
+        "S4"
+      ],
+      "primary": [
+        "لت"
+      ],
+      "secondary": [
+        "خم‌کننده‌های آرنج",
+        "عضلات کمکی کتف"
+      ],
+      "setup": "دستگاه کمک‌بارفیکس با پد زانو و گیرش خنثی."
+    },
+    "Single-Arm Cable Row": {
+      "cues": [
+        "نشسته روی دستگاه روئینگ، پاها روی تکیه‌گاه",
+        "آرنج را به سمت کنار لگن بکش",
+        "با تنهٔ پایدار دست را آرام جلو ببر"
+      ],
+      "error": "عقب‌رفتن تنه یا چرخاندن شدید کمر برای جابه‌جایی وزنه.",
+      "image": null,
+      "visual": "سه‌ربع کنار دست فعال؛ نشیمن دستگاه، تکیه‌گاه پا و اتصال تک‌دسته در قرقرهٔ پایین واضح؛ دست جلو ← کنار تنه؛ لت و پشت میانی اصلی، جلو بازو و دلتوئید خلفی کمکی.",
+      "sources": [
+        "S2",
+        "S3"
+      ],
+      "primary": [
+        "لت و پشت میانی"
+      ],
+      "secondary": [
+        "جلو بازو",
+        "دلتوئید خلفی"
+      ],
+      "setup": "نشسته روی دستگاه روئینگ؛ تک‌دسته، قرقرهٔ پایین و پا روی تکیه‌گاه."
+    },
+    "Seated Cable Row": {
+      "cues": [
+        "پاها روی تکیه‌گاه و زانو کمی نرم",
+        "دسته را به سمت پایین سینه/بالای شکم بکش",
+        "بدون خم‌کردن کمر آرام برگرد"
+      ],
+      "error": "رفت‌وبرگشت زیاد بالاتنه یا قوزکردن برای کشش بیشتر.",
+      "image": null,
+      "visual": "نمای کنار و جزئیات گیرش؛ قرقرهٔ پایین، مسیر کابل، دست کشیده ← دسته نزدیک تنه؛ لت و پشت میانی.",
+      "sources": [
+        "S2",
+        "S3"
+      ],
+      "primary": [
+        "لت و پشت میانی"
+      ],
+      "secondary": [
+        "جلو بازو",
+        "دلتوئید خلفی"
+      ]
+    },
+    "Single-Arm Cable Chest Press": {
+      "cues": [
+        "پشت به قرقره، پاها پایدار",
+        "دسته را از کنار سینه جلو ببر",
+        "بدون چرخش تنه آرام برگرد"
+      ],
+      "error": "چرخاندن لگن و کمر همراه فشار.",
+      "image": null,
+      "visual": "سه‌ربعِ دست فعال؛ کابل از پشت در حوالی سینه، یک دست فعال و دست آزاد واضح؛ سینه سبز.",
+      "sources": [
+        "S5"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Single-Arm Machine Chest Press": {
+      "cues": [
+        "دسته در ارتفاع راحت سینه",
+        "یک دست فشار بده و تنه ثابت بماند",
+        "کنترل‌شده برگرد"
+      ],
+      "error": "دستگاهِ دسته‌های به‌هم‌متصل را تک‌دست فرض نکنیم.",
+      "image": null,
+      "visual": "دستگاه با بازوهای مستقل؛ یک دست فعال، پشت روی پشتی؛ سینه.",
+      "sources": [
+        "S5"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ],
+      "setup": "فقط دستگاه با دسته‌های مستقل برای اجرای تک‌دست."
+    },
+    "Neutral-Grip Dumbbell Bench Press": {
+      "cues": [
+        "پا و تنه روی تکیه‌گاه پایدار",
+        "کف دست‌ها روبه‌هم و مچ روی ساعد",
+        "در دامنهٔ راحت شانه پایین برو و آرام پرس کن"
+      ],
+      "error": "پایین‌بردن اجباری بازو زیر دامنهٔ راحت یا خم‌شدن مچ.",
+      "image": null,
+      "visual": "نمای سه‌ربع جلو با نمای کوچک از سر نیمکت؛ دو دمبل موازی، آرنج حدود ۳۰–۴۵ درجه از تنه به‌عنوان راهنمای برنامه؛ سینه.",
+      "sources": [
+        "S6"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Machine Chest Press": {
+      "cues": [
+        "صندلی را برای ارتفاع مناسب دسته تنظیم کن",
+        "با تکیهٔ پشت فشار بده",
+        "بدون ضربه آرام برگرد"
+      ],
+      "error": "عقب‌رفتن بیش از حد دسته‌ها و جداشدن پشت.",
+      "image": null,
+      "visual": "نمای سه‌ربع کنار، محور و مسیر واقعی دستگاه؛ سینه، دلتوئید قدامی و سه‌سر کمکی.",
+      "sources": [
+        "S5"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Incline Dumbbell Press": {
+      "cues": [
+        "شیب ملایم نیمکت مطابق برنامه",
+        "مچ‌ها در امتداد ساعد",
+        "پایین‌رفتن و پرس در دامنهٔ راحت"
+      ],
+      "error": "شیب زیاد را با همین نام و همین تصویر جایگزین نکنیم؛ کمر را برای جبران قوس نده.",
+      "image": null,
+      "visual": "سه‌ربع کنار؛ شیب ۱۵–۳۰ درجه انتخاب برنامه است، نه مقدار بهینهٔ قطعی؛ تأکید شماتیک بخش ترقوه‌ای سینه.",
+      "sources": [
+        "S6",
+        "S7"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Incline Machine Press": {
+      "cues": [
+        "صندلی و دسته متناسب با مسیر دستگاه",
+        "پشت روی پشتی",
+        "دسته‌ها را بدون بالاانداختن شانه جلو/بالا ببر"
+      ],
+      "error": "اشتباه گرفتن با پرس سرشانهٔ دستگاه.",
+      "image": null,
+      "visual": "سه‌ربع کنار با دسته و ریل واقعی؛ مسیر مایل سینه؛ بخش بالایی سینه.",
+      "sources": [
+        "S5",
+        "S7"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Dumbbell Floor Press": {
+      "cues": [
+        "روی زمین، پاها ثابت",
+        "بازو آرام به زمین نزدیک شود",
+        "بدون جهش پرس کن"
+      ],
+      "error": "کوبیدن آرنج یا استفاده از زمین برای پرتاب وزنه.",
+      "image": null,
+      "visual": "نمای سه‌ربع کنار؛ بازو نزدیک تماس زمین ← دست‌ها بالای سینه؛ سینه و سه‌سر، نبود نیمکت روشن.",
+      "sources": [
+        "S6"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Dumbbell Bench Press": {
+      "cues": [
+        "چهارچوب بدن ثابت",
+        "دمبل‌ها را کنترل‌شده کنار سینه پایین بیاور",
+        "با مچ مستقیم بالا ببر"
+      ],
+      "error": "برخورد دمبل‌ها، پرتاب وزنه یا رهاکردن ناگهانی در پایان.",
+      "image": null,
+      "visual": "نیمکت صاف و گیرش متعارف، مستقل از تصویر گیرش خنثی؛ سینه.",
+      "sources": [
+        "S6"
+      ],
+      "primary": [
+        "سینه"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "دلتوئید قدامی"
+      ]
+    },
+    "Reverse Pec Deck": {
+      "cues": [
+        "صندلی متناسب با ارتفاع دسته و دسترسی راحت",
+        "آرنج کمی خم",
+        "بازوها را باز کن و آرام برگرد"
+      ],
+      "error": "فشار اجباری برای جمع‌کردن حداکثری کتف یا عقب‌بردن بیش از حد بازو.",
+      "image": null,
+      "visual": "نمای سه‌ربع پشت؛ سینه رو به پد، دسته‌ها جلو ← دو طرف؛ دلتوئید خلفی با پشت میانی کمکی.",
+      "sources": [
+        "S8",
+        "S9"
+      ],
+      "primary": [
+        "دلتوئید خلفی"
+      ],
+      "secondary": [
+        "پشت میانی"
+      ]
+    },
+    "Chest-Supported Dumbbell Rear Delt Raise": {
+      "cues": [
+        "سینه روی نیمکت شیب‌دار",
+        "با آرنج کمی خم دست‌ها را باز کن",
+        "تا دامنهٔ قابل‌کنترل بالا برو و آرام پایین بیاور"
+      ],
+      "error": "تبدیل حرکت به روئینگ با خم‌کردن زیاد آرنج.",
+      "image": null,
+      "visual": "سه‌ربع پشت، نمای کوچک از بالا برای مسیر T؛ آرنج تقریباً ثابت، دلتوئید خلفی.",
+      "sources": [
+        "S9"
+      ],
+      "primary": [
+        "دلتوئید خلفی"
+      ],
+      "secondary": [
+        "پشت میانی"
+      ]
+    },
+    "Dumbbell Lateral Raise": {
+      "cues": [
+        "تنه ثابت و دست‌ها کمی جلوتر از پهلو",
+        "آرنج نرم و مسیر راحت شانه",
+        "تا حوالی ارتفاع شانه بالا برو و آرام پایین بیاور"
+      ],
+      "error": "تاب‌دادن بدن یا چرخاندن اجباری شست رو به پایین.",
+      "image": null,
+      "visual": "نمای جلو/سه‌ربع، دمبل پایین ← بازو نزدیک افق در صفحهٔ اندکی جلوی بدن؛ دلتوئید میانی.",
+      "sources": [
+        "S10"
+      ],
+      "primary": [
+        "دلتوئید میانی"
+      ],
+      "secondary": [
+        "عضلات گردش کتف"
+      ]
+    },
+    "Cable Lateral Raise": {
+      "cues": [
+        "کابل و تکیه‌گاه درست تنظیم شود",
+        "تنه ثابت و آرنج نرم",
+        "دست را از مسیر راحت به پهلو بالا ببر و کنترل‌شده برگرد"
+      ],
+      "error": "با تاب تنه یا بالاانداختن شانه، کابل را بالا نبر.",
+      "image": null,
+      "visual": "سه‌ربع جلو با نمایش قرقره، کابل و دست فعال؛ دلتوئید میانی.",
+      "sources": [
+        "S10"
+      ],
+      "primary": [
+        "دلتوئید میانی"
+      ],
+      "secondary": [
+        "عضلات گردش کتف"
+      ],
+      "setup": "ایستاده، قرقرهٔ پایین و کابل از جلوی بدن."
+    },
+    "Standing Single-Arm Landmine Press": {
+      "cues": [
+        "پایهٔ میله ثابت و پاها پایدار",
+        "یک دست میله را بالا و جلو فشار دهد",
+        "بدون قوس اضافهٔ کمر برگرد"
+      ],
+      "error": "تصویرِ دو دست، لانج عمیق یا فشار عمودی کامل را جایگزین نکنیم.",
+      "image": null,
+      "visual": "سه‌ربع کنار دست فعال؛ تمام میله و محور زمین داخل قاب؛ یک دست کنار شانه ← بالا/جلو؛ دلتوئید قدامی، سینهٔ بالایی کمکی.",
+      "sources": [
+        "S11"
+      ],
+      "primary": [
+        "دلتوئید قدامی"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "سینهٔ بالایی"
+      ]
+    },
+    "Half-Kneeling Landmine Press": {
+      "cues": [
+        "یک زانو روی پد، پای دیگر جلو",
+        "لگن و تنه پایدار",
+        "یک‌دست میله را بالا و جلو فشار بده"
+      ],
+      "error": "جای زانوی روی زمین و پای جلو را بین دو فریم عوض نکنیم.",
+      "image": null,
+      "visual": "سه‌ربع کنار؛ زانو/پا و تک‌دست‌بودن واضح؛ دلتوئید قدامی، سینه کمکی.",
+      "sources": [
+        "S11"
+      ],
+      "primary": [
+        "دلتوئید قدامی"
+      ],
+      "secondary": [
+        "سه‌سر",
+        "سینهٔ بالایی"
+      ],
+      "setup": "زانوی سمت دست فعال روی پد؛ پای مخالف جلو."
+    },
+    "Cable Curl": {
+      "cues": [
+        "قرقره پایین و مچ راحت",
+        "آرنج‌ها نزدیک تنه",
+        "ساعد را بالا بیاور و آهسته باز کن"
+      ],
+      "error": "عقب‌انداختن تنه و جلوپرتاب‌کردن شانه.",
+      "image": null,
+      "visual": "سه‌ربع جلو؛ اتصال کابل واقعی و نوع دسته مشخص؛ جلو بازو، بازویی کمکی.",
+      "sources": [
+        "S12"
+      ],
+      "primary": [
+        "دوسربازویی و بازویی"
+      ],
+      "secondary": [
+        "بازویی‌زنداعلایی"
+      ]
+    },
+    "Dumbbell Curl": {
+      "cues": [
+        "پاها ثابت و مچ مستقیم",
+        "آرنج نزدیک تنه",
+        "با کنترل بالا و پایین برو"
+      ],
+      "error": "تغییر ناخودآگاه به هامر یا تاب‌دادن بدن.",
+      "image": null,
+      "visual": "سه‌ربع جلو، کف دستِ رو به جلو/بالا واضح؛ جلو بازو؛ هر دو فریم یک نوع گیرش.",
+      "sources": [
+        "S13"
+      ],
+      "primary": [
+        "دوسربازویی و بازویی"
+      ],
+      "secondary": [
+        "بازویی‌زنداعلایی"
+      ]
+    },
+    "Rope Triceps Pressdown": {
+      "cues": [
+        "طناب از قرقره بالا",
+        "آرنج‌ها نزدیک تنه",
+        "ساعدها را پایین باز کن و آرام برگرد"
+      ],
+      "error": "هل‌دادن با شانه/تنه یا خم‌شدن زیاد مچ.",
+      "image": null,
+      "visual": "نمای سه‌ربع کنار؛ طناب دوشاخه، دو دست و کابل بالای سر دیده شود؛ سه‌سر پشت بازو.",
+      "sources": [
+        "S14"
+      ],
+      "primary": [
+        "سه‌سر"
+      ],
+      "secondary": []
+    },
+    "Seated Leg Curl": {
+      "cues": [
+        "زانو هم‌راستای محور و ران زیر پد",
+        "لگن روی صندلی",
+        "زانوها را خم کن و آرام باز کن"
+      ],
+      "error": "بلندشدن لگن یا مجبورکردن کاربر به خم‌شدن زیاد به جلو.",
+      "image": null,
+      "visual": "نمای کنار؛ پد ران و پد پشت پایین ساق مشخص؛ زانوی بازِ راحت ← خم؛ همسترینگ.",
+      "sources": [
+        "S15"
+      ],
+      "primary": [
+        "همسترینگ"
+      ],
+      "secondary": [
+        "دوقلو"
+      ]
+    },
+    "Lying Leg Curl": {
+      "cues": [
+        "زانو نزدیک محور و پد بالای پاشنه",
+        "لگن روی پد",
+        "زانوها را خم کن و آهسته باز کن"
+      ],
+      "error": "بلندکردن لگن و قوس‌دادن کمر.",
+      "image": null,
+      "visual": "کنار یا سه‌ربع پشت؛ دمر روی دستگاه، پا پایین ← ساق بالا؛ همسترینگ.",
+      "sources": [
+        "S15"
+      ],
+      "primary": [
+        "همسترینگ"
+      ],
+      "secondary": [
+        "دوقلو"
+      ]
+    },
+    "Trap Bar Deadlift": {
+      "cues": [
+        "وسط میله، دستهٔ بلند و تنه مهار",
+        "زمین را هل بده و بایست",
+        "میله را کنترل‌شده زمین بگذار و دوباره تنظیم کن"
+      ],
+      "error": "خم‌کردن بازو، عقب‌دادن تنه در بالا، جهش از زمین.",
+      "image": null,
+      "visual": "سه فریم کنار/سه‌ربع: تنظیم روی زمین، جداشدن از زمین، ایستاده؛ دستهٔ بلند، دست‌ها کنار بدن، چهارسر و باسن؛ همسترینگ/راست‌کننده‌ها کمکی.",
+      "sources": [
+        "S16"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": [
+        "همسترینگ",
+        "راست‌کننده‌های ستون مهره‌ها (نگهدارنده)"
+      ]
+    },
+    "Dumbbell Romanian Deadlift": {
+      "cues": [
+        "زانو کمی نرم و دمبل نزدیک پا",
+        "باسن عقب برود",
+        "تا دامنهٔ کنترل‌شدهٔ لگن پایین برو و بایست"
+      ],
+      "error": "برای رساندن دمبل به زمین کمر را گرد نکن؛ به اسکوات تبدیل نشود.",
+      "image": null,
+      "visual": "سه فریم کنار: ایستاده، میانهٔ هیپ‌هینج، انتهای دامنه؛ همسترینگ و باسن.",
+      "sources": [
+        "S17"
+      ],
+      "primary": [
+        "همسترینگ و باسن"
+      ],
+      "secondary": [
+        "راست‌کننده‌های ستون مهره‌ها (نگهدارنده)"
+      ]
+    },
+    "Leg Press": {
+      "cues": [
+        "کف پا ثابت و لگن روی پشتی",
+        "زانو هم‌جهت پنجه",
+        "تا عمق کنترل‌شده پایین برو و بدون ضربه بالا بیاور"
+      ],
+      "error": "جمع‌شدن لگن از پشتی یا بیش‌کشیدگی زانو.",
+      "image": null,
+      "visual": "کنار و نمای کوچک صفحه از جلو؛ نوع دستگاه ۴۵ درجه/افقی مشخص؛ چهارسر و باسن.",
+      "sources": [
+        "S18"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": [],
+      "setup": "پیش‌فرض: دستگاه پرس پا با سورتمهٔ ۴۵ درجه."
+    },
+    "Hack Squat": {
+      "cues": [
+        "پشت و شانه روی پد",
+        "پاها پایدار",
+        "با زانوی هم‌جهت پنجه پایین و بالا برو"
+      ],
+      "error": "بلندشدن پاشنه یا جداشدن لگن و کمر از پشتی.",
+      "image": null,
+      "visual": "سه‌ربع کنار؛ پد شانه و ریل مایل دیده شوند؛ چهارسر و باسن.",
+      "sources": [
+        "S19"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": []
+    },
+    "Single-Leg Leg Press": {
+      "cues": [
+        "یک پا روی صفحه و لگن صاف",
+        "زانو در راستای پنجه",
+        "با دامنه‌ای که لگن ثابت می‌ماند حرکت کن"
+      ],
+      "error": "چرخش لگن یا نمایش پای آزاد در مسیر صفحه.",
+      "image": null,
+      "visual": "سه‌ربع جلو+نمای کنار کوچک؛ جای پای فعال و پای آزاد امن؛ چهارسر و باسن.",
+      "sources": [
+        "S18"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": [],
+      "setup": "همان پرس پای سورتمه‌ای؛ پای فعال بالای صفحه و پای آزاد بیرون مسیر سورتمه."
+    },
+    "Split Squat": {
+      "cues": [
+        "پاها در وضعیت گام ثابت",
+        "با کمک دست تعادل بگیر",
+        "پایین برو و با پای جلو بلند شو"
+      ],
+      "error": "تصویر بلغاری با پای عقب روی نیمکت، یا لانجِ همراه قدم‌برداشتن.",
+      "image": null,
+      "visual": "سه‌ربع کنار؛ پای عقب روی زمین و دست روی تکیه‌گاه؛ بالا ← پایین؛ چهارسر و باسن پای جلو.",
+      "sources": [
+        "S19"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": []
+    },
+    "Leg Extension": {
+      "cues": [
+        "زانو هم‌محور دستگاه و پد بالای مچ",
+        "ساق را کنترل‌شده بالا ببر",
+        "آرام به خم‌شدن راحت زانو برگرد"
+      ],
+      "error": "برای بالا آوردن وزنه کمر را قوس نده؛ انتها را ضربه‌ای قفل نکن.",
+      "image": null,
+      "visual": "نمای کنار با نقطهٔ محور زانو؛ ساق پایین ← نزدیک صاف؛ چهارسر. یک نشان کوچک مکث در فاز پایین از تنظیم برنامه بیاید.",
+      "sources": [
+        "S20",
+        "S21"
+      ],
+      "primary": [
+        "چهارسر"
+      ],
+      "secondary": []
+    },
+    "Seated Calf Raise": {
+      "cues": [
+        "سینهٔ پا روی لبه و زانو زیر پد",
+        "پاشنه آرام پایین",
+        "بدون فنر روی پنجه بالا برو"
+      ],
+      "error": "پد روی کشکک یا تغییر حرکت به بازوبسته‌کردن زانو.",
+      "image": null,
+      "visual": "کنار؛ دستگاه نشسته و جزئیات مچ پایین/بالا؛ تأکید نعلی با نمای آناتومیک توضیح‌دار، نه ادعای انزوای کامل.",
+      "sources": [
+        "S22",
+        "S23"
+      ],
+      "primary": [
+        "نعلی"
+      ],
+      "secondary": [
+        "دوقلو (نقش کمتر)"
+      ]
+    },
+    "Landmine Lateral Raise": {
+      "cues": [
+        "مهار میله ثابت و آرنج کمی نرم باشد",
+        "میله را از جلوی بدن در مسیر قطری به بیرون ببر؛ حداکثر تا ارتفاع شانه",
+        "بدون تاب یا کج‌شدن تنه، کنترل‌شده برگرد"
+      ],
+      "error": "حرکت را با پرس رو به بالا یا تاب‌دادن تنه جایگزین نکن.",
+      "image": null,
+      "visual": "دو وضعیت پس از تطبیق اجرا؛ دوربین و محور باید نشان بدهند میله چگونه از جلوی بدن به سمت بیرون می‌رود؛ هدف‌گذاری رنگ پس از تأیید مسیر.",
+      "sources": [
+        "S24"
+      ],
+      "primary": [
+        "دلتوئید میانی"
+      ],
+      "secondary": [
+        "عضلات گردش کتف"
+      ],
+      "setup": "ایستاده؛ مسیر قطری از جلوی بدن به بیرون، حداکثر تا ارتفاع شانه."
+    },
+    "Calf Press on Leg Press": {
+      "cues": [
+        "سینهٔ پا روی لبهٔ امن",
+        "زانوها در وضعیت ثابت",
+        "فقط مچ را آرام پایین و بالا ببر"
+      ],
+      "error": "رهاکردن ضامن یا لغزش کف پا از صفحه؛ نمایش حرکت اسکواتی زانو.",
+      "image": null,
+      "visual": "کنار+کلوزآپ پا؛ پاشنه پایین/بالا، صفحه و مهار امن دستگاه؛ دوقلو و نعلی.",
+      "sources": [
+        "S18",
+        "S22",
+        "S23"
+      ],
+      "primary": [
+        "دوقلو و نعلی"
+      ],
+      "secondary": [
+        "تثبیت‌کننده‌های مچ"
+      ]
+    },
+    "Standing Calf Raise": {
+      "cues": [
+        "پنجه روی تکیه‌گاه امن",
+        "تنه و زانو پایدار",
+        "پاشنه را کنترل‌شده پایین و بالا ببر"
+      ],
+      "error": "تاب‌دادن بدن یا پریدن از پایین.",
+      "image": null,
+      "visual": "نمای کنار با کلوزآپ مچ؛ مدل دستگاه یا دمبل پیش از تولید انتخاب شود؛ دوقلو و نعلی، تأکید دوقلو.",
+      "sources": [
+        "S22",
+        "S23"
+      ],
+      "primary": [
+        "دوقلو و نعلی"
+      ],
+      "secondary": [
+        "تثبیت‌کننده‌های مچ"
+      ],
+      "setup": "پیش‌فرض: دستگاه ایستاده با پد روی شانه."
+    },
+    "Pallof Press": {
+      "cues": [
+        "پهلو به کابلِ هم‌ارتفاع سینه",
+        "دست‌ها جلو بروند و تنه ثابت بماند",
+        "مکث و بازگشت آرام"
+      ],
+      "error": "تصویر نباید چرخش تنه را آموزش دهد؛ مقاومت ضدچرخش است.",
+      "image": null,
+      "visual": "نمای سه‌ربع جلو؛ کابل از کنار، دسته کنار سینه ← جلوی سینه؛ خط جهت نیرو جدا از فلش دست؛ دیوارهٔ شکم با توضیح تثبیت.",
+      "sources": [
+        "S25"
+      ],
+      "primary": [
+        "دیوارهٔ شکم (تثبیت تنه)"
+      ],
+      "secondary": []
+    },
+    "Suitcase Carry": {
+      "cues": [
+        "دمبل فقط در یک دست",
+        "قامت متعادل و شانه‌ها کنترل‌شده",
+        "قدم‌های کوتاه و آرام، سپس سمت دیگر"
+      ],
+      "error": "دو دمبل آن را به Farmer’s Carry تبدیل می‌کند؛ خم‌شدن به طرفین نمایش داده نشود.",
+      "image": null,
+      "visual": "نمای جلو برای راستای تنه و نمای کنار کوچک برای قدم؛ دو فریم قدم‌زدن، نه خم‌شدن جانبی؛ میان‌تنه و ساعد؛ نه عضلهٔ سطحی ساختگی برای عمقی‌ها.",
+      "sources": [
+        "S26"
+      ],
+      "primary": [
+        "دیوارهٔ شکم (تثبیت تنه)"
+      ],
+      "secondary": [
+        "ساعد و گیرش"
+      ]
+    },
+    "Bodyweight Overhead Squat": {
+      "cues": [
+        "دست‌ها بالای سر در دامنهٔ راحت",
+        "کف پا ثابت و زانو هم‌جهت پنجه",
+        "فقط تا عمقِ قابل‌کنترل پایین برو"
+      ],
+      "error": "برای صاف نگه‌داشتن دست‌ها کمر را بیش‌ازحد قوس نده؛ اسکوات عمیق اجباری نیست.",
+      "image": null,
+      "visual": "کنار+نمای جلو کوچک؛ بدون هالتر/چوب، ایستاده ← پایینِ قابل‌کنترل؛ چهارسر/باسن و تثبیت‌کننده‌ها شماتیک.",
+      "sources": [
+        "S19"
+      ],
+      "primary": [
+        "چهارسر و باسن"
+      ],
+      "secondary": []
+    },
+    "Band External Rotation": {
+      "cues": [
+        "اتصال کش در ارتفاع آرنج",
+        "آرنج خم و کنار تنه",
+        "ساعد را بیرون بچرخان و آرام برگرد"
+      ],
+      "error": "بازشدن آرنج از تنه یا چرخیدن کل بدن.",
+      "image": null,
+      "visual": "جلو/سه‌ربع؛ حولهٔ کوچک اختیاری کنار آرنج؛ چرخش ساعد، نه دورشدن بازو؛ تحت‌خاری و گرد کوچک در نمای پشت مشخص.",
+      "sources": [
+        "S27"
+      ],
+      "primary": [
+        "تحت‌خاری و گرد کوچک"
+      ],
+      "secondary": [
+        "دلتوئید خلفی"
+      ]
+    },
+    "Band Face Pull": {
+      "cues": [
+        "کش در حوالی صورت مهار شود",
+        "با تنهٔ پایدار دست‌ها را به کنار صورت بکش",
+        "آرام برگرد"
+      ],
+      "error": "کشش سنگین با عقب‌رفتن تنه یا شراگ عمدی.",
+      "image": null,
+      "visual": "سه‌ربع جلو؛ اتصال کش در صورت، بازو جلو ← دست کنار صورت؛ دلتوئید خلفی و پشت بالایی؛ با تصویر سیم‌کش اشتباه نشود.",
+      "sources": [
+        "S28"
+      ],
+      "primary": [
+        "دلتوئید خلفی و پشت میانی"
+      ],
+      "secondary": [
+        "چرخاننده‌های خارجی شانه"
+      ]
+    },
+    "Standing Wall Calf Stretch": {
+      "cues": [
+        "دست روی دیوار و پاها جابه‌جا",
+        "پای عقب صاف و پاشنه پایین",
+        "بدون ضربه در کشش ملایم بمان"
+      ],
+      "error": "بلندشدن پاشنه یا چرخاندن پای عقب به بیرون.",
+      "image": null,
+      "visual": "یک وضعیت نگه‌داشتنی از کنار+جزئیات پاشنه؛ فلش کوچک انتقال وزن، نه تکرار بالا و پایین؛ ساق عقب.",
+      "sources": [
+        "S29"
+      ],
+      "primary": [],
+      "secondary": []
+    },
+    "Mini-Band Lateral Walk": {
+      "cues": [
+        "کش بالای زانو برای نسخهٔ پایه",
+        "زانوها کمی خم و لگن ثابت",
+        "گام‌های جانبی کوتاه بدون جمع‌شدن کامل پاها"
+      ],
+      "error": "تصویر را مثل اسکوات راه‌رفتنی عمیق یا تاب‌دادن تنه نکشیم.",
+      "image": null,
+      "visual": "نمای جلو، سه حالت پا کنارهمِ با فاصله/گام باز/دنبال‌کردن؛ فلش افقی؛ باسن میانی با تأکید کنترل لگن.",
+      "sources": [
+        "S30"
+      ],
+      "primary": [
+        "سرینی میانی و کوچک"
+      ],
+      "secondary": [
+        "بخش‌های کمکی باسن"
+      ]
+    },
+    "Treadmill": {
+      "cues": [
+        "شروع با سرعت راحت",
+        "قامت طبیعی و قدم‌های قابل‌کنترل",
+        "سرعت/شیب را تدریجی تنظیم کن"
+      ],
+      "error": "آویزان‌شدن از دسته‌ها یا استفاده از تصویر دویدن برای برنامهٔ پیاده‌روی.",
+      "image": null,
+      "visual": "نمای کنارِ پیاده‌روی، تسمه و گیرهٔ ایمنی؛ تصویر عضلات غالب لازم نیست. برنامهٔ اینتروال و پیوسته متن مستقل دارند.",
+      "sources": [
+        "S31"
+      ],
+      "primary": [],
+      "secondary": []
+    },
+    "Stationary Bike": {
+      "cues": [
+        "زین متناسب با دسترسی پا",
+        "در پایین رکاب زانو کمی خم",
+        "لگن ثابت و رکاب‌زدن روان"
+      ],
+      "error": "تاب‌خوردن لگن برای رسیدن پا به رکاب.",
+      "image": null,
+      "visual": "نمای کنار، دو موقعیت رکاب و تنظیم ارتفاع زین؛ مسیر چرخشی رکاب؛ بدون عدد ثابت برای همه.",
+      "sources": [
+        "S31"
+      ],
+      "primary": [],
+      "secondary": []
+    },
+    "Elliptical": {
+      "cues": [
+        "کف پا روی پد و تنه متعادل",
+        "حرکت روان و مقاومت مناسب",
+        "دسته‌ها بدون کشیدن شدید تنه همراه شوند"
+      ],
+      "error": "پا خارج از پد یا تصویر دستگاه استپر به‌جای الپتیکال.",
+      "image": null,
+      "visual": "نمای سه‌ربع کنار؛ مسیر بیضوی پد، دو وضعیتِ واقعی همان دستگاه؛ تصویر عضلات جدا لازم نیست.",
+      "sources": [
+        "S31"
+      ],
+      "primary": [],
+      "secondary": []
+    }
+  },
+  "sources": {
+    "S1": {
+      "title": "PureGym: Incline / Chest-Supported Row",
+      "url": "https://www.puregym.com/exercises/back/rows/incline-row/"
+    },
+    "S2": {
+      "title": "ACE: Seated Row",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/168/seated-row/"
+    },
+    "S3": {
+      "title": "Western University: Back/Lats equipment guides",
+      "url": "https://www.uwo.ca/campusrec/orientation/equipment_guides/backlats.html"
+    },
+    "S4": {
+      "title": "ACE: Seated Lat Pulldown",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/158/seated-lat-pulldown/"
+    },
+    "S5": {
+      "title": "ACE: Seated Chest Press",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/188/seated-chest-press/"
+    },
+    "S6": {
+      "title": "ACE: Dumbbell Chest Press",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/19/chest-press/"
+    },
+    "S7": {
+      "title": "NASM: Single-Arm Incline Dumbbell Chest Press",
+      "url": "https://www.nasm.org/resource-center/exercise-library/single-arm-incline-dumbbell-chest-press"
+    },
+    "S8": {
+      "title": "Life Fitness: Pectoral Fly / Rear Deltoid",
+      "url": "https://www.lifefitness.com/en-us/catalog/strength-training/selectorized/insignia-series-pectoral-fly-rear-deltoid"
+    },
+    "S9": {
+      "title": "ACE: Incline Reverse Fly",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/34/incline-reverse-fly/"
+    },
+    "S10": {
+      "title": "ACE: Lateral Raise",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/26/lateral-raise/"
+    },
+    "S11": {
+      "title": "NSCA TSAC Report 67، صفحهٔ چاپی ۳۱، شکل 4A/4B",
+      "url": "https://www.nsca.com/globalassets/education/tsac-report/tsac-report-67.pdf"
+    },
+    "S12": {
+      "title": "ACE: Standing Bicep Curl",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/322/standing-bicep-curl/"
+    },
+    "S13": {
+      "title": "ACE: Seated Biceps Curl",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/44/seated-biceps-curl/"
+    },
+    "S14": {
+      "title": "ACE: Rope Triceps Pressdown",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/3/triceps-pressdown/"
+    },
+    "S15": {
+      "title": "Maeo et al.: Seated versus prone leg curl، PMID 33009197",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/33009197/"
+    },
+    "S16": {
+      "title": "ASCA: Trap Bar Deadlift",
+      "url": "https://www.strengthandconditioning.org/exercise-highlight/2418-trap-bar-deadlift"
+    },
+    "S17": {
+      "title": "ACE Technique Series: Romanian Deadlift",
+      "url": "https://www.acefitness.org/continuing-education/prosource/january-2016/5767/ace-technique-series-romanian-deadlift/"
+    },
+    "S18": {
+      "title": "ACE: Seated Leg Press",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/154/seated-leg-press/"
+    },
+    "S19": {
+      "title": "PureGym: Squat Variations",
+      "url": "https://www.puregym.com/exercises/legs/quad-exercises/squats/"
+    },
+    "S20": {
+      "title": "Hawaii Pacific Health: Seated Leg Extensions",
+      "url": "https://livinghealthy.hawaiipacifichealth.org/wellness/fitness/your-exercise-routine-seated-leg-extensions"
+    },
+    "S21": {
+      "title": "Larsen et al.: Hip flexion angle in leg extension، PMID 39699974",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/39699974/"
+    },
+    "S22": {
+      "title": "PureGym: Calf Raises",
+      "url": "https://www.puregym.com/exercises/legs/calf-exercises/calf-raises/"
+    },
+    "S23": {
+      "title": "Kinoshita et al.: Standing vs seated calf-raise training، PMID 38156065",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/38156065/"
+    },
+    "S24": {
+      "title": "Muscle & Strength: Landmine Lateral Raise",
+      "url": "https://www.muscleandstrength.com/exercises/landmine-lateral-raise"
+    },
+    "S25": {
+      "title": "ACE: Standing Anti-Rotation Press",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/332/standing-anti-rotation-press/"
+    },
+    "S26": {
+      "title": "ACE: Dumbbell Suitcase Carry",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/358/suitcase-carry/"
+    },
+    "S27": {
+      "title": "AAOS: Rotator Cuff and Shoulder Conditioning",
+      "url": "https://www.orthoinfo.org/recovery/rotator-cuff-and-shoulder-conditioning-program"
+    },
+    "S28": {
+      "title": "PureGym: Face Pulls",
+      "url": "https://www.puregym.com/exercises/arms-and-shoulders/rear-delt-exercises/face-pulls/"
+    },
+    "S29": {
+      "title": "ACE: Standing Dorsi-Flexion / Calf Stretch",
+      "url": "https://www.acefitness.org/resources/everyone/exercise-library/152/standing-dorsi-flexion-calf-stretch/"
+    },
+    "S30": {
+      "title": "NASM: Active Recovery، بخش Lateral Band Walk",
+      "url": "https://www.nasm.org/resource-center/blog/active-recovery"
+    },
+    "S31": {
+      "title": "ACE: Submaximal Talk Test for VT1",
+      "url": "https://contentcdn.eacefitness.com/assets/certification/ace-answers/forms/pt/42_Submaximal_Talk_Test_For_VT1_Protocol.pdf"
+    },
+    "S32": {
+      "title": "Martín-Fuentes et al.: Feet position in inclined leg press، PMID 34085847",
+      "url": "https://pubmed.ncbi.nlm.nih.gov/34085847/"
+    }
+  },
+  "colors": {
+    "primary": "#C5F04A",
+    "secondary": "#8FCFFF"
+  }
+};
+  if(typeof module==='object' && module.exports)module.exports=data;
+  else root.TamrinGuides=data;
+})(typeof globalThis!=='undefined'?globalThis:this);
 
 (() => {
 'use strict';
@@ -1414,7 +2490,7 @@ function render() {
 
   if (!ctx.deload && ctx.week >= 2 && (view.day === 'sat' || view.day === 'fri')) h += `<div class="banner" style="margin-top:12px"><span class="grow"><b>بعد از تزریق پنجشنبه:</b> اگر امروز بی‌حال یا کم‌انرژی هستی، RIR هر حرکت را یک واحد بالاتر بگیر.</span></div>`;
 
-  h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span></li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span></li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
+  h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span><button class="info-btn" type="button" data-movement-guide="${w[0]}" aria-label="راهنمای ${w[0]}" aria-haspopup="dialog">i</button>${myNote({name:w[0]})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:w[0]}))}</p>`:''}</li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span><button class="info-btn" type="button" data-movement-guide="Bodyweight Overhead Squat" aria-label="راهنمای اسکوات دست‌بالا" aria-haspopup="dialog">i</button>${myNote({name:'Bodyweight Overhead Squat'})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:'Bodyweight Overhead Squat'}))}</p>`:''}</li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
 
   h += '<div class="list">';
   for (const b of day.items) {
@@ -1513,6 +2589,16 @@ function updateProgress() {
   pg.querySelector('span').textContent = fa(dn) + ' از ' + fa(tot) + ' ست';
 }
 
+function weightSuggestionHTML(ex,sug){
+  let h='';
+  if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
+  else if (sug && sug.type === 'up') h += ex.db
+    ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
+    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
+  else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
+  return h;
+}
+
 function exCard(ex, ctx, rec, inSS) {
   const t = targetFor(ex, ctx, rec);
   const e = entry(rec, ex, false);
@@ -1523,21 +2609,14 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex${ex.pri ? ' pri' : ''}" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${esc(ex.name)}</h3><button class="info-btn${myNote(ex) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${esc(ex.name)}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${esc(ex.name)}</h3><button class="info-btn${myNote(ex) ? ' on' : ''}" type="button" data-info aria-label="راهنمای ${esc(ex.name)}" aria-haspopup="dialog">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest || ex.ssRest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
-  if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex))}</p>`;
-  if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
-  else if (sug && sug.type === 'up') h += ex.db
-    ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
-    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
-  else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
-  h+=adviceHTML(ex,t,rec);
+  h+=weightSuggestionHTML(ex,sug);
   if (prev) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? esc(fa(s.r)) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h+=comparisonHTML(ex,rec,view.date);
   if (ex.tb) h += `<div class="barrow"><button class="barchip${barW() == null ? ' unset' : ''}" type="button" data-bar>${barW() == null ? 'وزن میله را وارد کن' : 'میله: ' + fa(barW()) + ' کیلو'}${PENCIL}</button><span class="muted">عدد نهایی = صفحه‌ها + میله</span></div>`;
   h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'وزن کل' : ex.pl ? 'جمع صفحه‌ها' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
@@ -1583,7 +2662,7 @@ function cardioCard(day, ctx, rec, b) {
     const inp = (k, l, span) => `<label for="c-${k}"${span ? ' style="grid-column:span 2"' : ''}>${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`;
     const R2 = (a, b2) => `${fa(a)}${LRM}–${LRM}${fa(b2)}`;
     return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
-    <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span></div>
+    <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span><button class="info-btn" type="button" data-movement-guide="${cardioName(view.day,c)}" aria-label="راهنمای ${cardioName(view.day,c)}" aria-haspopup="dialog">i</button></div>${myNote({name:cardioName(view.day,c)})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:cardioName(view.day,c)}))}</p>`:''}
     <p class="c-tgt">۱۴ دقیقه، اینتروال</p>
     <p class="c-desc">۳ دقیقه آرام، بعد ۳ بار: ۳ دقیقه منطقهٔ ۲ و ۱ دقیقه آرام (دور آخر بدون آرام). بعد از وزنه؛ دستگیره را نگیر.</p>
     <p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
@@ -1599,7 +2678,7 @@ function cardioCard(day, ctx, rec, b) {
   const fields = tread ? [['min', 'دقیقه'], ['inc', 'شیب'], ['spd', 'سرعت']] : [['min', 'دقیقه'], ['lvl', 'سطح دستگاه']];
   const alt = tread ? 'Stationary Bike' : 'Elliptical';
   return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
-    <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span></div>
+    <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span><button class="info-btn" type="button" data-movement-guide="${cardioName(view.day,c)}" aria-label="راهنمای ${cardioName(view.day,c)}" aria-haspopup="dialog">i</button></div>${myNote({name:cardioName(view.day,c)})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:cardioName(view.day,c)}))}</p>`:''}
     <p class="c-tgt">${target}</p><p class="c-desc">${desc} بعد از وزنه.</p><p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
     ${UI2() ? `<div class="crow" style="--cols:${fields.length}">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}</div>${cbtn(c)}` : `<div class="crow" style="grid-template-columns:repeat(${fields.length},minmax(0,1fr)) 48px">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button></div>`}
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">${alt}</span></button>
@@ -1742,6 +2821,7 @@ main.addEventListener('click', ev => {
   const sp = ev.target.closest('[data-ss]');
   if (sp) { if (ssFired) { ssFired = false; return; } toast(sp.closest('.ss.off') ? 'برای وصل دوباره، نگه دار' : 'برای جدا کردن در این جلسه، نگه دار'); return; }
   if (ev.target.closest('[data-bar]')) { openBar(); return; }
+  const gb=ev.target.closest('[data-movement-guide]');if(gb){openExerciseGuide(gb.dataset.movementGuide);return;}
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
   const ch = UI2() && ev.target.closest('.ex.complete .ex-head, .ex.complete .ex-sum');
@@ -2396,7 +3476,7 @@ async function forceUpdate(){
     if(!navigator.serviceWorker){toast('به‌روزرسانی در این محیط در دسترس نیست');return;}
     const reg=await navigator.serviceWorker.getRegistration();if(!reg){toast('اپ را یک بار با اینترنت دوباره باز کن');return;}
     await reg.update();
-    if(v==='3.7.1'){toast('همین نسخه، جدیدترین است');return;}
+    if(v==='3.8.0'){toast('همین نسخه، جدیدترین است');return;}
     toast('نسخهٔ تازه در حال آماده شدن است؛ پس از آماده شدن دکمهٔ به‌روزرسانی را بزن');
   }catch(e){toast('نسخهٔ تازه دریافت نشد؛ نسخهٔ آفلاین فعلی محفوظ است');}finally{clearTimeout(timeout);}
 }
@@ -2413,20 +3493,125 @@ $('#wipe-btn').addEventListener('click', ev => {
 const modal = $('#modal'), mCard = $('#m-card');
 let mState = null;
 function showModal(html, focusSel, top) {
-  cancelOut(modal); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
+  guideSwipe=null;cancelOut(modal);modal.classList.remove('exercise-guide'); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
   if (focusSel) { const f = mCard.querySelector(focusSel); if (f) setTimeout(() => f.focus(), 60); }
 }
-function hideModal() { mState = null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = ''; if (!openId) document.body.classList.remove('lock'); }); }
+function hideModal() { const focusBack=mState?.kind==='guide'?guideOpener:null;mState = null;guideSwipe=null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = '';modal.classList.remove('exercise-guide'); if (!openId) document.body.classList.remove('lock');if(focusBack?.isConnected)focusBack.focus({preventScroll:true}); }); }
 
-function openNote(id) {
-  const base = EX[id] || OLD_EX[id]; if (!base) return;
-  const ex=effective(base,getRec(false)?.ex[id]);
-  mState = { kind: 'note', key:C.noteKey(ex.name) };
-  showModal(`<h2 id="m-title">نکتهٔ من · <span class="en">${esc(ex.name)}</span></h2>
-    <textarea id="m-note" maxlength="10000" aria-label="نکتهٔ من برای این حرکت" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(ex))}</textarea>
-    <p class="m-sub">این نکته همراه همین حرکت می‌ماند؛ در همهٔ روزها و برنامه‌های بعد هم نمایش داده می‌شود. حرکت جایگزین نکتهٔ مستقل خودش را دارد.</p>
-    <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, myNote(ex) ? null : '#m-note', true);
+const G = globalThis.TamrinGuides;
+const GUIDE_ICONS = {
+  execution:'<path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1zm0 0v15"/>',
+  weight:'<path d="M3 9v6m3-9v12m12-12v12m3-9v6M6 12h12"/>',
+  comparison:'<path d="M4 20h16M6 20v-6h4v6m0-6V9h4v11m0-11V4h4v16"/>'
+};
+// Only program-specific instructions are added to the researched technique.
+// Targets, sets, rest timers and progression rules remain in the program model.
+const GUIDE_PROGRAM = {
+  sat1:['نیمکت ۳۰ تا ۴۵ درجه. اگر برداشتن دمبل‌ها سخت شد، طبق برنامه بازه را ۸ تا ۱۲ کن.'],
+  sat3:['دو دست پشت سر هم؛ سپس استراحت.'],
+  sat4:['دو دست پشت سر هم؛ آرنج حدود ۴۵ درجه از تنه در دامنهٔ راحت.'],
+  mon1:['دمبل‌ها را با کمک زانو آماده کن و پایان ست روی ران برگردان؛ نینداز. اگر رساندن دمبل اذیت کرد، طبق برنامه بازه را ۸ تا ۱۲ کن.'],
+  mon2:['شیب نیمکت ۱۵ تا ۳۰ درجه؛ اگر شانه راحت‌تر است، کف دست‌ها را کمی رو به هم بچرخان.'],
+  mon3:['اگر شانهٔ راست با مسیر دستگاه راحت نیست، از جایگزین سیم‌کش استفاده کن.'],
+  mon4:['طبق برنامه، ست آخر پس از ناتوانی: ۳ تا ۶ تکرار نیمه از پایین تا حدود ۴۵ درجه با همان فرم.'],
+  wed7:['طبق برنامه، ست آخر پس از ناتوانی: ۳ تا ۶ تکرار نیمه از پایین تا حدود ۴۵ درجه با همان فرم.'],
+  mon6:['طبق برنامه، در ست آخر پس از ناتوانی چند تکرار نیمه در نیمهٔ پایینی.'],
+  wed1:['هر تکرار دوباره نفس و شکم را سفت کن. اگر کمر گرد شد، ست را تمام کن؛ RIR زیر ۲ نرود.','پس از ست آخر تا ۵ دقیقه استراحت؛ با برگشت نفس حرکت بعد را شروع کن.'],
+  wed3:['جای پا مطابق برنامه: عرض لگن، وسط تا کمی پایین صفحه.'],
+  wed8:['جای پای فعال مطابق برنامه: بالای صفحه، هم‌راستای همان طرف لگن؛ چهارسر و باسن هر دو درگیرند.','اول پای راست، سپس چپ؛ ۶۰ ثانیه بین پاها. تیک پس از پای دوم.','شروع پیشنهادی برنامه: حدود ۳۵ تا ۴۰ درصد مجموع صفحه‌های پرس پای دوپا؛ مجموع صفحه‌ها ثبت می‌شود.'],
+  wed5:['مکث پایین انتخاب برنامه است؛ وزنه‌ها روی هم ننشینند. اگر پشتی دستگاه امکان تنظیم دارد، کمی عقب‌تر بنشین.'],
+  fri1:['پای مخالف دست فعال کمی جلو باشد.'],
+  fri2:['دامنهٔ برنامه: حداکثر تا ارتفاع شانه.'],
+  fri3:['نیمکت ۳۰ تا ۴۵ درجه؛ دست‌ها با آرنج کمی خم تا هم‌سطح بدن.'],
+  fri4:['گیرش خنثی؛ آرنج حدود ۳۰ تا ۴۵ درجه از بدن.'],
+  wed6:['ضامن سورتمه بسته بماند؛ زانو تقریباً صاف و بدون قفل ضربه‌ای.','طبق برنامه، در ست آخر پس از ناتوانی چند تکرار نیمه در نیمهٔ پایینی.'],
+  sat8:['یک سمت کامل، سپس سمت دیگر.'],fri5:['یک سمت کامل، سپس سمت دیگر.']
+};
+function guideData(name){return (Object.hasOwn(G.exercises,name)?G.exercises[name]:null) || {cues:[],primary:[],secondary:[],sources:[],image:null};}
+function guideExecutionHTML(ex,id,rec){
+  const g=guideData(ex.name),e=id?rec?.ex[id]:null;
+  const program=id&&!e?.alt?(GUIDE_PROGRAM[id]||[]):[];
+  const muscles=(g.primary||[]).map(x=>`<span>اصلی: ${esc(x)}</span>`).concat((g.secondary||[]).map(x=>`<span class="secondary">کمکی: ${esc(x)}</span>`)).join('');
+  const sources=(g.sources||[]).filter(k=>G.sources[k]);
+  return `<div class="guide-image" data-image-slot="${esc(ex.name)}" role="img" aria-label="جای خالی تصویر اجرای ${esc(ex.name)}؛ شروع سمت راست و پایان سمت چپ"><span>شروع</span><span>پایان</span></div>
+    ${muscles?`<div class="guide-muscles">${muscles}</div><p class="guide-hint">سبز: هدف اصلی · آبی روشن: کمکی · نمایش شماتیک</p>`:''}
+    ${g.setup?`<p class="m-prog">${esc(g.setup)}</p>`:''}
+    ${g.cues.length?`<ol class="guide-cues">${g.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ol>`:'<p class="m-sub">هنوز راهنمایی برای این حرکت ثبت نشده است.</p>'}
+    ${g.error?`<p class="guide-error"><b>حواست باشد:</b> ${esc(g.error)}</p>`:''}
+    ${program.length||ex.pz?`<div class="guide-program"><b>در برنامهٔ تو</b><ul>${ex.pz?`<li>مکث: ${ex.pz}</li>`:''}${program.map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div>`:''}
+    <div class="guide-personal"><div class="guide-personal-head"><b>نکتهٔ من</b><button class="btn" type="button" data-m="edit-guide-note" aria-expanded="false" aria-controls="guide-note-editor">${PENCIL} ویرایش</button></div>
+      <p id="guide-note-preview">${myNote(ex)?esc(myNote(ex)):'هنوز نکته‌ای ننوشته‌ای.'}</p>
+      <div id="guide-note-editor" hidden><textarea id="m-note" maxlength="10000" aria-label="نکتهٔ من برای این حرکت" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(ex))}</textarea>
+      <p class="m-sub">این نکته همراه همین حرکت می‌ماند؛ در همهٔ روزها و برنامه‌های بعد. حرکت جایگزین نکتهٔ مستقل خودش را دارد.</p>
+      <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="cancel-guide-note">انصراف</button></div></div>
+    </div>${sources.length?`<details class="guide-sources"><summary>منابع راهنما</summary><ul>${sources.map(k=>`<li><a href="${esc(G.sources[k].url)}" target="_blank" rel="noopener noreferrer">${esc(G.sources[k].title)}</a></li>`).join('')}</ul></details>`:''}`;
 }
+function guideWeightHTML(ex,rec){
+  const t=targetFor(ex,ctxOf(view.date),rec),sug=suggest(ex,t,ctxOf(view.date));
+  return `<h3>وزنهٔ این حرکت</h3><p class="m-sub">${ex.db?'عدد هر دمبل را بنویس.':ex.lm?'فقط مجموع صفحه‌های روی میله را بنویس.':ex.tb?'مجموع صفحه‌ها را وارد کن؛ وزن میله جداگانه اضافه می‌شود.':ex.pl?'مجموع صفحه‌ها را بنویس.':'عدد وزنهٔ دستگاه را بنویس.'}</p>${weightSuggestionHTML(ex,sug)}${adviceHTML(ex,t,rec).replace('<details','<details open')}`;
+}
+let guideSwipe=null,guideOpener=null;
+function openExerciseGuide(name,id=null){
+  const rec=getRec(false),base=id?(EX[id]||OLD_EX[id]):null,ex=base?effective(base,rec?.ex[id]):{name};
+  guideOpener=document.activeElement;
+  sw=null;settleNav();
+  mState={kind:'guide',key:C.noteKey(ex.name),name:ex.name,id,tab:0};
+  const keys=id?['execution','weight','comparison']:['execution'],labels=['اجرا','وزنه','مقایسه'];
+  const panels=[guideExecutionHTML(ex,id,rec)];
+  if(id)panels.push(guideWeightHTML(ex,rec),`<h3>مقایسه با جلسهٔ قبل</h3>${comparisonHTML(ex,rec,view.date).replace('<details','<details open')}<p class="m-sub">مقایسه بر اساس همین حرکت، واحد ثبت، هدف و فاصله از ناتوانی انجام می‌شود؛ ثابت بودن وسیله و تنظیمات اجرا فرض شده است.</p>`);
+  showModal(`<div class="guide-handle" aria-hidden="true"></div><header class="guide-head"><div><h2 id="m-title">راهنمای حرکت</h2><span class="en" dir="ltr">${esc(ex.name)}</span></div><button class="guide-close" type="button" data-m="close" aria-label="بستن راهنمای حرکت">×</button></header>
+    <div class="guide-viewport"><div class="guide-track">${panels.map((p,i)=>`<section class="guide-panel" role="tabpanel" id="guide-panel-${i}" aria-labelledby="guide-tab-${i}" tabindex="0"${i?' inert aria-hidden="true"':''}>${p}</section>`).join('')}</div></div>
+    <nav class="guide-nav" role="tablist" aria-label="بخش‌های راهنمای حرکت">${keys.map((k,i)=>`<button class="guide-tab" type="button" role="tab" id="guide-tab-${i}" aria-controls="guide-panel-${i}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-guide-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GUIDE_ICONS[k]}</svg><span>${labels[i]}</span></button>`).join('')}</nav>`,'.guide-close');
+  modal.classList.add('exercise-guide');
+}
+// Kept as the movement-aware note entry point for existing callers.
+function openNote(id){openExerciseGuide(null,id);}
+function setGuideTab(index,focus=false){
+  if(mState?.kind!=='guide')return;
+  const tabs=[...mCard.querySelectorAll('[data-guide-tab]')];
+  index=Math.max(0,Math.min(tabs.length-1,index));mState.tab=index;
+  const track=mCard.querySelector('.guide-track');track.style.transition='';track.style.transform=`translateX(${index*100}%)`;
+  tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;});
+  mCard.querySelectorAll('.guide-panel').forEach((p,i)=>{p.inert=i!==index;p.setAttribute('aria-hidden',String(i!==index));});
+  if(focus)tabs[index].focus();
+}
+// Horizontal gestures belong exclusively to this sheet. Text editing and
+// vertical panel scrolling retain their native gestures; edges never change days.
+mCard.addEventListener('touchstart',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();guideSwipe=null;
+  if(ev.touches.length!==1||!ev.target.closest('.guide-viewport')||ev.target.closest('textarea,input,button,a,summary'))return;
+  const t=ev.touches[0];guideSwipe={x:t.clientX,y:t.clientY,at:Date.now(),dx:0,lock:null};
+},{passive:true});
+mCard.addEventListener('touchmove',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();
+  if(!guideSwipe)return;if(ev.touches.length!==1){guideSwipe=null;setGuideTab(mState.tab);return;}
+  const s=guideSwipe,t=ev.touches[0],dx=t.clientX-s.x,dy=t.clientY-s.y;
+  if(!s.lock){if(Math.abs(dx)<10&&Math.abs(dy)<10)return;s.lock=Math.abs(dx)>Math.abs(dy)*1.2?'h':'v';}
+  if(s.lock!=='h')return;ev.preventDefault();s.dx=dx;
+  const tabs=mCard.querySelectorAll('[data-guide-tab]').length,edge=dx>0?mState.tab===tabs-1:mState.tab===0;
+  const width=mCard.querySelector('.guide-viewport').clientWidth,track=mCard.querySelector('.guide-track');
+  track.style.transition='none';track.style.transform=`translateX(${mState.tab*width+(edge?dx*.2:dx)}px)`;
+},{passive:false});
+mCard.addEventListener('touchend',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();
+  const s=guideSwipe;guideSwipe=null;if(!s||s.lock!=='h')return;
+  const changed=Math.abs(s.dx)>60||(Math.abs(s.dx)>30&&Math.abs(s.dx)/Math.max(1,Date.now()-s.at)>.45);
+  setGuideTab(mState.tab+(changed?(s.dx>0?1:-1):0));
+},{passive:true});
+mCard.addEventListener('touchcancel',ev=>{if(mState?.kind==='guide'){ev.stopPropagation();guideSwipe=null;setGuideTab(mState.tab);}},{passive:true});
+mCard.addEventListener('keydown',ev=>{
+  if(mState?.kind!=='guide')return;
+  if(ev.target.matches('[data-guide-tab]')&&['ArrowLeft','ArrowRight','Home','End'].includes(ev.key)){
+    ev.preventDefault();setGuideTab(ev.key==='Home'?0:ev.key==='End'?2:mState.tab+(ev.key==='ArrowLeft'?1:-1),true);
+  }
+  if(ev.key==='Tab'){
+    const focusable=[...mCard.querySelectorAll('button,a[href],textarea,input,[tabindex="0"]')].filter(e=>!e.closest('[inert]')&&e.getClientRects().length);
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(ev.shiftKey&&document.activeElement===first){ev.preventDefault();last.focus();}
+    else if(!ev.shiftKey&&document.activeElement===last){ev.preventDefault();first.focus();}
+  }
+});
+
 function openBar() {
   mState = { kind: 'bar' };
   showModal(`<h2 id="m-title">وزن میلهٔ <span class="en">Trap Bar</span></h2>
@@ -2473,12 +3658,15 @@ function paintEff() {
 }
 mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min' || ev.target.id === 'm-bar') faInput(ev.target); });
 mCard.addEventListener('click', async ev => {
+  const tab=ev.target.closest('[data-guide-tab]');if(tab){setGuideTab(+tab.dataset.guideTab);return;}
   const rb = ev.target.closest('[data-rpe]');
   if (rb && mState) { mState[rb.closest('.eff').dataset.k] = +rb.dataset.rpe; paintEff(); return; }
   const st = ev.target.closest('[data-step]');
   if (st && mState) { const k = st.closest('.eff').dataset.k; mState[k] = Math.min(10, Math.max(1, (mState[k] || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
+  if(m.dataset.m==='edit-guide-note'){const ed=$('#guide-note-editor');ed.hidden=false;m.setAttribute('aria-expanded','true');$('#m-note').focus();return;}
+  if(m.dataset.m==='cancel-guide-note'){$('#m-note').value=S.exNotes[mState.key]?.t||'';$('#guide-note-editor').hidden=true;mCard.querySelector('[data-m=edit-guide-note]').setAttribute('aria-expanded','false');return;}
   if(m.dataset.m==='run-backup'){hideModal();await runShortcut();return;}
   if(m.dataset.m==='apply-import'){
     if(!rescue())return;checkpoint('بازگردانی پشتیبان');
@@ -2508,7 +3696,9 @@ mCard.addEventListener('click', async ev => {
   if (m.dataset.m === 'save-note') {
     checkpoint('نکتهٔ حرکت');const t = $('#m-note').value.trim();
     S.exNotes[mState.key] = { t, upd: Date.now() };
-    save(true); hideModal(); softRender(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
+    if(!save(true))return;softRender();
+    if(mState.kind==='guide'){$('#guide-note-preview').textContent=t||'هنوز نکته‌ای ننوشته‌ای.';$('#guide-note-editor').hidden=true;const edit=mCard.querySelector('[data-m=edit-guide-note]');edit.setAttribute('aria-expanded','false');edit.focus();}
+    else hideModal();toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
     return;
   }
   if (m.dataset.m === 'save-finish') {

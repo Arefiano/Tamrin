@@ -38,28 +38,65 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
      localStorage.setItem('daftar-tamrin-v1',JSON.stringify({v:1,schema:3,start:previous,sessions:{[previous+'|mon']:old,[today+'|mon']:current},equipment:{[spec.name]:equipment},deload:[],exNotes:{},mig1:1,mig2:1,backupMode:'manual'}));
    });
    await fp.goto(url);assert.equal(await fp.locator('#resume-panel').isVisible(),true);assert.ok((await fp.locator('#resume-panel').textContent()).includes('۴ دقیقه'));await fp.locator('[data-resume-go]').click();assert.equal(await fp.locator('#resume-panel').isVisible(),false);
-   const primary=fp.locator('.ex[data-ex=mon1]');await primary.locator('.why summary').click();assert.ok((await primary.locator('.why').textContent()).includes('هر ۴ ست'));
+   const primary=fp.locator('.ex[data-ex=mon1]');
+   const openGuide=async(card,tab=0)=>{await card.locator('[data-info]').click();await fp.locator('[data-guide-tab="'+tab+'"]').click();};
+   const closeGuide=async()=>{await fp.locator('.guide-close').click();await fp.waitForSelector('#modal[hidden]',{state:'attached'});};
+   const saveNote=async(card,text)=>{await openGuide(card);await fp.locator('[data-m=edit-guide-note]').click();await fp.locator('#m-note').fill(text);await fp.locator('[data-m=save-note]').click();assert.ok((await fp.locator('#guide-note-preview').textContent()).includes(text));await closeGuide();};
+   await openGuide(primary,1);assert.ok((await fp.locator('#guide-panel-1 .why').textContent()).includes('هر ۴ ست'));await closeGuide();
    for(const [i,r]of [[1,'10'],[2,'10'],[3,'12']]){await fp.locator('#w-mon1-'+i).fill('30');await fp.locator('#r-mon1-'+i).fill(r);}
-   await fp.waitForFunction(()=>document.querySelector('[data-comparison="mon1"]').textContent.includes('۲ تکرار بیشتر'));
+   await openGuide(primary,2);assert.ok((await fp.locator('[data-comparison=mon1]').textContent()).includes('۲ تکرار بیشتر'));await closeGuide();
    assert.equal(await fp.locator('[data-equipment]').count(),0);
    assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت الف'));
-   await primary.locator('[data-info]').click();assert.ok((await fp.locator('#m-title').textContent()).includes('Neutral-Grip Dumbbell Bench Press'));await fp.locator('#m-note').fill('نیمکت خودم، صندلی ۴');await fp.locator('[data-m=save-note]').click();
+   await saveNote(primary,'نیمکت خودم، صندلی ۴');
    assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت خودم'));
-   assert.ok((await primary.locator('[data-comparison]').textContent()).includes('۲ تکرار بیشتر'));
+   await openGuide(primary,2);assert.ok((await fp.locator('[data-comparison]').textContent()).includes('۲ تکرار بیشتر'));await closeGuide();
    // One actual movement shares its note across days and a different slot's alternative.
-   await fp.locator('[data-day=mon]').click();const lateral=fp.locator('.ex[data-ex=mon4]');await lateral.locator('[data-info]').click();await fp.locator('#m-note').fill('ارتفاع ۴ <img src=x onerror=alert(1)>');await fp.locator('[data-m=save-note]').click();
+   await fp.locator('[data-day=mon]').click();const lateral=fp.locator('.ex[data-ex=mon4]');await saveNote(lateral,'ارتفاع ۴ <img src=x onerror=alert(1)>');
    await fp.locator('[data-day=wed]').click();assert.ok((await fp.locator('.ex[data-ex=wed7] .my-note').textContent()).includes('ارتفاع ۴ <img'));assert.equal(await fp.locator('.my-note img').count(),0);
    await fp.locator('[data-day=fri]').click();const landmine=fp.locator('.ex[data-ex=fri2]');assert.equal(await landmine.locator('.my-note').count(),0);await landmine.locator('[data-alt]').click();assert.ok((await landmine.locator('.my-note').textContent()).includes('ارتفاع ۴'));
-   await landmine.locator('[data-info]').click();assert.ok((await fp.locator('#m-title').textContent()).includes('Dumbbell Lateral Raise'));await fp.locator('#m-note').fill('تنظیم تازه');await fp.locator('[data-m=save-note]').click();await landmine.locator('[data-alt]').click();assert.equal(await landmine.locator('.my-note').count(),0);
+   await saveNote(landmine,'تنظیم تازه');await landmine.locator('[data-alt]').click();assert.equal(await landmine.locator('.my-note').count(),0);
+   // The sheet owns horizontal swipes; day navigation never receives them.
+   await fp.locator('[data-day=fri]').click();await openGuide(landmine);
+   const guideName=await fp.locator('.guide-head .en').textContent();assert.equal(guideName,'Landmine Lateral Raise');
+   const swipe=async(dx,dy=0,cancel=false)=>fp.locator('.guide-viewport').evaluate((el,{dx,dy,cancel})=>{
+     const target=el.querySelector('.guide-panel:not([inert]) .guide-image')||el.querySelector('.guide-panel:not([inert]) h3');
+     const rect=el.getBoundingClientRect(),x=rect.x+rect.width/2,y=rect.y+70;
+     const touch=(cx,cy)=>new Touch({identifier:7,target,clientX:cx,clientY:cy,pageX:cx,pageY:cy});
+     target.dispatchEvent(new TouchEvent('touchstart',{bubbles:true,cancelable:true,touches:[touch(x,y)]}));
+     target.dispatchEvent(new TouchEvent('touchmove',{bubbles:true,cancelable:true,touches:[touch(x+dx,y+dy)]}));
+     target.dispatchEvent(new TouchEvent(cancel?'touchcancel':'touchend',{bubbles:true,cancelable:true,touches:[],changedTouches:[touch(x+dx,y+dy)]}));
+   },{dx,dy,cancel});
+   const selected=()=>fp.locator('[data-guide-tab][aria-selected=true]').getAttribute('data-guide-tab');
+   const dayBefore=await fp.locator('#daypill span').textContent();
+   await swipe(110);assert.equal(await selected(),'1');await swipe(110);assert.equal(await selected(),'2');await swipe(110);assert.equal(await selected(),'2');
+   await swipe(-110);assert.equal(await selected(),'1');await swipe(-110);assert.equal(await selected(),'0');await swipe(-110);assert.equal(await selected(),'0');
+   await swipe(15,100);assert.equal(await selected(),'0');await swipe(110,0,true);assert.equal(await selected(),'0');assert.equal(await fp.locator('#daypill span').textContent(),dayBefore);
+   assert.equal(await fp.locator('.ex[data-ex=fri2]').count(),1);
+   await fp.locator('[data-m=edit-guide-note]').click();await fp.locator('#m-note').fill('پیش‌نویس مستقل');await fp.locator('[data-guide-tab="1"]').click();await fp.locator('[data-guide-tab="0"]').click();assert.equal(await fp.locator('#m-note').inputValue(),'پیش‌نویس مستقل');await fp.locator('[data-m=cancel-guide-note]').click();
+   await fp.locator('[data-guide-tab="0"]').focus();await fp.keyboard.press('ArrowLeft');assert.equal(await selected(),'1');await fp.keyboard.press('End');assert.equal(await selected(),'2');await fp.keyboard.press('Home');assert.equal(await selected(),'0');
+   assert.equal(await fp.locator('.guide-panel:not([inert])').count(),1);assert.equal(await fp.locator('.guide-image img').count(),0);
+   for(const width of [320,390,430]){
+     await fp.setViewportSize({width,height:844});
+     const layout=await fp.evaluate(()=>{const g=document.querySelector('.exercise-guide .m-card'),v=g.querySelector('.guide-viewport').getBoundingClientRect(),n=g.querySelector('.guide-nav').getBoundingClientRect();return {overflow:document.documentElement.scrollWidth>innerWidth,below:n.top>=v.bottom-1,visible:n.bottom<=innerHeight+1,panelOverflow:g.scrollWidth>g.clientWidth+1};});
+     assert.deepEqual(layout,{overflow:false,below:true,visible:true,panelOverflow:false});
+   }
+   await fp.setViewportSize({width:390,height:844});await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-execution.png')});
+   await fp.locator('[data-guide-tab="1"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-weight.png')});
+   await fp.locator('[data-guide-tab="2"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-comparison.png')});
+   await closeGuide();await fp.screenshot({path:path.resolve('test-results/'+name+'-compact-card.png')});
+   // Warmups and cardio alternatives share the same catalog, with no bogus load tabs.
+   await fp.locator('details.warm summary').click();await fp.locator('[data-movement-guide="Band External Rotation"]').click();assert.equal(await fp.locator('[role=tab]').count(),1);assert.ok((await fp.locator('#guide-panel-0').textContent()).includes('تحت‌خاری'));await closeGuide();
+   await fp.locator('[data-calt]').click();await fp.locator('.cardio [data-movement-guide]').click();assert.equal(await fp.locator('.guide-head .en').textContent(),'Stationary Bike');await closeGuide();await fp.locator('[data-calt]').click();
+   assert.equal(await fp.locator('#main .cues, #main .why, #main [data-comparison]').count(),0);
    // Persist, reload and restore a backup that contains notes for absent future movements.
    await fp.reload();if(await fp.locator('#resume-panel').isVisible())await fp.locator('[data-resume-go]').click();await fp.locator('[data-day=mon]').click();assert.ok((await fp.locator('.ex[data-ex=mon4] .my-note').textContent()).includes('تنظیم تازه'));assert.ok((await primary.locator('.my-note').textContent()).includes('نیمکت خودم'));
    await fp.locator('#open-settings').click();await fp.locator('#import-text').fill(JSON.stringify({sessions:{},exNotes:{'n:Future Press':{t:'بماند برای برنامهٔ بعد',upd:2}}}));await fp.locator('#import-btn').click();await fp.locator('[data-m=apply-import]').click();await fp.locator('#sh-settings [data-close]').click();
    const migrated=await fp.evaluate(()=>JSON.parse(localStorage.getItem('daftar-tamrin-v1')));assert.equal(migrated.exNotes['n:Future Press'].t,'بماند برای برنامهٔ بعد');assert.equal(migrated.exNotes['n:Dumbbell Lateral Raise'].t,'تنظیم تازه');assert.equal(migrated.equipment&&Object.keys(migrated.equipment).length||0,0);
-   await primary.locator('[data-rir="3"]').click();assert.ok((await primary.locator('[data-comparison]').textContent()).includes('فاصله از ناتوانی متفاوت'));await primary.locator('[data-rir="2"]').click();
+   await primary.locator('[data-rir="3"]').click();await openGuide(primary,2);assert.ok((await fp.locator('[data-comparison]').textContent()).includes('فاصله از ناتوانی متفاوت'));await closeGuide();await primary.locator('[data-rir="2"]').click();
    await fp.locator('#finish').click();await fp.locator('[data-k=rpm] [data-rpe="4"]').click();await fp.locator('[data-k=rpe] [data-rpe="5"]').click();await fp.locator('[data-m=save-finish]').click();await fp.locator('[data-m=save-finish]').click();assert.ok((await fp.locator('.session-summary').textContent()).includes('۱ حرکت بهتر'));assert.ok((await fp.locator('.session-summary').textContent()).includes('سختی روانی کمتر'));
    await fp.screenshot({path:path.resolve('test-results/'+name+'-insights.png'),fullPage:true});
    await fx.close();
-   assert.deepEqual(errors,[]);console.log(name+': persistent movement notes, legacy migration, browser flows, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
+   assert.deepEqual(errors,[]);console.log(name+': independent guide swipes, bottom tabs, empty image slots, persistent movement notes, legacy migration, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
   }catch(e){await page.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
  }
 })().then(()=>server.close()).catch(e=>{console.error(e);server.close();process.exitCode=1;});

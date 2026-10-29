@@ -77,7 +77,7 @@ details.warm[open] summary::after{transform:rotate(-135deg)}
 .warm ul{margin:0;padding:0 16px 14px;list-style:none;display:flex;flex-direction:column;gap:6px}
 .warm li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;font-size:16px}
 .warm li .en{font-weight:700}
-.warm li .muted{font-size:15px}
+.warm li .muted{font-size:15px}.warm li .info-btn{margin-inline-start:auto}.warm li .my-note{flex-basis:100%;padding-inline-start:0}
 
 /* exercise list */
 .list{display:flex;flex-direction:column;gap:14px;margin-top:16px}
@@ -215,6 +215,38 @@ textarea:focus{border-color:var(--accent);outline:none}
 .m-prog{margin:0;font-size:14px;color:var(--ink-2);background:var(--surface-2);border-radius:12px;padding:8px 10px;line-height:1.6}
 .m-act{display:flex;gap:8px}
 .m-act .btn{flex:1;min-height:46px;font-size:16px}
+/* Movement guide: the body scrolls; the thumb controls stay at the bottom. */
+.modal.exercise-guide{place-items:end center;padding:0;overscroll-behavior:contain}
+.exercise-guide .m-card{max-width:560px;height:min(88dvh,850px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - 12px);overflow:hidden;padding:0;gap:0;border-radius:24px 24px 0 0}
+.guide-handle{height:4px;width:38px;border-radius:9px;background:var(--line-2);margin:9px auto 2px;flex:none}
+.guide-head{display:flex;align-items:center;gap:12px;padding:10px 16px 12px;flex:none;border-bottom:1px solid var(--line)}
+.guide-head>div{flex:1;min-width:0}.guide-head h2{font-size:19px}.guide-head .en{display:block;font-size:14px;line-height:1.4;margin-top:4px;color:var(--ink-2);overflow-wrap:anywhere}
+.guide-close{width:44px;height:44px;flex:none;border:1px solid var(--line-2);background:var(--surface-2);border-radius:12px;font-size:30px;line-height:1;color:var(--ink-2)}
+.guide-viewport{min-height:0;flex:1;overflow:hidden;touch-action:pan-y;overscroll-behavior:contain}
+.guide-track{display:flex;direction:rtl;width:100%;height:100%;transform:translateX(0);transition:transform .24s var(--ease)}
+.guide-panel{flex:0 0 100%;min-width:0;overflow-y:auto;overscroll-behavior-y:contain;padding:14px 16px 20px;scrollbar-width:thin;line-height:1.7}
+.guide-panel:focus{outline:none}.guide-panel h3{margin:14px 0 8px;font-size:16px}
+.guide-image{aspect-ratio:3/2;border:1px dashed var(--line-2);border-radius:16px;background:var(--field);position:relative;display:flex;justify-content:space-between;padding:12px;color:var(--ink-2);font-size:13px}
+.guide-image::after{content:'جای تصویر اجرای حرکت';position:absolute;inset:0;display:grid;place-items:center;color:var(--ink-2);font-size:13px;opacity:.65}
+.guide-muscles{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:13px}
+.guide-muscles span{border:1px solid currentColor;border-radius:9px;padding:3px 8px;color:#C5F04A}.guide-muscles .secondary{color:#8FCFFF}
+.guide-hint{font-size:12px;color:var(--ink-2);margin:8px 0 12px}
+.guide-cues{list-style:none;margin:12px 0;padding:0;display:grid;gap:8px;counter-reset:cue}
+.guide-cues li{display:flex;align-items:baseline;gap:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:10px;font-size:15px}
+.guide-cues li::before{counter-increment:cue;content:counter(cue,persian);color:var(--accent);font-weight:800;flex:none}
+.guide-error{margin:12px 0;padding:10px 12px;border-inline-start:3px solid var(--ink-2);background:var(--field);border-radius:10px;font-size:14px;color:var(--ink-2)}
+.guide-program{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font-size:14px}.guide-program ul{padding-inline-start:20px;margin:5px 0}
+.guide-personal{border:1px solid var(--line-2);border-radius:14px;padding:12px;margin-top:14px}.guide-personal-head{display:flex;align-items:center;justify-content:space-between;gap:8px}.guide-personal-head .btn{min-height:44px;font-size:14px;padding:6px 12px}
+.guide-personal p{white-space:pre-line;font-size:14px;margin:8px 0;color:var(--accent);overflow-wrap:anywhere}
+.guide-personal textarea{margin:8px 0;min-height:110px}.guide-personal .m-sub{color:var(--ink-2);font-size:12px}
+.guide-nav{display:flex;direction:rtl;flex:none;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));gap:4px;border-top:1px solid var(--line-2);background:var(--surface)}
+.guide-tab{flex:1;position:relative;min-height:62px;border:0;border-radius:12px;background:transparent;color:var(--ink-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:800;font-size:14px}
+.guide-tab svg{width:24px;height:24px}.guide-tab[aria-selected=true]{color:var(--accent);background:var(--accent-soft)}
+.guide-tab[aria-selected=true]::after{content:'';position:absolute;bottom:0;left:18%;right:18%;height:3px;background:var(--accent);border-radius:5px}
+.guide-panel .insight{margin:12px 0;padding:12px}.guide-panel .insight p{margin:8px 0}.guide-panel .prev{flex-wrap:wrap}
+.guide-sources{font-size:13px;margin-top:16px;color:var(--ink-2)}.guide-sources ul{padding-inline-start:20px}.guide-sources a{color:var(--ink-2)}
+@media(min-width:600px){.modal.exercise-guide{padding-bottom:16px}.exercise-guide .m-card{border-radius:24px}}
+@media(prefers-reduced-motion:reduce){.guide-track{transition:none}}
 .m-num{display:flex;align-items:center;gap:10px}
 .m-num input{width:110px;height:52px;border-radius:12px;border:1px solid var(--line-2);background:var(--field);text-align:center;font-size:25px;font-weight:800;direction:ltr;-webkit-appearance:none;appearance:none}
 .m-num input::placeholder{color:#5D6670}
@@ -668,7 +700,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
       <p>نسخهٔ نصب‌شده: <b dir="ltr">/*VER*/</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.7.1</b><span class="muted"> · ۷ آبان</span><br>حذف ثبت جداگانهٔ وسیله و تنظیمات؛ انتقال اطلاعات قبلی به نکتهٔ حرکت. نکته‌ها مستقل از روز و برنامه، برای خود حرکت اصلی یا جایگزین حفظ می‌شوند.</li><li><b dir="ltr">3.7.0</b><span class="muted"> · ۷ آبان</span><br>دلیل پیشنهاد وزنه، مقایسهٔ هم‌شرایط، ادامهٔ سریع جلسه، مشخصات دستگاه و جمع‌بندی پایان جلسه.</li><li><b dir="ltr">3.6.0</b><span class="muted"> · ۷ آبان</span><br>بازگردانی امن و نسخهٔ نجات، حفظ تعارض‌ها، برگشت از اشتباه، مشخصات مستقل جایگزین‌ها، محاسبات دقیق‌تر، پشتیبان با میان‌بر و به‌روزرسانی امن. محاسبهٔ ست‌های تیک‌نخورده حفظ شد.</li><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.8.0</b><span class="muted"> · ۷ آبان</span><br>راهنمای حرکت در پنجرهٔ پایین؛ اجرا، وزنه و مقایسه با تب‌های پایین و اسلاید مستقل. نکات پژوهش‌شده و جای خالی تصاویر برای حرکت اصلی، جایگزین و گرم‌کردن.</li><li><b dir="ltr">3.7.1</b><span class="muted"> · ۷ آبان</span><br>حذف ثبت جداگانهٔ وسیله و تنظیمات؛ انتقال اطلاعات قبلی به نکتهٔ حرکت. نکته‌ها مستقل از روز و برنامه، برای خود حرکت اصلی یا جایگزین حفظ می‌شوند.</li><li><b dir="ltr">3.7.0</b><span class="muted"> · ۷ آبان</span><br>دلیل پیشنهاد وزنه، مقایسهٔ هم‌شرایط، ادامهٔ سریع جلسه، مشخصات دستگاه و جمع‌بندی پایان جلسه.</li><li><b dir="ltr">3.6.0</b><span class="muted"> · ۷ آبان</span><br>بازگردانی امن و نسخهٔ نجات، حفظ تعارض‌ها، برگشت از اشتباه، مشخصات مستقل جایگزین‌ها، محاسبات دقیق‌تر، پشتیبان با میان‌بر و به‌روزرسانی امن. محاسبهٔ ست‌های تیک‌نخورده حفظ شد.</li><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -758,6 +790,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
 <div class="modal" id="modal" hidden><div class="m-card" role="dialog" aria-modal="true" aria-labelledby="m-title" id="m-card"></div></div>
 <script>
 /*CORE*/
+/*GUIDES*/
 (() => {
 'use strict';
 document.documentElement.lang = 'fa';
@@ -1165,7 +1198,7 @@ function render() {
 
   if (!ctx.deload && ctx.week >= 2 && (view.day === 'sat' || view.day === 'fri')) h += `<div class="banner" style="margin-top:12px"><span class="grow"><b>بعد از تزریق پنجشنبه:</b> اگر امروز بی‌حال یا کم‌انرژی هستی، RIR هر حرکت را یک واحد بالاتر بگیر.</span></div>`;
 
-  h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span></li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span></li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
+  h += `<details class="warm"><summary>گرم‌کردن <span class="muted">حدود ۸ دقیقه</span></summary><ul>${WARM.map(w => `<li><span class="en" dir="ltr">${w[0]}</span><span class="muted">${w[1]}</span><button class="info-btn" type="button" data-movement-guide="${w[0]}" aria-label="راهنمای ${w[0]}" aria-haspopup="dialog">i</button>${myNote({name:w[0]})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:w[0]}))}</p>`:''}</li>`).join('')}${day.ohs ? `<li><span class="en" dir="ltr">Bodyweight Overhead Squat</span><span class="muted"><span dir="ltr">${sxr(2, [6, 8])}</span> · فقط چهارشنبه</span><button class="info-btn" type="button" data-movement-guide="Bodyweight Overhead Squat" aria-label="راهنمای اسکوات دست‌بالا" aria-haspopup="dialog">i</button>${myNote({name:'Bodyweight Overhead Squat'})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:'Bodyweight Overhead Squat'}))}</p>`:''}</li>` : ''}<li><span class="muted">در پایان ۱${LRM}–${LRM}۲ ست سبک برای حرکت ۱</span></li></ul></details>`;
 
   h += '<div class="list">';
   for (const b of day.items) {
@@ -1264,6 +1297,16 @@ function updateProgress() {
   pg.querySelector('span').textContent = fa(dn) + ' از ' + fa(tot) + ' ست';
 }
 
+function weightSuggestionHTML(ex,sug){
+  let h='';
+  if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
+  else if (sug && sug.type === 'up') h += ex.db
+    ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
+    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
+  else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
+  return h;
+}
+
 function exCard(ex, ctx, rec, inSS) {
   const t = targetFor(ex, ctx, rec);
   const e = entry(rec, ex, false);
@@ -1274,21 +1317,14 @@ function exCard(ex, ctx, rec, inSS) {
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex${ex.pri ? ' pri' : ''}" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${esc(ex.name)}</h3><button class="info-btn${myNote(ex) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${esc(ex.name)}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${esc(ex.name)}</h3><button class="info-btn${myNote(ex) ? ' on' : ''}" type="button" data-info aria-label="راهنمای ${esc(ex.name)}" aria-haspopup="dialog">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest || ex.ssRest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
-  if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex))}</p>`;
-  if (sug && sug.type === 'up' && ex.lm) h += `<div class="sugg up">${ICON.up}<span>وقت وزنهٔ بیشتر: کوچک‌ترین صفحه را اضافه کن و از ${fa(sug.bottom)} تکرار شروع کن.</span></div>`;
-  else if (sug && sug.type === 'up') h += ex.db
-    ? `<div class="sugg up">${ICON.up}<span>وقت دمبل سنگین‌تر: دمبل بعدی بعد از <b>${fa(sug.w0)}</b> کیلو (معمولاً ۲ کیلو بیشتر) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`
-    : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
-  else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
-  h+=adviceHTML(ex,t,rec);
+  h+=weightSuggestionHTML(ex,sug);
   if (prev) {
     const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? esc(fa(s.r)) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
-  h+=comparisonHTML(ex,rec,view.date);
   if (ex.tb) h += `<div class="barrow"><button class="barchip${barW() == null ? ' unset' : ''}" type="button" data-bar>${barW() == null ? 'وزن میله را وارد کن' : 'میله: ' + fa(barW()) + ' کیلو'}${PENCIL}</button><span class="muted">عدد نهایی = صفحه‌ها + میله</span></div>`;
   h += `<div class="sets"><div class="set-head" aria-hidden="true"><span></span><div class="pair"><span>${ex.db ? 'هر دمبل' : ex.lm ? 'صفحه‌های روی میله' : ex.tb ? 'وزن کل' : ex.pl ? 'جمع صفحه‌ها' : 'عدد دستگاه'}</span><span></span><span>${ex.unit || 'تکرار'}</span></div><span></span></div>`;
   for (let i = 0; i < rows; i++) {
@@ -1334,7 +1370,7 @@ function cardioCard(day, ctx, rec, b) {
     const inp = (k, l, span) => `<label for="c-${k}"${span ? ' style="grid-column:span 2"' : ''}>${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`;
     const R2 = (a, b2) => `${fa(a)}${LRM}–${LRM}${fa(b2)}`;
     return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
-    <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span></div>
+    <div class="ex-head"><span class="badge">${c.alt ? ICON.bike : ICON.walk}</span><h3 class="ex-name" dir="ltr">${c.alt ? 'Stationary Bike' : 'Treadmill'}</h3><span class="zone">منطقهٔ ۲</span><button class="info-btn" type="button" data-movement-guide="${cardioName(view.day,c)}" aria-label="راهنمای ${cardioName(view.day,c)}" aria-haspopup="dialog">i</button></div>${myNote({name:cardioName(view.day,c)})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:cardioName(view.day,c)}))}</p>`:''}
     <p class="c-tgt">۱۴ دقیقه، اینتروال</p>
     <p class="c-desc">۳ دقیقه آرام، بعد ۳ بار: ۳ دقیقه منطقهٔ ۲ و ۱ دقیقه آرام (دور آخر بدون آرام). بعد از وزنه؛ دستگیره را نگیر.</p>
     <p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
@@ -1350,7 +1386,7 @@ function cardioCard(day, ctx, rec, b) {
   const fields = tread ? [['min', 'دقیقه'], ['inc', 'شیب'], ['spd', 'سرعت']] : [['min', 'دقیقه'], ['lvl', 'سطح دستگاه']];
   const alt = tread ? 'Stationary Bike' : 'Elliptical';
   return `<article class="cardio${c.d ? ' done' : ''}" data-cardio>
-    <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span></div>
+    <div class="ex-head"><span class="badge">${tread ? ICON.walk : ICON.bike}</span><h3 class="ex-name" dir="ltr">${tread ? 'Treadmill' : 'Stationary Bike'}</h3><span class="zone">منطقهٔ ۲</span><button class="info-btn" type="button" data-movement-guide="${cardioName(view.day,c)}" aria-label="راهنمای ${cardioName(view.day,c)}" aria-haspopup="dialog">i</button></div>${myNote({name:cardioName(view.day,c)})?`<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote({name:cardioName(view.day,c)}))}</p>`:''}
     <p class="c-tgt">${target}</p><p class="c-desc">${desc} بعد از وزنه.</p><p class="c-desc"><b>ضربان شخصی منطقهٔ ۲:</b> حدود ۱۵۰&lrm;–&lrm;۱۶۵ (ملاک اصلی همچنان حرف زدن است).</p>
     ${UI2() ? `<div class="crow" style="--cols:${fields.length}">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}</div>${cbtn(c)}` : `<div class="crow" style="grid-template-columns:repeat(${fields.length},minmax(0,1fr)) 48px">${fields.map(([k, l]) => `<label for="c-${k}">${l}<input id="c-${k}" inputmode="decimal" autocomplete="off" value="${faV(c[k] || '')}"></label>`).join('')}<button class="chk" type="button" data-cdone aria-pressed="${!!c.d}" aria-label="ثبت هوازی">${ICON.check}</button></div>`}
     <button class="alt${c.alt ? ' on' : ''}" type="button" data-calt aria-pressed="${!!c.alt}">${c.alt ? 'امروز با جایگزین: ' : 'جایگزین: '}<span dir="ltr">${alt}</span></button>
@@ -1493,6 +1529,7 @@ main.addEventListener('click', ev => {
   const sp = ev.target.closest('[data-ss]');
   if (sp) { if (ssFired) { ssFired = false; return; } toast(sp.closest('.ss.off') ? 'برای وصل دوباره، نگه دار' : 'برای جدا کردن در این جلسه، نگه دار'); return; }
   if (ev.target.closest('[data-bar]')) { openBar(); return; }
+  const gb=ev.target.closest('[data-movement-guide]');if(gb){openExerciseGuide(gb.dataset.movementGuide);return;}
   const ib = ev.target.closest('[data-info]');
   if (ib) { openNote(ib.closest('.ex').dataset.ex); return; }
   const ch = UI2() && ev.target.closest('.ex.complete .ex-head, .ex.complete .ex-sum');
@@ -2164,20 +2201,125 @@ $('#wipe-btn').addEventListener('click', ev => {
 const modal = $('#modal'), mCard = $('#m-card');
 let mState = null;
 function showModal(html, focusSel, top) {
-  cancelOut(modal); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
+  guideSwipe=null;cancelOut(modal);modal.classList.remove('exercise-guide'); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
   if (focusSel) { const f = mCard.querySelector(focusSel); if (f) setTimeout(() => f.focus(), 60); }
 }
-function hideModal() { mState = null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = ''; if (!openId) document.body.classList.remove('lock'); }); }
+function hideModal() { const focusBack=mState?.kind==='guide'?guideOpener:null;mState = null;guideSwipe=null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = '';modal.classList.remove('exercise-guide'); if (!openId) document.body.classList.remove('lock');if(focusBack?.isConnected)focusBack.focus({preventScroll:true}); }); }
 
-function openNote(id) {
-  const base = EX[id] || OLD_EX[id]; if (!base) return;
-  const ex=effective(base,getRec(false)?.ex[id]);
-  mState = { kind: 'note', key:C.noteKey(ex.name) };
-  showModal(`<h2 id="m-title">نکتهٔ من · <span class="en">${esc(ex.name)}</span></h2>
-    <textarea id="m-note" maxlength="10000" aria-label="نکتهٔ من برای این حرکت" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(ex))}</textarea>
-    <p class="m-sub">این نکته همراه همین حرکت می‌ماند؛ در همهٔ روزها و برنامه‌های بعد هم نمایش داده می‌شود. حرکت جایگزین نکتهٔ مستقل خودش را دارد.</p>
-    <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, myNote(ex) ? null : '#m-note', true);
+const G = globalThis.TamrinGuides;
+const GUIDE_ICONS = {
+  execution:'<path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1zm0 0v15"/>',
+  weight:'<path d="M3 9v6m3-9v12m12-12v12m3-9v6M6 12h12"/>',
+  comparison:'<path d="M4 20h16M6 20v-6h4v6m0-6V9h4v11m0-11V4h4v16"/>'
+};
+// Only program-specific instructions are added to the researched technique.
+// Targets, sets, rest timers and progression rules remain in the program model.
+const GUIDE_PROGRAM = {
+  sat1:['نیمکت ۳۰ تا ۴۵ درجه. اگر برداشتن دمبل‌ها سخت شد، طبق برنامه بازه را ۸ تا ۱۲ کن.'],
+  sat3:['دو دست پشت سر هم؛ سپس استراحت.'],
+  sat4:['دو دست پشت سر هم؛ آرنج حدود ۴۵ درجه از تنه در دامنهٔ راحت.'],
+  mon1:['دمبل‌ها را با کمک زانو آماده کن و پایان ست روی ران برگردان؛ نینداز. اگر رساندن دمبل اذیت کرد، طبق برنامه بازه را ۸ تا ۱۲ کن.'],
+  mon2:['شیب نیمکت ۱۵ تا ۳۰ درجه؛ اگر شانه راحت‌تر است، کف دست‌ها را کمی رو به هم بچرخان.'],
+  mon3:['اگر شانهٔ راست با مسیر دستگاه راحت نیست، از جایگزین سیم‌کش استفاده کن.'],
+  mon4:['طبق برنامه، ست آخر پس از ناتوانی: ۳ تا ۶ تکرار نیمه از پایین تا حدود ۴۵ درجه با همان فرم.'],
+  wed7:['طبق برنامه، ست آخر پس از ناتوانی: ۳ تا ۶ تکرار نیمه از پایین تا حدود ۴۵ درجه با همان فرم.'],
+  mon6:['طبق برنامه، در ست آخر پس از ناتوانی چند تکرار نیمه در نیمهٔ پایینی.'],
+  wed1:['هر تکرار دوباره نفس و شکم را سفت کن. اگر کمر گرد شد، ست را تمام کن؛ RIR زیر ۲ نرود.','پس از ست آخر تا ۵ دقیقه استراحت؛ با برگشت نفس حرکت بعد را شروع کن.'],
+  wed3:['جای پا مطابق برنامه: عرض لگن، وسط تا کمی پایین صفحه.'],
+  wed8:['جای پای فعال مطابق برنامه: بالای صفحه، هم‌راستای همان طرف لگن؛ چهارسر و باسن هر دو درگیرند.','اول پای راست، سپس چپ؛ ۶۰ ثانیه بین پاها. تیک پس از پای دوم.','شروع پیشنهادی برنامه: حدود ۳۵ تا ۴۰ درصد مجموع صفحه‌های پرس پای دوپا؛ مجموع صفحه‌ها ثبت می‌شود.'],
+  wed5:['مکث پایین انتخاب برنامه است؛ وزنه‌ها روی هم ننشینند. اگر پشتی دستگاه امکان تنظیم دارد، کمی عقب‌تر بنشین.'],
+  fri1:['پای مخالف دست فعال کمی جلو باشد.'],
+  fri2:['دامنهٔ برنامه: حداکثر تا ارتفاع شانه.'],
+  fri3:['نیمکت ۳۰ تا ۴۵ درجه؛ دست‌ها با آرنج کمی خم تا هم‌سطح بدن.'],
+  fri4:['گیرش خنثی؛ آرنج حدود ۳۰ تا ۴۵ درجه از بدن.'],
+  wed6:['ضامن سورتمه بسته بماند؛ زانو تقریباً صاف و بدون قفل ضربه‌ای.','طبق برنامه، در ست آخر پس از ناتوانی چند تکرار نیمه در نیمهٔ پایینی.'],
+  sat8:['یک سمت کامل، سپس سمت دیگر.'],fri5:['یک سمت کامل، سپس سمت دیگر.']
+};
+function guideData(name){return (Object.hasOwn(G.exercises,name)?G.exercises[name]:null) || {cues:[],primary:[],secondary:[],sources:[],image:null};}
+function guideExecutionHTML(ex,id,rec){
+  const g=guideData(ex.name),e=id?rec?.ex[id]:null;
+  const program=id&&!e?.alt?(GUIDE_PROGRAM[id]||[]):[];
+  const muscles=(g.primary||[]).map(x=>`<span>اصلی: ${esc(x)}</span>`).concat((g.secondary||[]).map(x=>`<span class="secondary">کمکی: ${esc(x)}</span>`)).join('');
+  const sources=(g.sources||[]).filter(k=>G.sources[k]);
+  return `<div class="guide-image" data-image-slot="${esc(ex.name)}" role="img" aria-label="جای خالی تصویر اجرای ${esc(ex.name)}؛ شروع سمت راست و پایان سمت چپ"><span>شروع</span><span>پایان</span></div>
+    ${muscles?`<div class="guide-muscles">${muscles}</div><p class="guide-hint">سبز: هدف اصلی · آبی روشن: کمکی · نمایش شماتیک</p>`:''}
+    ${g.setup?`<p class="m-prog">${esc(g.setup)}</p>`:''}
+    ${g.cues.length?`<ol class="guide-cues">${g.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ol>`:'<p class="m-sub">هنوز راهنمایی برای این حرکت ثبت نشده است.</p>'}
+    ${g.error?`<p class="guide-error"><b>حواست باشد:</b> ${esc(g.error)}</p>`:''}
+    ${program.length||ex.pz?`<div class="guide-program"><b>در برنامهٔ تو</b><ul>${ex.pz?`<li>مکث: ${ex.pz}</li>`:''}${program.map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div>`:''}
+    <div class="guide-personal"><div class="guide-personal-head"><b>نکتهٔ من</b><button class="btn" type="button" data-m="edit-guide-note" aria-expanded="false" aria-controls="guide-note-editor">${PENCIL} ویرایش</button></div>
+      <p id="guide-note-preview">${myNote(ex)?esc(myNote(ex)):'هنوز نکته‌ای ننوشته‌ای.'}</p>
+      <div id="guide-note-editor" hidden><textarea id="m-note" maxlength="10000" aria-label="نکتهٔ من برای این حرکت" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(ex))}</textarea>
+      <p class="m-sub">این نکته همراه همین حرکت می‌ماند؛ در همهٔ روزها و برنامه‌های بعد. حرکت جایگزین نکتهٔ مستقل خودش را دارد.</p>
+      <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="cancel-guide-note">انصراف</button></div></div>
+    </div>${sources.length?`<details class="guide-sources"><summary>منابع راهنما</summary><ul>${sources.map(k=>`<li><a href="${esc(G.sources[k].url)}" target="_blank" rel="noopener noreferrer">${esc(G.sources[k].title)}</a></li>`).join('')}</ul></details>`:''}`;
 }
+function guideWeightHTML(ex,rec){
+  const t=targetFor(ex,ctxOf(view.date),rec),sug=suggest(ex,t,ctxOf(view.date));
+  return `<h3>وزنهٔ این حرکت</h3><p class="m-sub">${ex.db?'عدد هر دمبل را بنویس.':ex.lm?'فقط مجموع صفحه‌های روی میله را بنویس.':ex.tb?'مجموع صفحه‌ها را وارد کن؛ وزن میله جداگانه اضافه می‌شود.':ex.pl?'مجموع صفحه‌ها را بنویس.':'عدد وزنهٔ دستگاه را بنویس.'}</p>${weightSuggestionHTML(ex,sug)}${adviceHTML(ex,t,rec).replace('<details','<details open')}`;
+}
+let guideSwipe=null,guideOpener=null;
+function openExerciseGuide(name,id=null){
+  const rec=getRec(false),base=id?(EX[id]||OLD_EX[id]):null,ex=base?effective(base,rec?.ex[id]):{name};
+  guideOpener=document.activeElement;
+  sw=null;settleNav();
+  mState={kind:'guide',key:C.noteKey(ex.name),name:ex.name,id,tab:0};
+  const keys=id?['execution','weight','comparison']:['execution'],labels=['اجرا','وزنه','مقایسه'];
+  const panels=[guideExecutionHTML(ex,id,rec)];
+  if(id)panels.push(guideWeightHTML(ex,rec),`<h3>مقایسه با جلسهٔ قبل</h3>${comparisonHTML(ex,rec,view.date).replace('<details','<details open')}<p class="m-sub">مقایسه بر اساس همین حرکت، واحد ثبت، هدف و فاصله از ناتوانی انجام می‌شود؛ ثابت بودن وسیله و تنظیمات اجرا فرض شده است.</p>`);
+  showModal(`<div class="guide-handle" aria-hidden="true"></div><header class="guide-head"><div><h2 id="m-title">راهنمای حرکت</h2><span class="en" dir="ltr">${esc(ex.name)}</span></div><button class="guide-close" type="button" data-m="close" aria-label="بستن راهنمای حرکت">×</button></header>
+    <div class="guide-viewport"><div class="guide-track">${panels.map((p,i)=>`<section class="guide-panel" role="tabpanel" id="guide-panel-${i}" aria-labelledby="guide-tab-${i}" tabindex="0"${i?' inert aria-hidden="true"':''}>${p}</section>`).join('')}</div></div>
+    <nav class="guide-nav" role="tablist" aria-label="بخش‌های راهنمای حرکت">${keys.map((k,i)=>`<button class="guide-tab" type="button" role="tab" id="guide-tab-${i}" aria-controls="guide-panel-${i}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-guide-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GUIDE_ICONS[k]}</svg><span>${labels[i]}</span></button>`).join('')}</nav>`,'.guide-close');
+  modal.classList.add('exercise-guide');
+}
+// Kept as the movement-aware note entry point for existing callers.
+function openNote(id){openExerciseGuide(null,id);}
+function setGuideTab(index,focus=false){
+  if(mState?.kind!=='guide')return;
+  const tabs=[...mCard.querySelectorAll('[data-guide-tab]')];
+  index=Math.max(0,Math.min(tabs.length-1,index));mState.tab=index;
+  const track=mCard.querySelector('.guide-track');track.style.transition='';track.style.transform=`translateX(${index*100}%)`;
+  tabs.forEach((tab,i)=>{tab.setAttribute('aria-selected',String(i===index));tab.tabIndex=i===index?0:-1;});
+  mCard.querySelectorAll('.guide-panel').forEach((p,i)=>{p.inert=i!==index;p.setAttribute('aria-hidden',String(i!==index));});
+  if(focus)tabs[index].focus();
+}
+// Horizontal gestures belong exclusively to this sheet. Text editing and
+// vertical panel scrolling retain their native gestures; edges never change days.
+mCard.addEventListener('touchstart',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();guideSwipe=null;
+  if(ev.touches.length!==1||!ev.target.closest('.guide-viewport')||ev.target.closest('textarea,input,button,a,summary'))return;
+  const t=ev.touches[0];guideSwipe={x:t.clientX,y:t.clientY,at:Date.now(),dx:0,lock:null};
+},{passive:true});
+mCard.addEventListener('touchmove',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();
+  if(!guideSwipe)return;if(ev.touches.length!==1){guideSwipe=null;setGuideTab(mState.tab);return;}
+  const s=guideSwipe,t=ev.touches[0],dx=t.clientX-s.x,dy=t.clientY-s.y;
+  if(!s.lock){if(Math.abs(dx)<10&&Math.abs(dy)<10)return;s.lock=Math.abs(dx)>Math.abs(dy)*1.2?'h':'v';}
+  if(s.lock!=='h')return;ev.preventDefault();s.dx=dx;
+  const tabs=mCard.querySelectorAll('[data-guide-tab]').length,edge=dx>0?mState.tab===tabs-1:mState.tab===0;
+  const width=mCard.querySelector('.guide-viewport').clientWidth,track=mCard.querySelector('.guide-track');
+  track.style.transition='none';track.style.transform=`translateX(${mState.tab*width+(edge?dx*.2:dx)}px)`;
+},{passive:false});
+mCard.addEventListener('touchend',ev=>{
+  if(mState?.kind!=='guide')return;ev.stopPropagation();
+  const s=guideSwipe;guideSwipe=null;if(!s||s.lock!=='h')return;
+  const changed=Math.abs(s.dx)>60||(Math.abs(s.dx)>30&&Math.abs(s.dx)/Math.max(1,Date.now()-s.at)>.45);
+  setGuideTab(mState.tab+(changed?(s.dx>0?1:-1):0));
+},{passive:true});
+mCard.addEventListener('touchcancel',ev=>{if(mState?.kind==='guide'){ev.stopPropagation();guideSwipe=null;setGuideTab(mState.tab);}},{passive:true});
+mCard.addEventListener('keydown',ev=>{
+  if(mState?.kind!=='guide')return;
+  if(ev.target.matches('[data-guide-tab]')&&['ArrowLeft','ArrowRight','Home','End'].includes(ev.key)){
+    ev.preventDefault();setGuideTab(ev.key==='Home'?0:ev.key==='End'?2:mState.tab+(ev.key==='ArrowLeft'?1:-1),true);
+  }
+  if(ev.key==='Tab'){
+    const focusable=[...mCard.querySelectorAll('button,a[href],textarea,input,[tabindex="0"]')].filter(e=>!e.closest('[inert]')&&e.getClientRects().length);
+    const first=focusable[0],last=focusable[focusable.length-1];
+    if(ev.shiftKey&&document.activeElement===first){ev.preventDefault();last.focus();}
+    else if(!ev.shiftKey&&document.activeElement===last){ev.preventDefault();first.focus();}
+  }
+});
+
 function openBar() {
   mState = { kind: 'bar' };
   showModal(`<h2 id="m-title">وزن میلهٔ <span class="en">Trap Bar</span></h2>
@@ -2224,12 +2366,15 @@ function paintEff() {
 }
 mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min' || ev.target.id === 'm-bar') faInput(ev.target); });
 mCard.addEventListener('click', async ev => {
+  const tab=ev.target.closest('[data-guide-tab]');if(tab){setGuideTab(+tab.dataset.guideTab);return;}
   const rb = ev.target.closest('[data-rpe]');
   if (rb && mState) { mState[rb.closest('.eff').dataset.k] = +rb.dataset.rpe; paintEff(); return; }
   const st = ev.target.closest('[data-step]');
   if (st && mState) { const k = st.closest('.eff').dataset.k; mState[k] = Math.min(10, Math.max(1, (mState[k] || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
+  if(m.dataset.m==='edit-guide-note'){const ed=$('#guide-note-editor');ed.hidden=false;m.setAttribute('aria-expanded','true');$('#m-note').focus();return;}
+  if(m.dataset.m==='cancel-guide-note'){$('#m-note').value=S.exNotes[mState.key]?.t||'';$('#guide-note-editor').hidden=true;mCard.querySelector('[data-m=edit-guide-note]').setAttribute('aria-expanded','false');return;}
   if(m.dataset.m==='run-backup'){hideModal();await runShortcut();return;}
   if(m.dataset.m==='apply-import'){
     if(!rescue())return;checkpoint('بازگردانی پشتیبان');
@@ -2259,7 +2404,9 @@ mCard.addEventListener('click', async ev => {
   if (m.dataset.m === 'save-note') {
     checkpoint('نکتهٔ حرکت');const t = $('#m-note').value.trim();
     S.exNotes[mState.key] = { t, upd: Date.now() };
-    save(true); hideModal(); softRender(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
+    if(!save(true))return;softRender();
+    if(mState.kind==='guide'){$('#guide-note-preview').textContent=t||'هنوز نکته‌ای ننوشته‌ای.';$('#guide-note-editor').hidden=true;const edit=mCard.querySelector('[data-m=edit-guide-note]');edit.setAttribute('aria-expanded','false');edit.focus();}
+    else hideModal();toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
     return;
   }
   if (m.dataset.m === 'save-finish') {
