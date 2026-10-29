@@ -6,7 +6,7 @@ let networkUnavailable=false;
 const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(503).end('offline test');return;}const pathname=new URL(req.url,'http://localhost').pathname;const file=path.join(root,pathname==='/'?'index.html':pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}fs.readFile(file,(e,b)=>{if(e){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/json');res.end(b);});});
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const url='http://127.0.0.1:'+server.address().port;
  for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
-  const browser=await engine.launch({headless:true});const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});const page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  const browser=await engine.launch({headless:true});const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});const page=await ctx.newPage();let checkPage=page;const errors=[];page.on('pageerror',e=>errors.push(e.message));
   try{
    await page.goto(url);await page.waitForSelector('.ex[data-ex]');
    for(const [day,n]of [['sat',8],['mon',6],['wed',6],['fri',7]]){await page.locator('[data-day='+day+']').click();assert.equal(await page.locator('.ex[data-ex]').count(),n);assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);}
@@ -28,7 +28,7 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
 
    // Independent legacy-migration/insight/resume fixture, with synthetic local dates.
    const fx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),fp=await fx.newPage();
-   fp.on('pageerror',e=>errors.push(e.message));
+   checkPage=fp;fp.on('pageerror',e=>errors.push(e.message));
    await fx.addInitScript(()=>{
      if(localStorage.getItem('daftar-tamrin-v1'))return;
      const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const now=new Date(),prior=new Date(now);prior.setDate(prior.getDate()-7);
@@ -61,10 +61,11 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    const swipe=async(dx,dy=0,cancel=false)=>fp.locator('.guide-viewport').evaluate((el,{dx,dy,cancel})=>{
      const target=el.querySelector('.guide-panel:not([inert]) .guide-image')||el.querySelector('.guide-panel:not([inert]) h3');
      const rect=el.getBoundingClientRect(),x=rect.x+rect.width/2,y=rect.y+70;
-     const touch=(cx,cy)=>new Touch({identifier:7,target,clientX:cx,clientY:cy,pageX:cx,pageY:cy});
-     target.dispatchEvent(new TouchEvent('touchstart',{bubbles:true,cancelable:true,touches:[touch(x,y)]}));
-     target.dispatchEvent(new TouchEvent('touchmove',{bubbles:true,cancelable:true,touches:[touch(x+dx,y+dy)]}));
-     target.dispatchEvent(new TouchEvent(cancel?'touchcancel':'touchend',{bubbles:true,cancelable:true,touches:[],changedTouches:[touch(x+dx,y+dy)]}));
+     // WebKit exposes Touch without a usable constructor in this runner.
+     // Dispatch the same touch lists through standard DOM events in both engines.
+     const touch=(cx,cy)=>({identifier:7,target,clientX:cx,clientY:cy,pageX:cx,pageY:cy});
+     const send=(type,touches,changedTouches=[])=>{const event=new Event(type,{bubbles:true,cancelable:true});Object.defineProperties(event,{touches:{value:touches},changedTouches:{value:changedTouches}});target.dispatchEvent(event);};
+     send('touchstart',[touch(x,y)]);send('touchmove',[touch(x+dx,y+dy)]);send(cancel?'touchcancel':'touchend',[],[touch(x+dx,y+dy)]);
    },{dx,dy,cancel});
    const selected=()=>fp.locator('[data-guide-tab][aria-selected=true]').getAttribute('data-guide-tab');
    const dayBefore=await fp.locator('#daypill span').textContent();
@@ -97,6 +98,6 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await fp.screenshot({path:path.resolve('test-results/'+name+'-insights.png'),fullPage:true});
    await fx.close();
    assert.deepEqual(errors,[]);console.log(name+': independent guide swipes, bottom tabs, empty image slots, persistent movement notes, legacy migration, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
-  }catch(e){await page.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
+  }catch(e){await checkPage.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
  }
 })().then(()=>server.close()).catch(e=>{console.error(e);server.close();process.exitCode=1;});
