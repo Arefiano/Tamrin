@@ -1,0 +1,5 @@
+source/fonts/
+source/out/
+node_modules/
+test-results/
+source/tests/screenshots/

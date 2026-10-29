@@ -566,6 +566,14 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 .chlog ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ink-2);line-height:1.6}
 .chlog li b{color:var(--ink);font-size:15px}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+/* data safety controls: kept apart from legacy card rules */
+[hidden]{display:none!important}
+.utility{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+#retry-save{display:none}body.save-error #retry-save{display:block}
+#save-status{position:sticky;top:88px;z-index:19}
+input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!important}
+#shortcut-name{width:100%;height:44px;background:var(--field);border:1px solid var(--line-2);border-radius:10px;padding:0 10px}
+#finish-warning{color:var(--warn)}
 </style>
 </head>
 <body>
@@ -579,6 +587,7 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     <div class="appprog" aria-hidden="true"><i id="appprog"></i></div><div class="brand"><b>دفتر تمرین</b><span class="pill" id="weekchip"></span></div>
   </header>
   <div class="banners" id="banners"></div>
+  <div id="save-status" class="banner warn" role="alert" hidden></div><div class="utility"><button class="btn" id="undo-last" hidden></button><button class="btn" id="retry-save" type="button">ذخیرهٔ دوباره</button></div>
   <nav class="tabs" id="tabs" role="tablist" aria-label="جلسه‌ها"></nav>
   <main id="main"></main>
 </div>
@@ -638,6 +647,14 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     <div class="sec">
       <h3>پشتیبان</h3>
       <p id="backup-age"></p>
+      <label for="backup-mode">پشتیبان پس از پایان جلسه</label><select id="backup-mode"><option value="shortcut">میان‌بر آیفون</option><option value="manual">دستی</option></select>
+      <label for="shortcut-name">نام میان‌بر</label><input id="shortcut-name" autocomplete="off" value="پشتیبان دفتر تمرین">
+      <p>میان‌بر را یک بار طبق راهنما بساز، سپس نامش را اینجا بنویس. هنگام اجرا، اطلاعات تمرین در کلیپ‌بورد قرار می‌گیرد.</p>
+      <details><summary>راهنمای ساخت میان‌بر</summary><ol><li>در برنامهٔ میان‌برهای آیفون، میان‌بر تازه با نام «پشتیبان دفتر تمرین» بساز.</li><li>عمل «دریافت کلیپ‌بورد» را اضافه کن.</li><li>عمل «تعیین نام» را اضافه کن و نام را <span dir="ltr">daftar-tamrin-backup.json</span> بگذار.</li><li>عمل «ذخیرهٔ فایل» را اضافه کن؛ پرسیدن محل ذخیره را خاموش کن، پوشهٔ دلخواه در آی‌کلاد را انتخاب کن و بازنویسی فایل موجود را روشن کن.</li><li>یک بار با دکمهٔ زیر آزمایش کن و فایل را در برنامهٔ فایل‌ها بررسی کن؛ سپس «فایل ذخیره شد» را بزن.</li></ol></details>
+      <div class="row"><button class="btn" id="run-shortcut">اجرای میان‌بر</button><button class="btn" id="confirm-shortcut">فایل ذخیره شد</button></div><p id="shortcut-state"></p><label><input type="checkbox" id="shortcut-ready"> میان‌بر آماده است؛ بعد از پایان جلسه خودکار اجرا شود</label>
+      <p id="persist-state"></p>
+      <h3>نسخهٔ نجات و تعارض‌ها</h3><p id="recovery-info"></p><p id="conflict-count"></p>
+      <div class="row"><button class="btn" id="download-recovery">ذخیرهٔ نسخهٔ نجات</button><button class="btn" id="restore-rescue">بررسی نسخهٔ قبل از تغییر</button><button class="btn" id="use-recovered" hidden>استفاده از نسخهٔ بازیابی‌شده</button></div>
       <div class="row">
         <button class="btn acc" type="button" id="export-file">ذخیرهٔ فایل پشتیبان</button>
         <button class="btn" type="button" id="copy-backup">کپی پشتیبان به‌صورت متن</button>
@@ -658,8 +675,8 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
     
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
-      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.5.5</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
-      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
+      <p>نسخهٔ نصب‌شده: <b dir="ltr">3.6.0</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
+      <details class="chlog"><summary>تاریخچهٔ نسخه‌ها</summary><ul><li><b dir="ltr">3.6.0</b><span class="muted"> · ۷ آبان</span><br>بازگردانی امن و نسخهٔ نجات، حفظ تعارض‌ها، برگشت از اشتباه، مشخصات مستقل جایگزین‌ها، محاسبات دقیق‌تر، پشتیبان با میان‌بر و به‌روزرسانی امن. محاسبهٔ ست‌های تیک‌نخورده حفظ شد.</li><li><b dir="ltr">3.5.5</b><span class="muted"> · ۶ آبان</span><br>اگر نوار ساعت آیفون هنوز شفاف باشد، نوار بالا خودکار کمی پایین‌تر می‌نشیند تا تار نشود.</li><li><b dir="ltr">3.5.4</b><span class="muted"> · ۶ آبان</span><br>فاصلهٔ نوار بالا متعادل شد و قرص روزها هم‌راستای دکمه‌ها قرار گرفت.</li><li><b dir="ltr">3.5.3</b><span class="muted"> · ۶ آبان</span><br>نوار ساعت و باتری آیفون مات شد تا سایه‌ای روی اپ نیفتد؛ نوار بالا ۱۵ پیکسل پایین‌تر از طرح اول.</li><li><b dir="ltr">3.5.2</b><span class="muted"> · ۶ آبان</span><br>نوار بالا باز هم پایین‌تر آمد تا کاملاً از ناحیهٔ سایهٔ آیفون بیرون باشد.</li><li><b dir="ltr">3.5.1</b><span class="muted"> · ۶ آبان</span><br>نوار بالای صفحه کمی پایین‌تر آمد تا سایهٔ بالای صفحهٔ آیفون روی دکمه‌ها نیفتد.</li><li><b dir="ltr">3.5</b><span class="muted"> · ۶ آبان</span><br>دکمهٔ ↻ بالای صفحه برای گرفتن جدیدترین نسخه (با نقطهٔ سبز وقتی نسخهٔ جدید آماده است)؛ دکمه‌ها به سمت راست آمدند. با زدن روی خانه‌ای که عدد دارد، خانه برای عدد جدید آماده می‌شود و اگر چیزی ننویسی عدد قبلی برمی‌گردد.</li><li><b dir="ltr">3.4.1</b><span class="muted"> · ۶ آبان</span><br>Trap Bar: خانهٔ وزنه دوقسمتی شد؛ وزن کل درشت سمت چپ، صفحه‌ها کوچک سمت راست.</li><li><b dir="ltr">3.4</b><span class="muted"> · ۶ آبان</span><br>Trap Bar Deadlift: فقط مجموع صفحه‌ها را می‌نویسی؛ وزن میله یک بار وارد می‌شود و عدد نهایی کنار هر ست نشان داده و ثبت می‌شود.</li><li><b dir="ltr">3.3</b><span class="muted"> · ۶ آبان</span><br>برنامه: چهارشنبه Single-Leg Leg Press (پا بالای صفحه) به‌جای Split Squat، بعد از Leg Press؛ Calf Press on Leg Press به جمعه رفت. حجم هفتگی پا بدون تغییر.</li><li><b dir="ltr">3.2.2</b><span class="muted"> · ۶ آبان</span><br>مکث Leg Extension از بالای حرکت به پایین، در بیشترین کشش، منتقل شد.</li><li><b dir="ltr">3.2.1</b><span class="muted"> · ۶ آبان</span><br>نکتهٔ شخصی هر حرکت در همهٔ روزهایی که آن حرکت هست نمایش داده می‌شود.</li><li><b dir="ltr">3.2</b><span class="muted"> · ۶ آبان</span><br>با نگه داشتن انگشت روی برچسب «سوپرست»، حرکت‌هایش فقط برای همان جلسه جدا می‌شوند؛ هرکدام استراحت خودش را می‌گیرد. نگه داشتن دوباره، آن‌ها را وصل می‌کند.</li><li><b dir="ltr">3.1.2</b><span class="muted"> · ۶ آبان</span><br>استراحت بعد از ست آخر Trap Bar Deadlift تا ۵ دقیقه و Split Squat تا ۴ دقیقه.</li><li><b dir="ltr">3.1.1</b><span class="muted"> · ۶ آبان</span><br>پنجرهٔ نکتهٔ شخصی (دکمهٔ i) فقط جای نوشتن دارد و بالای صفحه باز می‌شود تا زیر کیبورد نرود.</li><li><b dir="ltr">3.1</b><span class="muted"> · ۵ آبان</span><br>سختی جلسه در پایان به دو شاخص تقسیم شد: بدنی و روانی.</li><li><b dir="ltr">3.0.1</b><span class="muted"> · ۵ آبان</span><br>نکته‌های Dumbbell Lateral Raise: دست خنثی، تکرار نیمه در ست آخر.</li><li><b dir="ltr">3.0</b><span class="muted"> · ۴ آبان</span><br>طراحی تازه: جمع شدن حرکت تمام‌شده، نوار و درصد پیشرفت جلسه، قاب حرکت فعلی و حاشیهٔ سبز اولویت، رکورد طلایی، علامت تعجب برای تکرار کم، تایمر جمع‌وجور، نمودار پیشرفت حرکت‌ها در سابقه، تاریخ شروع شمسی.</li><li><b dir="ltr">2.0.3</b><span class="muted"> · ۴ آبان</span><br>رفع ماندن تکه‌ای از صفحهٔ قبل هنگام اسلاید.</li><li><b dir="ltr">2.0.2</b><span class="muted"> · ۴ آبان</span><br>اسلاید پشت‌سرهم بدون گیر؛ دو صفحه با هم جابه‌جا می‌شوند.</li><li><b dir="ltr">2.0.1</b><span class="muted"> · ۴ آبان</span><br>رفع بسته نشدن منوی روزها؛ برجسته‌تر شدن اسم برنامه در قرص.</li><li><b dir="ltr">2.0</b><span class="muted"> · ۴ آبان</span><br>ناوبری تازه: اسلاید بین روزها، قرص شناور و منوی روزها، به‌خاطر سپردن جای هر روز، حرکت‌های نرم در کل اپ، حذف ست اضافه با نگه داشتن تیک، نمایش نسخه و دکمهٔ به‌روزرسانی.</li><li><b dir="ltr">1.8</b><span class="muted"> · ۴ آبان</span><br>همهٔ هوازی‌ها روی تردمیل؛ خانه‌های شیب و سرعت؛ ضربان شخصی منطقهٔ ۲.</li><li><b dir="ltr">1.7</b><span class="muted"> · ۲ آبان</span><br>دکمهٔ «+ ست اضافه»؛ واژه‌نامهٔ انواع ست در راهنما. برنامه: Chest-Supported Dumbbell Row حرکت اصلی شنبه.</li><li><b dir="ltr">1.6</b><span class="muted"> · ۲۹ مهر</span><br>هشدار تکرار کمتر از بازهٔ هدف.</li><li><b dir="ltr">1.5</b><span class="muted"> · ۲۹ مهر</span><br>نکته‌های اجرای همهٔ حرکات؛ برچسب جداگانهٔ مکث.</li><li><b dir="ltr">1.4</b><span class="muted"> · ۲۹ مهر</span><br>برچسب وزنه برای هر وسیله و KG داخل خانه‌ها. برنامه: Split Squat با کمک دست به‌جای Bulgarian.</li><li><b dir="ltr">1.3.1</b><span class="muted"> · ۲۸ مهر</span><br>برنامه: Neutral-Grip Dumbbell Bench Press حرکت اصلی دوشنبه.</li><li><b dir="ltr">1.3</b><span class="muted"> · ۲۶ مهر</span><br>به‌روزرسانی سریع‌تر و اعلان نسخهٔ جدید.</li><li><b dir="ltr">1.2</b><span class="muted"> · ۲۶ مهر</span><br>ظاهر فشرده‌تر، فونت بزرگ‌تر، سرتیتر چپ‌به‌راست حرکت‌ها.</li><li><b dir="ltr">1.1</b><span class="muted"> · ۲۵ مهر</span><br>نکتهٔ شخصی هر حرکت (دکمهٔ i)؛ مدت و سختی جلسه در پایان.</li><li><b dir="ltr">1.0</b><span class="muted"> · ۲۵ مهر</span><br>اولین نسخه: ثبت ست، تایمر استراحت، سابقه، پشتیبان، گزارش برای مربی، RIR حرکت‌به‌حرکت.</li></ul></details>
       <p>اگر تغییری را که انتظار داشتی نمی‌بینی، این دکمه نسخهٔ ذخیره‌شده را پاک می‌کند و جدیدترین را می‌گیرد. داده‌هایت پاک نمی‌شوند.</p>
       <div class="row"><button class="btn" type="button" id="force-update">گرفتن جدیدترین نسخه</button></div>
     </div>
@@ -747,6 +764,134 @@ details.warm.closing ul,details.cues.closing .ex-list{animation:fadeDown .17s va
 
 <div class="modal" id="modal" hidden><div class="m-card" role="dialog" aria-modal="true" aria-labelledby="m-title" id="m-card"></div></div>
 <script>
+/* Pure data rules. No DOM, network or storage. Kept inline in the published app. */
+(function(root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.TamrinCore = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+  'use strict';
+  const clone = x => JSON.parse(JSON.stringify(x));
+  const obj = x => x !== null && typeof x === 'object' && !Array.isArray(x);
+  const safeKey = k => !['__proto__', 'constructor', 'prototype'].includes(k);
+  const digits = v => String(v == null ? '' : v).trim().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,،]/g, '.');
+  function number(v, integer = false, max = 10000) {
+    const s = digits(v);
+    if (!s || !/^\d+(?:\.\d+)?$/.test(s)) return null;
+    const n = Number(s);
+    return Number.isFinite(n) && n >= 0 && n <= max && (!integer || Number.isInteger(n)) ? n : null;
+  }
+  const iso = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && Number.isFinite(Date.parse(s)) && new Date(s+'T12:00:00Z').toISOString().slice(0,10) === s;
+  const text = (s, max = 10000) => { if (typeof s !== 'string' || s.length > max) throw Error('متن نامعتبر در پشتیبان'); return s; };
+  function numeric(v, integer = false, max = 10000) {
+    if (v === '' || v == null) return '';
+    const n = number(v, integer, max); if (n == null) throw Error('عدد نامعتبر در پشتیبان'); return String(n);
+  }
+  function target(t) {
+    if (!obj(t) || !Number.isInteger(t.s) || t.s < 1 || t.s > 100) throw Error('هدف نامعتبر');
+    const pair = (a, max) => { if (!Array.isArray(a) || a.length !== 2 || a.some(n=> typeof n !== 'number' || !Number.isFinite(n) || n < 0 || n > max) || a[0] > a[1]) throw Error('بازهٔ نامعتبر'); return a.slice(); };
+    return {s:t.s, r:pair(t.r,1000), rir:t.rir == null ? null : pair(t.rir, 10)};
+  }
+  function spec(o) {
+    if (!obj(o)) throw Error('مشخصات حرکت نامعتبر');
+    const clean=(v,max)=>{const t=text(v,max);if(/[<>\"']/.test(t))throw Error('مشخصات حرکت شامل متن نامعتبر است');return t;};
+    const z = {name:clean(o.name,200)};
+    for (const k of ['db','lm','tb','pl','carry']) if (o[k]) z[k]=1;
+    for (const k of ['unit','tag','pz']) if (o[k] != null) z[k]=clean(o[k],300);
+    if(o.r){if(!Array.isArray(o.r)||o.r.length!==2||o.r.some(n=>!Number.isInteger(n)||n<1||n>1000)||o.r[0]>o.r[1])throw Error('بازهٔ حرکت نامعتبر');z.r=o.r.slice();}
+    for (const k of ['rest','restLast']) if(o[k]) { if(!Array.isArray(o[k])||o[k].length!==2||o[k].some(n=>!Number.isInteger(n)||n<0||n>3600)||o[k][0]>o[k][1])throw Error('استراحت نامعتبر');z[k]=o[k].slice(); }
+    return z;
+  }
+  function entry(e, depth = 0) {
+    if (!obj(e) || !Array.isArray(e.sets) || e.sets.length > 100) throw Error('ست‌های پشتیبان نامعتبرند');
+    const z = {alt:!!e.alt, rir:numeric(e.rir, true, 4), sets:e.sets.map(s=> {
+      if (!obj(s)) throw Error('ست نامعتبر');
+      const st={w:numeric(s.w), r:numeric(s.r, false, 1000), d:s.d?1:0};
+      // Historic fractional distances are valid. Live repeat fields enforce integers.
+      if(s.x) st.x=1;
+      if(s.p!=null) st.p=numeric(s.p);
+      if(s.b!=null && s.b!=='') st.b=Number(numeric(s.b,false,80));
+      return st;
+    })};
+    if (e.t) z.t=target(e.t);
+    if (e.spec) z.spec=spec(e.spec);
+    if (e.variants && !depth) { z.variants={}; for(const k of ['main','alt'])if(e.variants[k])z.variants[k]=entry(e.variants[k],1); }
+    return z;
+  }
+  function session(r, key) {
+    if (!obj(r)||!iso(r.date)||!['sat','mon','wed','fri'].includes(r.day)||key!==r.date+'|'+r.day||!obj(r.ex)) throw Error('شناسه یا ساختار جلسه نامعتبر است');
+    const z={date:r.date,day:r.day,ex:{},cardio:{},done:!!r.done,note:r.note==null?'':text(r.note),upd:0};
+    for(const [id,e] of Object.entries(r.ex)) { if(!safeKey(id)||!/^\w[\w-]{0,79}$/.test(id))throw Error('شناسهٔ حرکت نامعتبر');z.ex[id]=entry(e); }
+    for (const k of ['upd','t0','t1']) if(r[k]!=null) { if(typeof r[k]!=='number'||!Number.isFinite(r[k])||r[k]<0)throw Error('زمان نامعتبر');z[k]=r[k]; }
+    for(const [k,max] of [['min',1440],['rpe',10],['rpm',10]])if(r[k]!=null){const n=number(r[k],true,max);if(n==null||n<1)throw Error('مدت یا سختی نامعتبر');z[k]=n;}
+    if(r.cardio!=null && !obj(r.cardio))throw Error('هوازی نامعتبر');
+    for(const k of ['min','inc','spd','inc2','spd2','inc1','spd1','lvl'])if(r.cardio?.[k]!=null)z.cardio[k]=numeric(r.cardio[k],false,k==='min'?1440:1000);
+    for(const k of ['d','alt'])if(r.cardio?.[k])z.cardio[k]=true;
+    if(r.ssOff){if(!obj(r.ssOff))throw Error('سوپرست نامعتبر');z.ssOff={};for(const [k,v]of Object.entries(r.ssOff)){if(!safeKey(k))throw Error('شناسه نامعتبر');if(v)z.ssOff[k]=1;}}
+    return z;
+  }
+  function normalize(raw) {
+    if(!obj(raw)||!obj(raw.sessions)||Object.keys(raw.sessions).length>10000)throw Error('این فایل پشتیبان دفتر تمرین نیست');
+    if(raw.schema!=null && raw.schema>2)throw Error('این پشتیبان مربوط به نسخهٔ جدیدتری است؛ ابتدا اپ را به‌روزرسانی کن');
+    const d={v:1,schema:2,sessions:{},deload:[],exNotes:{}};
+    for(const [k,r] of Object.entries(raw.sessions))d.sessions[k]=session(r,k);
+    if(raw.start!=null){if(!iso(raw.start))throw Error('تاریخ شروع نامعتبر');d.start=raw.start;}
+    if(raw.deload!=null){if(!Array.isArray(raw.deload)||raw.deload.some(x=>!iso(x)))throw Error('هفتهٔ دی‌لود نامعتبر');d.deload=[...new Set(raw.deload)];}
+    if(raw.exNotes!=null){if(!obj(raw.exNotes))throw Error('یادداشت نامعتبر');for(const [k,n]of Object.entries(raw.exNotes)){if(!safeKey(k)||k.length>250||!obj(n))throw Error('یادداشت نامعتبر');d.exNotes[k]={t:text(n.t),upd:number(n.upd,false,1e16)||0};}}
+    for(const k of ['mig1','mig2','hideInstall','shortcutReady'])if(raw[k])d[k]=1;
+    if(raw.tbBar!=null && raw.tbBar!==''){const n=number(raw.tbBar,false,80);if(n==null)throw Error('وزن میله نامعتبر');d.tbBar=n;}
+    for(const k of ['lastBackup','lastShortcutAttempt','backupPending'])if(raw[k]!=null){const n=number(raw[k],false,1e16);if(n==null)throw Error('زمان پشتیبان نامعتبر');d[k]=n;}
+    if(raw.backupMode)d.backupMode=['shortcut','manual'].includes(raw.backupMode)?raw.backupMode:'manual';
+    if(raw.shortcutName!=null)d.shortcutName=text(raw.shortcutName,150);
+    // Migrate the incoming state, independent of the receiving device's flags.
+    if(!raw.mig2)for(const r of Object.values(d.sessions)){const e=r.ex.sat1;if(e&&!e.alt&&r.date<='2026-10-24')e.alt=true;}
+    if(!raw.mig1)for(const r of Object.values(d.sessions)){const e=r.ex.mon1;if(e&&e.alt&&r.date<'2026-10-20')e.alt=false;}
+    d.mig1=1;d.mig2=1;
+    if(raw.conflicts!=null){if(!Array.isArray(raw.conflicts)||raw.conflicts.length>10000)throw Error('تعارض نامعتبر');d.conflicts=raw.conflicts.map(x=>{if(!obj(x)||typeof x.key!=='string')throw Error('تعارض نامعتبر');return {key:x.key,rec:session(x.rec,x.key),at:number(x.at,false,1e16)||0};});}
+    return d;
+  }
+  function parseBackup(txt) {
+    if(typeof txt!=='string'||txt.length>20*1024*1024)throw Error('فایل خالی یا بیش از حد بزرگ است');
+    let o;try{o=JSON.parse(txt);}catch{throw Error('فایل پشتیبان قابل خواندن نیست');}
+    if(!obj(o))throw Error('ساختار پشتیبان نامعتبر');
+    if(o.app && o.app!=='daftar-tamrin')throw Error('این پشتیبان متعلق به دفتر تمرین نیست');
+    return normalize(o.data || o);
+  }
+  function merge(current,incoming) {
+    const out=clone(current);out.conflicts=out.conflicts||[];
+    const counts={added:0,updated:0,conflicts:0};
+    for(const [k,r]of Object.entries(incoming.sessions)){
+      const old=out.sessions[k];if(!old){out.sessions[k]=clone(r);counts.added++;continue;}
+      if(JSON.stringify(old)===JSON.stringify(r))continue;
+      // Preserve both complete versions: field merges can silently invent a workout.
+      const newer=(r.upd||0)>(old.upd||0), losing=newer?old:r;
+      const canonical=x=>JSON.stringify(x,(_k,v)=>obj(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
+      const signature=canonical(losing);
+      if(!out.conflicts.some(x=>x.key===k&&JSON.stringify(x.rec)===signature)){out.conflicts.push({key:k,rec:clone(losing),at:Date.now()});counts.conflicts++;}
+      if(newer){out.sessions[k]=clone(r);counts.updated++;}
+    }
+    for(const x of incoming.conflicts||[])if(!out.conflicts.some(y=>y.key===x.key&&JSON.stringify(y.rec)===JSON.stringify(x.rec)))out.conflicts.push(clone(x));
+    for(const [k,n]of Object.entries(incoming.exNotes))if(!out.exNotes[k]||n.upd>out.exNotes[k].upd)out.exNotes[k]=clone(n);
+    out.deload=[...new Set(out.deload.concat(incoming.deload))];
+    const empty=Object.keys(current.sessions).length===0;
+    if(empty&&incoming.start)out.start=incoming.start;
+    if(incoming.tbBar!=null && (empty || out.tbBar==null))out.tbBar=incoming.tbBar;
+    out.schema=2;out.mig1=1;out.mig2=1;
+    return {data:out,counts,barConflict:incoming.tbBar!=null && current.tbBar!=null && incoming.tbBar!==current.tbBar};
+  }
+  function metric(st, exercise) {
+    const w=number(st.w),r=number(st.r);
+    if(r==null||r<=0)return null;
+    if(exercise?.carry||exercise?.unit==='متر')return w>0?{k:'carry',v:w*r}: {k:'distance',v:r};
+    return w>0?{k:'w',v:w*(1+r/30)}:{k:'r',v:r};
+  }
+  function trapTotal(st, fallback) {
+    if(st && st.w!=='' && number(st.w)!=null)return String(number(st.w));
+    return st?.p!=='' && number(st?.p)!=null ? String(number(st.p)+(st.b??fallback??0)):'';
+  }
+  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal};
+});
+
 (() => {
 'use strict';
 document.documentElement.lang = 'fa';
@@ -759,13 +904,11 @@ const IS_PREVIEW = /*PREVIEW*/false;
 const STANDALONE = (() => { try { return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; } catch (e) { return false; } })();
 
 const fa = v => String(v).replace(/\d/g, d => FA[d]).replace(/\./g, '٫');
-const faV = v => (v === '' || v == null) ? '' : fa(v);
-const toLat = v => String(v == null ? '' : v)
-  .replace(/[۰-۹]/g, d => FA.indexOf(d))
-  .replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d))
-  .replace(/[٫,،]/g, '.')
-  .replace(/[^\d.]/g, '');
-const num = v => { const t = toLat(v); if (!t) return null; const n = parseFloat(t); return Number.isFinite(n) ? n : null; };
+const faV = v => (v === '' || v == null) ? '' : String(fa(v)).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const C = globalThis.TamrinCore;
+const toLat = C.digits;
+const num = v => C.number(v);
+
 const rng = (a, b) => a === b ? fa(a) : fa(a) + LRM + '–' + LRM + fa(b);
 const sxr = (s, r) => fa(s) + LRM + ' × ' + LRM + rng(r[0], r[1]);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -773,15 +916,18 @@ const UI2 = () => true;
 /* trap bar: the plates are typed in, the bar weight (set once) is added and the total is what gets stored */
 const barW = () => (S.tbBar != null && S.tbBar !== '' && Number.isFinite(+S.tbBar)) ? +S.tbBar : null;
 const rnd2 = x => String(Math.round(x * 100) / 100);
-const toPlates = w => (w === '' || w == null) ? '' : (barW() != null ? rnd2(Math.max(0, num(w) - barW())) : String(w));
-const totalOf = pl => pl === '' ? '' : rnd2(num(pl) + (barW() || 0));
-const platesOf = st => (st && st.p != null && st.p !== '') ? st.p : toPlates(st ? st.w : '');
+const toPlates = (w, b = barW()) => w === '' || w == null ? '' : (b != null ? rnd2(Math.max(0, num(w) - b)) : String(w));
+const totalOf = (pl,b=barW()) => pl === '' || num(pl)==null ? '' : rnd2(num(pl) + (b || 0));
+const platesOf = st => st?.p != null && st.p !== '' ? st.p : toPlates(st?.w || '',st?.b ?? barW());
+function setBar(st) { return st && st.b != null ? st.b : barW(); }
+
 const PENCIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"></path><path d="M13.5 6.5l4 4"></path></svg>';
 function tbUnit(row) {
   const inp = row.querySelector('.w'); const u = row.querySelector('.unit.tot'); if (!inp || !u) return;
   const v = toLat(inp.value); const ph = toLat(inp.placeholder);
   const pl = v !== '' ? v : ph;
-  u.textContent = pl !== '' ? fa(totalOf(pl)) : '';
+  const st = getRec(false)?.ex[row.dataset.ex]?.sets[+row.dataset.i];
+  u.textContent = v !== '' && st?.w !== '' && st ? fa(C.trapTotal(st,barW())) : (pl !== '' ? fa(totalOf(pl,setBar(st))) : '');
   u.classList.toggle('ph', v === '');
 }
 const isSplit = ex => { const r = S.sessions[view.date + '|' + view.day]; return !!(ex && ex.ssKey && r && r.ssOff && r.ssOff[ex.ssKey]); };
@@ -892,6 +1038,41 @@ const WARM = [
   ['Mini-Band Lateral Walk', '۱۰ قدم به هر طرف']
 ];
 
+
+const ALT_PROFILE = {
+ sat1:{},sat2:{},sat3:{},sat4:{},sat5:{db:1},sat6:{db:1},sat7:{},
+ mon1:{},mon2:{},mon3:{},mon4:{},wed1:{db:1},wed3:{pl:1},wed8:{},wed4:{},wed7:{},
+ fri1:{lm:1},fri2:{db:1,r:[12,20],tag:''},fri3:{},fri4:{db:1},wed6:{pl:1}
+};
+function exerciseSpec(ex, alt) {
+  const o={name:alt ? ex.alt : ex.name};
+  for(const k of ['db','lm','tb','pl','unit','tag','pz','rest','restLast'])if(ex[k]!=null)o[k]=C.clone(ex[k]);
+  if(alt){for(const k of ['db','lm','tb','pl','tag','pz'])delete o[k];Object.assign(o,ALT_PROFILE[ex.id]||{});}
+  if(ex.unit==='متر')o.carry=1;
+  return o;
+}
+function effective(ex,e) {
+  if(!e)return ex;
+  const spec=e.spec || exerciseSpec(ex,e.alt);
+  const o={...ex};for(const k of ['db','lm','tb','pl','unit','tag','pz','restLast'])delete o[k];
+  Object.assign(o,spec);
+  if(e.alt)o.note=[];
+  return o;
+}
+function targetFor(ex,ctx,rec=getRec(false)) {
+  const e=rec?.ex[ex.id];
+  if(e?.t)return {...C.clone(e.t),mode:''};
+  return tgt(effective(ex,e),ctx);
+}
+function freezeEntries(state) {
+  for(const r of Object.values(state.sessions))for(const [id,e]of Object.entries(r.ex)){
+    const base=EX[id]||OLD_EX[id];if(!base)continue;
+    if(!e.spec)e.spec=exerciseSpec(base,e.alt);
+    if(!e.t){const week=Math.max(1,Math.floor((dnum(r.date)-dnum(state.start||r.date))/7)+1);e.t=tgt(effective(base,e),{week,deload:state.deload.includes(satOf(r.date))});}
+  }
+  return state;
+}
+
 /* ---------- dates ---------- */
 const pad = n => String(n).padStart(2, '0');
 const isoOf = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
@@ -906,39 +1087,51 @@ const fmtD = (iso, withYear) => {
 const SLOT_BY_DOW = { 6: 'sat', 0: 'mon', 1: 'mon', 2: 'wed', 3: 'wed', 4: 'fri', 5: 'fri' };
 const TRAIN_DOW = { 6: 'sat', 1: 'mon', 3: 'wed', 5: 'fri' };
 
-/* ---------- storage ---------- */
-function load() {
-  let s = null;
-  try { s = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { s = null; }
-  if (!s || typeof s !== 'object') s = {};
-  s.v = 1;
-  if (!s.sessions || typeof s.sessions !== 'object') s.sessions = {};
-  if (!Array.isArray(s.deload)) s.deload = [];
-  if (!s.exNotes || typeof s.exNotes !== 'object') s.exNotes = {};
-  s.exNotes = normNotes(s.exNotes);
-  // v2.5 swap (2026-10-20): mon1 became the dumbbell press. Sessions logged before the swap with the
-  // old "alternative" toggle on were already dumbbell sets, so clear the flag.
-  // 2026-10-24: Saturday's first row became the dumbbell row; sessions up to that day used the machine,
-  // which is now the alternative.
-  if (!s.mig2) { for (const r of Object.values(s.sessions)) { const e = r && r.ex && r.ex.sat1; if (e && !e.alt && r.date <= '2026-10-24') e.alt = true; } s.mig2 = 1; }
-  if (!s.mig1) { for (const r of Object.values(s.sessions)) { const e = r && r.ex && r.ex.mon1; if (e && e.alt && r.date < '2026-10-20') e.alt = false; } s.mig1 = 1; }
-  if (!s.start) s.start = satOf(todayIso());
-  return s;
+/* ---------- storage, recovery and undo ---------- */
+let STORE_BLOCKED=false, storageOk=true, saveT=null;
+function emptyState(){return {v:1,schema:2,sessions:{},deload:[],exNotes:{},start:satOf(todayIso()),mig1:1,mig2:1,backupMode:'shortcut',shortcutName:'پشتیبان دفتر تمرین'};}
+function load(){
+  let raw=null;
+  try{
+    raw=localStorage.getItem(KEY);if(!raw)return emptyState();
+    const state=C.normalize(JSON.parse(raw));state.start=state.start||satOf(todayIso());state.exNotes=normNotes(state.exNotes);return freezeEntries(state);
+  }catch(e){
+    STORE_BLOCKED=true;
+    try{if(raw&&!localStorage.getItem(KEY+':quarantine'))localStorage.setItem(KEY+':quarantine',raw);}catch(_){}
+    try{const good=localStorage.getItem(KEY+':lastgood');if(good)return freezeEntries(C.normalize(JSON.parse(good)));}catch(_){}
+    return emptyState();
+  }
 }
-let S = load();
-let storageOk = true;
-let saveT = null;
-function save(now) {
+let S=load();
+const UNDO=[];
+function checkpoint(label){UNDO.push({label,data:C.clone(S),view:{...view},timer:T?C.clone(T):null});if(UNDO.length>15)UNDO.shift();updateSaveUI();}
+function updateSaveUI(){
+  const el=document.getElementById('save-status');if(!el)return;document.body.classList.toggle('save-error',!storageOk||STORE_BLOCKED);
+  el.hidden=storageOk&&!STORE_BLOCKED;el.textContent=STORE_BLOCKED?'اطلاعات قبلی خوانده نشد؛ برای حفظ آن ذخیره متوقف است. از تنظیمات نسخهٔ نجات را بررسی کن.':'ذخیره انجام نشد؛ اطلاعات فعلاً فقط در این صفحه است. حافظه را بررسی کن و دوباره تلاش کن.';
+  const u=document.getElementById('undo-last');if(u){u.hidden=!UNDO.length;u.textContent=UNDO.length?'برگشت: '+UNDO[UNDO.length-1].label:'';}
+}
+function save(now){
   clearTimeout(saveT);
-  const f = () => {
-    try { localStorage.setItem(KEY, JSON.stringify(S)); storageOk = true; }
-    catch (e) { if (storageOk) toast('ذخیره نشد؛ حافظهٔ این مرورگر در دسترس نیست'); storageOk = false; }
+  const f=()=>{
+    if(STORE_BLOCKED){updateSaveUI();return false;}
+    try{
+      const txt=JSON.stringify(S);const prev=localStorage.getItem(KEY);
+      if(prev && prev!==txt){try{C.normalize(JSON.parse(prev));localStorage.setItem(KEY+':lastgood',prev);}catch(e){if(e.name==='QuotaExceededError')throw e;}}
+      localStorage.setItem(KEY,txt);storageOk=true;updateSaveUI();return true;
+    }catch(e){storageOk=false;updateSaveUI();return false;}
   };
-  if (now) f(); else saveT = setTimeout(f, 250);
+  if(now)return f();saveT=setTimeout(f,250);return true;
 }
-window.addEventListener('pagehide', () => save(true));
-document.addEventListener('visibilitychange', () => { if (document.hidden) save(true); else onWake(); });
-try { if (!localStorage.getItem(KEY)) save(true); } catch (e) { storageOk = false; }
+function rescue(){try{localStorage.setItem(KEY+':rescue',JSON.stringify(S));return true;}catch(e){storageOk=false;updateSaveUI();toast('نسخهٔ نجات ذخیره نشد؛ عملیات انجام نشد');return false;}}
+function undoLast(){
+  const a=UNDO.pop();if(!a)return;
+  const current=C.clone(S);S=a.data;view=a.view;
+  if(!save(true)){S=current;UNDO.push(a);updateSaveUI();return;}
+  stopTimer();if(a.timer){startTimer([a.timer.lo,a.timer.hi],a.timer.label);T={...a.timer};tick();}
+  render();if(openId==='history')renderHistory();if(openId==='settings')renderSettings();updateSaveUI();toast('برگشت انجام شد');
+}
+window.addEventListener('pagehide',()=>save(true));
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save(true);else onWake();});
 
 const weekOf = iso => Math.max(1, Math.floor((dnum(iso) - dnum(S.start)) / 7) + 1);
 const isDeload = iso => S.deload.includes(satOf(iso));
@@ -965,7 +1158,7 @@ function getRec(create) {
 }
 function entry(rec, ex, create) {
   let e = rec && rec.ex[ex.id];
-  if (!e && create) e = rec.ex[ex.id] = { sets: [], rir: '', alt: false };
+  if (!e && create) { e = rec.ex[ex.id] = { sets: [], rir: '', alt: false, spec:exerciseSpec(ex,false) };e.t=tgt(ex,ctxOf(rec.date)); }
   return e || null;
 }
 const setHas = s => s && (s.w !== '' || s.r !== '');
@@ -990,7 +1183,9 @@ function prevEntry(exId, beforeDate, pred) {
 const r05 = x => Math.round(x * 2) / 2;
 function suggest(ex, t, ctx) {
   if (ctx.deload) return null;
-  const p = prevEntry(ex.id, view.date, (r, e) => !isDeload(r.date) && !e.alt);
+  if(ex.carry||ex.unit==='متر')return null;
+  const alt=!!getRec(false)?.ex[ex.id]?.alt;
+  const p = prevEntry(ex.id, view.date, (r, e) => !isDeload(r.date) && !!e.alt===alt); 
   if (!p) return null;
   const pt = p.e.t || tgt(ex, ctxOf(p.rec.date));
   if (pt.r[0] !== t.r[0] || pt.r[1] !== t.r[1]) {
@@ -1003,7 +1198,7 @@ function suggest(ex, t, ctx) {
   const w0 = ws[0];
   if (ws.some(w => Math.abs(w - w0) > 0.01)) return null;
   if (done.some(s => num(s.r) < pt.r[1])) return null;
-  if (pt.rir && p.e.rir !== '' && num(p.e.rir) != null && num(p.e.rir) < pt.rir[0]) return null;
+  if (pt.rir && (p.e.rir === '' || num(p.e.rir) == null || num(p.e.rir) < pt.rir[0])) return null;
   const lo = Math.max(r05(w0 * 1.02), w0 + 0.5);
   const hi = Math.max(r05(w0 * 1.05), lo);
   return { type: 'up', w0, lo, hi, bottom: t.r[0] };
@@ -1094,25 +1289,25 @@ function exState(e, t) {
   const complete = allSets && (!t.rir || (e && e.rir !== '' && e.rir != null));
   return { done, allSets, complete };
 }
-const metric = s => { const w = num(s.w), r = num(s.r); if (r == null || r <= 0) return null; return w && w > 0 ? { k: 'w', v: w * (1 + r / 30) } : { k: 'r', v: r }; };
+const metric = (s,ex) => C.metric(s,ex);
 function prevBest(exId, date, alt) {
   const best = {};
   for (const r of Object.values(S.sessions)) {
     if (r.date >= date) continue;
     const e = r.ex && r.ex[exId]; if (!e || !!e.alt !== !!alt) continue;
-    for (const s of e.sets) { if (!s || !setHas(s)) continue; const m = metric(s); if (m && (best[m.k] == null || m.v > best[m.k])) best[m.k] = m.v; }
+    for (const s of e.sets) { if (!s || !setHas(s)) continue; const m = metric(s,effective(EX[exId]||OLD_EX[exId],e)); if (m && (best[m.k] == null || m.v > best[m.k])) best[m.k] = m.v; }
   }
   return best;
 }
 function prIndex(ex, e) {
   if (!e) return -1;
   const pb = prevBest(ex.id, view.date, e.alt); let bi = -1, bv = 0;
-  e.sets.forEach((s, i) => { if (!s || !s.d) return; const m = metric(s); if (!m || pb[m.k] == null) return; if (m.v > pb[m.k] + 1e-9 && m.v > bv) { bv = m.v; bi = i; } });
+  e.sets.forEach((s, i) => { if (!s || !s.d) return; const m = metric(s,effective(ex,e)); if (!m || pb[m.k] == null) return; if (m.v > pb[m.k] + 1e-9 && m.v > bv) { bv = m.v; bi = i; } });
   return bi;
 }
 function sumInner(ex, e, pi) {
   if (!e) return '';
-  const v = e.sets.map((s, i) => (s && (s.d || setHas(s))) ? `<span class="v${i === pi ? ' pr' : ''}">${s.w !== '' ? fa(s.w) + LRM + '×' + LRM : ''}${s.r !== '' ? fa(s.r) : '–'}</span>` : '').join('');
+  const v = e.sets.map((s, i) => (s && (s.d || setHas(s))) ? `<span class="v${i === pi ? ' pr' : ''}">${s.w !== '' ? esc(fa(s.w)) + LRM + '×' + LRM : ''}${s.r !== '' ? esc(fa(s.r)) : '–'}</span>` : '').join('');
   return v + (e.rir !== '' && e.rir != null ? `<span class="rir">RIR ${e.rir === '4' ? '۴+' : fa(e.rir)}</span>` : '') + (e.alt ? '<span class="alt-note">با جایگزین</span>' : '') + '<span class="open-h">باز کردن</span>';
 }
 function animHeight(el, change) {
@@ -1127,7 +1322,7 @@ function refreshCards(animId) {
   if (!UI2()) { updateProgress(); return; }
   const rec = getRec(false); const ctx = ctxOf(view.date); let cur = null;
   main.querySelectorAll('.ex[data-ex]').forEach(card => {
-    const ex = EX[card.dataset.ex]; const e = entry(rec, ex, false); const t = tgt(ex, ctx); const st = exState(e, t);
+    const ex = EX[card.dataset.ex]; const e = entry(rec, ex, false); const t = targetFor(ex, ctx, rec); const st = exState(e, t);
     const pi = prIndex(ex, e);
     card.querySelectorAll('.set').forEach(rw => rw.classList.toggle('pr', +rw.dataset.i === pi));
     if (!st.complete) expanded.delete(ex.id);
@@ -1149,7 +1344,7 @@ function refreshCards(animId) {
 }
 function updateProgress() {
   const rec = getRec(false); const ctx = ctxOf(view.date); let tot = 0, dn = 0;
-  for (const ex of dayExs(view.day)) { const t = tgt(ex, ctx); tot += t.s; const e = entry(rec, ex, false); if (e) for (let i = 0; i < t.s; i++) if (e.sets[i] && e.sets[i].d) dn++; }
+  for (const ex of dayExs(view.day)) { const t = targetFor(ex, ctx, rec); tot += t.s; const e = entry(rec, ex, false); if (e) for (let i = 0; i < t.s; i++) if (e.sets[i] && e.sets[i].d) dn++; }
   const p = tot ? Math.round(dn / tot * 100) : 0;
   pill.style.setProperty('--p', p);
   PROG.txt = fa(p) + '٪'; PROG.hi = p >= 80;
@@ -1162,15 +1357,16 @@ function updateProgress() {
 }
 
 function exCard(ex, ctx, rec, inSS) {
-  const t = tgt(ex, ctx);
+  const t = targetFor(ex, ctx, rec);
   const e = entry(rec, ex, false);
-  const prev = prevEntry(ex.id, view.date);
+  const baseEx=ex;ex=effective(ex,e);
+  const prev = prevEntry(ex.id, view.date,(r,old)=>!!old.alt===!!e?.alt);
   const sug = suggest(ex, t, ctx);
   let last = -1;
   if (e) e.sets.forEach((s, i) => { if (setHas(s) || s.d || s.x) last = i; });
   const rows = Math.max(t.s, last + 1);
   let h = `<article class="ex${ex.pri ? ' pri' : ''}" data-ex="${ex.id}">
-    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${ex.name}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${ex.name}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
+    <div class="ex-head"><span class="badge${ex.pri ? ' pri' : ''}">${ex.no}</span><h3 class="ex-name" dir="ltr">${esc(ex.name)}</h3><button class="info-btn${myNote(ex.id) ? ' on' : ''}" type="button" data-info aria-label="نکته‌های ${esc(ex.name)}">i</button></div>${UI2() ? '<div class="ex-sum"></div>' : ''}
     <div class="tgt"><span class="t-sr">${sxr(t.s, t.r)}${ex.unit ? ' <small style="font-size:14px;color:var(--ink-2)">' + ex.unit + '</small>' : ''}</span>${t.rir ? `<span class="t-rir"><small>RIR</small>${rng(t.rir[0], t.rir[1])}</span>` : (ex.ctl ? `<span class="t-note">${ex.ctl}</span>` : '')}${inSS ? '' : `<span class="t-rest">${ICON.clock}${restText(ex.rest || ex.ssRest)}</span>`}${ex.tag ? `<span class="tag">${ex.tag}</span>` : ''}</div>${ex.pz ? `<div class="pz"><span class="t-pause">${ICON.pause}<b>مکث</b> ${ex.pz}</span></div>` : ''}`;
   if (ex.note) h += Array.isArray(ex.note) ? `<details class="cues"><summary>نکته‌های اجرا</summary><ul class="ex-list">${ex.note.map(n => `<li>${n}</li>`).join('')}</ul></details>` : `<p class="ex-note">${ex.note}</p>`;
   if (myNote(ex.id)) h += `<p class="my-note"><b>نکتهٔ من:</b> ${esc(myNote(ex.id))}</p>`;
@@ -1180,7 +1376,7 @@ function exCard(ex, ctx, rec, inSS) {
     : `<div class="sugg up">${ICON.up}<span>وقت افزایش وزنه: حدود <b dir="ltr">${sug.lo === sug.hi ? fa(sug.lo) : fa(sug.lo) + LRM + '–' + LRM + fa(sug.hi)}</b> کیلو${ex.tb && barW() != null ? ` کل (صفحه‌ها <b dir="ltr">${sug.lo === sug.hi ? fa(toPlates(sug.lo)) : fa(toPlates(sug.lo)) + LRM + '–' + LRM + fa(toPlates(sug.hi))}</b>)` : ''} (یا نزدیک‌ترین وزنهٔ موجود) و از ${fa(sug.bottom)} ${ex.unit || 'تکرار'} شروع کن.</span></div>`;
   else if (sug && sug.type === 'newrange') h += `<div class="sugg info">${ICON.info}<span>بازهٔ تکرار از این هفته عوض شده. وزنه‌ای بگذار که با RIR هدف در همین بازه بمانی.</span></div>`;
   if (prev) {
-    const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('');
+    const vals = prev.e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? esc(fa(s.r)) : '–'}</span>`).join('');
     h += `<div class="prev"><span>دفعهٔ قبل · ${fmtD(prev.rec.date)}${prev.e.alt ? ' · با جایگزین' : ''}</span>${vals}${prev.e.rir !== '' && prev.e.rir != null ? `<span dir="ltr">RIR ${fa(prev.e.rir)}</span>` : ''}</div>`;
   }
   if (ex.tb) h += `<div class="barrow"><button class="barchip${barW() == null ? ' unset' : ''}" type="button" data-bar>${barW() == null ? 'وزن میله را وارد کن' : 'میله: ' + fa(barW()) + ' کیلو'}${PENCIL}</button><span class="muted">عدد نهایی = صفحه‌ها + میله</span></div>`;
@@ -1190,7 +1386,7 @@ function exCard(ex, ctx, rec, inSS) {
     const ph = placeholders(ex, e, (sug && sug.type === 'up') || (prev && !!prev.e.alt !== !!(e && e.alt)) ? null : prev, i);
     h += `<div class="set${s.d ? ' done' : ''}${i >= t.s ? ' extra' : ''}" data-ex="${ex.id}" data-i="${i}">
       <span class="set-n">ست ${fa(i + 1)}</span>
-      <div class="pair"><span class="wbox${ex.tb ? ' tbx' : ''}"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.tb ? 'مجموع صفحه‌ها' : 'وزنه'} به کیلو" value="${ex.tb ? faV(platesOf(s)) : faV(s.w)}" placeholder="${ex.tb ? faV(toPlates(ph.w)) : faV(ph.w)}">${ex.tb ? (() => { const pl = platesOf(s) !== '' ? platesOf(s) : toPlates(ph.w); return `<i class="unit tot${platesOf(s) === '' ? ' ph' : ''}" aria-hidden="true">${pl !== '' ? fa(totalOf(pl)) : ''}</i>`; })() : '<i class="unit" aria-hidden="true">KG</i>'}</span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${ex.name} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
+      <div class="pair"><span class="wbox${ex.tb ? ' tbx' : ''}"><input class="w" id="w-${ex.id}-${i}" inputmode="decimal" autocomplete="off" aria-label="${esc(ex.name)} ست ${fa(i + 1)}، ${ex.tb ? 'مجموع صفحه‌ها' : 'وزنه'} به کیلو" value="${ex.tb ? faV(platesOf(s)) : faV(s.w)}" placeholder="${ex.tb ? faV(toPlates(ph.w)) : faV(ph.w)}">${ex.tb ? (() => { const pl = platesOf(s) !== '' ? platesOf(s) : toPlates(ph.w); return `<i class="unit tot${platesOf(s) === '' ? ' ph' : ''}" aria-hidden="true">${pl !== '' ? fa(C.trapTotal(s,barW()) || totalOf(pl,setBar(s))) : ''}</i>`; })() : '<i class="unit" aria-hidden="true">KG</i>'}</span><span class="x" aria-hidden="true">×</span><input class="r${num(s.r) != null && num(s.r) < t.r[0] ? ' low' : ''}" id="r-${ex.id}-${i}" inputmode="numeric" autocomplete="off" aria-label="${esc(ex.name)} ست ${fa(i + 1)}، ${ex.unit || 'تکرار'}" value="${faV(s.r)}" placeholder="${faV(ph.r)}"></div>
       <button class="chk" type="button" data-chk aria-pressed="${s.d ? 'true' : 'false'}" aria-label="ثبت ست ${fa(i + 1)}">${ICON.check}${i >= t.s ? '<svg class="xic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17"></path></svg>' : ''}</button>
     </div>`;
   }
@@ -1263,22 +1459,27 @@ function cardioText(c, latin) {
 }
 
 /* ---------- interactions ---------- */
+function validField(el,integer=false){
+  const v=el.value;const ok=v.trim()===''||C.number(v,integer,integer?1000:10000)!=null;
+  el.setAttribute('aria-invalid',String(!ok));el.classList.toggle('invalid',!ok);return ok;
+}
 function faInput(el) {
   const v = el.value;
   const nv = v.replace(/[0-9]/g, d => FA[d]).replace(/\./g, '٫').replace(/[,،]/g, '٫');
   if (nv !== v) { const p = el.selectionStart; el.value = nv; try { el.setSelectionRange(p, p); } catch (e) { } }
 }
 function touch(rec) { rec.upd = Date.now(); save(); }
-function snapT(e, ex) { const t = tgt(ex, ctxOf(view.date)); e.t = { s: t.s, r: t.r, rir: t.rir }; }
+function snapT(e,ex){if(!e.spec)e.spec=exerciseSpec(ex,e.alt);if(!e.t){const t=tgt(effective(ex,e),ctxOf(view.date));e.t={s:t.s,r:t.r,rir:t.rir};}}
 
 main.addEventListener('input', ev => {
   const el = ev.target;
   if (el.matches('.pair input')) {
     faInput(el);
-    const row = el.closest('.set'); const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
+    const row = el.closest('.set'); const base=EX[row.dataset.ex];const ex=effective(base,getRec(false)?.ex[base.id]);
+    if(!validField(el,el.classList.contains('r')&&!ex.unit))return; const i = +row.dataset.i;
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
     while (e.sets.length <= i) e.sets.push({ w: '', r: '', d: 0 });
-    if (ex.tb && el.classList.contains('w')) { const pl = toLat(el.value); const st = e.sets[i]; st.p = pl; st.b = barW(); st.w = totalOf(pl); tbUnit(row); }
+    if (ex.tb && el.classList.contains('w')) { const pl = toLat(el.value); const st = e.sets[i]; st.p = pl; st.b = setBar(st); st.w = totalOf(pl,st.b); tbUnit(row); }
     else e.sets[i][el.classList.contains('w') ? 'w' : 'r'] = toLat(el.value);
     if (el.classList.contains('r')) markLow(el, ex);
     if (row.classList.contains('done') && UI2()) { cancelAnimationFrame(row._rf); row._rf = requestAnimationFrame(() => refreshCards()); }
@@ -1291,7 +1492,7 @@ main.addEventListener('input', ev => {
   } else if (el.id === 'note') {
     const rec = getRec(true); rec.note = el.value; touch(rec);
   } else if (/^c-(min|lvl|inc|spd|inc1|spd1|inc2|spd2)$/.test(el.id)) {
-    faInput(el);
+    faInput(el);if(!validField(el))return;
     const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio[el.id.slice(2)] = toLat(el.value); touch(rec);
   }
 });
@@ -1299,7 +1500,8 @@ main.addEventListener('input', ev => {
 /* tapping a filled box makes it ready for a new number: the old value stays as a faint hint and comes back if nothing is typed */
 const RETYPE = '.pair input, .crow input';
 main.addEventListener('focusin', ev => {
-  const el = ev.target; if (!el.matches || !el.matches(RETYPE) || el.dataset.held) return;
+  const el = ev.target;if(el.id==='note')checkpoint('یادداشت جلسه'); if (!el.matches || !el.matches(RETYPE) || el.dataset.held) return;
+  checkpoint('ویرایش عدد');
   if (el.value === '') return;
   el.dataset.held = '1'; el.dataset.prev = el.value; el.dataset.prevPh = el.placeholder; el.dataset.dirty = '';
   el.placeholder = el.value; el.value = '';
@@ -1315,6 +1517,7 @@ main.addEventListener('focusout', ev => {
 /* extra sets: long-press the check to turn it into ×, tap × to delete, long-press again to go back */
 let lpT = null, lpFired = false, lpPos = null;
 function removeSet(row) {
+  checkpoint('حذف ست');
   const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
   const rec = getRec(false); const e = rec && entry(rec, ex, false);
   const finish = () => {
@@ -1349,7 +1552,7 @@ main.addEventListener('pointerdown', ev => {
   ssPos = { x: ev.clientX, y: ev.clientY }; clearTimeout(ssT);
   ssT = setTimeout(() => {
     ssT = null; ssFired = true;
-    const key = pl.dataset.ss; const rec = getRec(true); rec.ssOff = rec.ssOff || {};
+    checkpoint('سوپرست');const key = pl.dataset.ss; const rec = getRec(true); rec.ssOff = rec.ssOff || {};
     if (rec.ssOff[key]) delete rec.ssOff[key]; else rec.ssOff[key] = 1;
     touch(rec); keepPos(); softRender(); restorePos();
     toast(rec.ssOff[key] ? 'برای این جلسه جدا شدند' : 'دوباره سوپرست شدند');
@@ -1373,7 +1576,7 @@ main.addEventListener('click', ev => {
   if (rirB) {
     const card = rirB.closest('.ex'); const ex = EX[card.dataset.ex];
     const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
-    const v = rirB.dataset.rir; e.rir = e.rir === v ? '' : v;
+    checkpoint('فاصله از ناتوانی');const v = rirB.dataset.rir; e.rir = e.rir === v ? '' : v;
     card.querySelectorAll('[data-rir]').forEach(b => { const on = b.dataset.rir === e.rir; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
     touch(rec); refreshCards(ex.id); return;
   }
@@ -1391,8 +1594,8 @@ main.addEventListener('click', ev => {
   }
   const ad = ev.target.closest('[data-addset]');
   if (ad) {
-    const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
-    const n = Math.max(tgt(ex, ctxOf(view.date)).s, e.sets.reduce((m, st, i) => (setHas(st) || st.d || st.x) ? i + 1 : m, 0));
+    checkpoint('ست اضافه');const ex = EX[ad.closest('.ex').dataset.ex]; const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
+    const n = Math.max(targetFor(ex, ctxOf(view.date),rec).s, e.sets.reduce((m, st, i) => (setHas(st) || st.d || st.x) ? i + 1 : m, 0));
     while (e.sets.length < n) e.sets.push({ w: '', r: '', d: 0 });
     e.sets.splice(n, e.sets.length - n, { w: '', r: '', d: 0, x: 1 });
     touch(rec); render();
@@ -1401,25 +1604,27 @@ main.addEventListener('click', ev => {
   }
   const altB = ev.target.closest('[data-alt]');
   if (altB) {
-    const card = altB.closest('.ex'); const ex = EX[card.dataset.ex];
-    const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex); e.alt = !e.alt; touch(rec);
-    altB.classList.toggle('on', e.alt); altB.setAttribute('aria-pressed', e.alt);
-    altB.innerHTML = (e.alt ? 'امروز با جایگزین: ' : 'جایگزین: ') + `<span dir="ltr">${ex.alt}</span>`;
-    refreshCards(); return;
+    checkpoint('حرکت جایگزین');
+    const base=EX[altB.closest('.ex').dataset.ex],rec=getRec(true),e=entry(rec,base,true);
+    const variants=e.variants||{},key=e.alt?'alt':'main',next=e.alt?'main':'alt';
+    const keep=C.clone(e);delete keep.variants;variants[key]=keep;
+    const n=variants[next]||{sets:[],rir:'',alt:!e.alt,spec:exerciseSpec(base,!e.alt)};
+    n.variants=variants;rec.ex[base.id]=n;snapT(n,base);touch(rec);softRender();return;
   }
+
   const cd = ev.target.closest('[data-cdone]');
   if (cd) {
-    const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.d = !rec.cardio.d; touch(rec);
+    checkpoint('ثبت هوازی');const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.d = !rec.cardio.d; touch(rec);
     cd.closest('.cardio').classList.toggle('done', rec.cardio.d); cd.setAttribute('aria-pressed', rec.cardio.d);
     if (rec.cardio.d) toast('هوازی ثبت شد');
     return;
   }
   const ca = ev.target.closest('[data-calt]');
-  if (ca) { const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.alt = !rec.cardio.alt; touch(rec); return softRender(); }
+  if (ca) { checkpoint('جایگزین هوازی');const rec = getRec(true); rec.cardio = rec.cardio || {}; rec.cardio.alt = !rec.cardio.alt; touch(rec); return softRender(); }
   if (ev.target.closest('#finish')) {
     const rec = getRec(true);
     if (!rec.done) { openFinish(false); return; }
-    rec.done = false; touch(rec); save(true); softRender();
+    checkpoint('باز کردن جلسه');rec.done = false; touch(rec); save(true); softRender();
     return;
   }
   const act = ev.target.closest('[data-act]');
@@ -1427,33 +1632,38 @@ main.addEventListener('click', ev => {
 });
 
 function markLow(inp, ex) {
-  const v = num(inp.value); const lo = tgt(ex, ctxOf(view.date)).r[0];
+  const v = num(inp.value); const lo = targetFor(ex, ctxOf(view.date)).r[0];
   inp.classList.toggle('low', v != null && v < lo);
 }
 function onCheck(row) {
-  const ex = EX[row.dataset.ex]; const i = +row.dataset.i;
-  const rec = getRec(true); const e = entry(rec, ex, true); snapT(e, ex);
+  checkpoint('ثبت ست');const base = EX[row.dataset.ex]; const i = +row.dataset.i;
+  const rec = getRec(true);const ex=effective(base,rec.ex[base.id]); const e = entry(rec, ex, true); snapT(e, ex);
   while (e.sets.length <= i) e.sets.push({ w: '', r: '', d: 0 });
   const s = e.sets[i];
   const wIn = row.querySelector('.w'), rIn = row.querySelector('.r');
   if (!s.d) {
+    if(!validField(wIn,false)||!validField(rIn,!ex.unit)){toast('وزنه یا تکرار معتبر بنویس');return;}
+    if (ex.tb && barW()==null && s.b==null){toast('اول وزن میله را وارد کن');openBar();return;}
     if (s.w === '' && wIn.placeholder) {
-      if (ex.tb) { s.p = toLat(wIn.placeholder); s.b = barW(); s.w = totalOf(s.p); wIn.value = faV(s.p); tbUnit(row); }
+      if (ex.tb) { s.p = toLat(wIn.placeholder); s.b = setBar(s); s.w = totalOf(s.p,s.b); wIn.value = faV(s.p); tbUnit(row); }
       else { s.w = toLat(wIn.placeholder); wIn.value = faV(s.w); }
     }
     if (s.r === '' && rIn.placeholder) { s.r = toLat(rIn.placeholder); rIn.value = faV(s.r); }
     markLow(rIn, ex);
-    if (s.r === '') { rIn.focus(); toast('تعداد ' + (ex.unit || 'تکرار') + ' را بنویس'); return; }
+    if (num(s.r) == null || num(s.r)<=0) { rIn.focus(); toast('تعداد ' + (ex.unit || 'تکرار') + ' را بنویس'); return; }
     s.d = 1;
-    if (!rec.t0) rec.t0 = Date.now();
-    rec.t1 = Date.now();
+    if(!view.editing){if (!rec.t0) rec.t0 = Date.now();rec.t1 = Date.now();}
     row.classList.add('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'true');
     const card = row.closest('.ex');
     card.querySelectorAll('.set').forEach(rw => { const k = +rw.dataset.i; if (k > i) { const wi = rw.querySelector('.w'); if (!wi.value && s.w !== '') wi.placeholder = faV(ex.tb ? platesOf(s) : s.w); } });
     if (ex.tb) card.querySelectorAll('.set').forEach(tbUnit);
     const isPR = UI2() && prIndex(ex, e) === i;
-    if (ex.ssRest && !ex.ssLast && !isSplit(ex)) toast((isPR ? 'رکورد جدید! · ' : '') + 'حالا: ' + ex.ssNext.name);
-    else { startTimer(ex.restLast && i >= tgt(ex, ctxOf(view.date)).s - 1 ? ex.restLast : (ex.ssRest || ex.rest), ex.name); if (isPR) toast('رکورد جدید در این حرکت!'); }
+    const next=ex.ssNext;const ne=next&&rec.ex[next.id];
+    const nt=next&&targetFor(next,ctxOf(view.date),rec);
+    const partnerPending=next && Array.from({length:nt.s},(_,j)=>j).some(j=>!ne?.sets[j]?.d);
+    if(ex.ssRest && !ex.ssLast && !isSplit(ex) && partnerPending)toast((isPR?'رکورد جدید! · ':'')+'حالا: '+effective(next,ne).name);
+    else {startTimer(ex.restLast && i>=targetFor(base,ctxOf(view.date),rec).s-1?ex.restLast:(ex.ssRest||ex.rest),ex.name);if(isPR)toast('رکورد جدید در این حرکت!');}
+
     if (rec.done) rec.done = false;
   } else {
     s.d = 0; row.classList.remove('done'); row.querySelector('[data-chk]').setAttribute('aria-pressed', 'false');
@@ -1751,12 +1961,12 @@ function recLines(r) {
     seen.add(ex.id);
     const e = r.ex && r.ex[ex.id];
     if (!entryHas(e)) continue;
-    out.push({ ex, e });
+    out.push({ ex:effective(ex,e), e });
   }
   // exercises logged that day but since moved to another day or retired from the program
   for (const [id, e] of Object.entries(r.ex || {})) {
     if (seen.has(id) || !entryHas(e)) continue;
-    const ex = EX[id] || OLD_EX[id]; if (ex) out.push({ ex, e });
+    const ex = EX[id] || OLD_EX[id]; if (ex) out.push({ ex:effective(ex,e), e });
   }
   return out;
 }
@@ -1777,7 +1987,7 @@ function progHTML() {
       for (const r of recs) {
         const e = r.ex && r.ex[ex.id]; if (!e || e.alt) continue;
         let best = null, bs = null;
-        for (const st of e.sets) { if (!st || !setHas(st)) continue; const m = metric(st); if (!m) continue; if (!best || (m.k === best.k ? m.v > best.v : m.k === 'w')) { best = m; bs = st; } }
+        for (const st of e.sets) { if (!st || !setHas(st)) continue; const m = metric(st,effective(ex,e)); if (!m) continue; if (!best || (m.k === best.k ? m.v > best.v : m.k === 'w')) { best = m; bs = st; } }
         if (best) pts.push({ v: best.v, k: best.k, s: bs });
       }
       if (!pts.length) continue;
@@ -1785,20 +1995,20 @@ function progHTML() {
       const ls = q[q.length - 1].s;
       const pct = q.length > 1 ? Math.round((q[q.length - 1].v / q[0].v - 1) * 100) : null;
       const dl = pct == null ? '' : pct > 0 ? `<span class="up">+${fa(pct)}٪</span>` : pct < 0 ? `<span class="dn">−${fa(-pct)}٪</span>` : '<span>۰٪</span>';
-      rows.push(`<div class="pg-row"><div><div class="n">${ex.name}</div><div class="m"><b>${ls.w !== '' ? fa(ls.w) + LRM + '×' + LRM : ''}${fa(ls.r)}</b>${dl}<span dir="rtl">${fa(q.length)} جلسه</span></div></div>${spark(q.map(x => x.v))}</div>`);
+      rows.push(`<div class="pg-row"><div><div class="n">${esc(ex.name)}</div><div class="m"><b>${ls.w !== '' ? fa(ls.w) + LRM + '×' + LRM : ''}${fa(ls.r)}</b>${dl}<span dir="rtl">${fa(q.length)} جلسه</span></div></div>${spark(q.map(x => x.v))}</div>`);
     }
     if (rows.length) out += `<div class="pg-day">${P[d].name} · ${P[d].short.replace(/ـ/g, '')}</div>` + rows.join('');
   }
   if (!out) return '';
-  return `<div class="sec" style="margin-top:12px"><h3>پیشرفت حرکت‌ها</h3><p>عدد پررنگ: بهترین ست آخرین جلسه. درصد و نمودار: تغییر قدرت تخمینی (از وزنه و تکرار) از اولین جلسه تا حالا؛ جلسه‌های جایگزین و دی‌لود حساب نمی‌شوند.</p>${out}</div>`;
+  return `<div class="sec" style="margin-top:12px"><h3>پیشرفت حرکت‌ها</h3><p>عدد پررنگ: بهترین ست آخرین جلسه. درصد و نمودار: تغییر در حداکثر ۱۲ جلسهٔ آخر؛ قدرت تخمینی برای حرکات تکراری و حاصل‌ضرب وزن در مسافت برای حمل وزنه. ست‌های تیک‌نخورده طبق انتخاب تو محاسبه می‌شوند؛ جلسه‌های جایگزین و دی‌لود حساب نمی‌شوند.</p>${out}</div>`;
 }
 function renderHistory() {
   const recs = sortedRecs().filter(recHas);
   const box = $('#history-list');
-  if (!recs.length) { box.innerHTML = '<p class="empty">هنوز جلسه‌ای ثبت نشده. اولین ستی که ثبت کنی اینجا می‌آید.</p>'; return; }
-  box.innerHTML = (UI2() ? progHTML() : '') + recs.map(r => {
+  if (!recs.length && !S.conflicts?.length) { box.innerHTML = '<p class="empty">هنوز جلسه‌ای ثبت نشده. اولین ستی که ثبت کنی اینجا می‌آید.</p>'; return; }
+  box.innerHTML = (S.conflicts?.length?`<div class="sec"><h3>نسخه‌های متعارض</h3><p>هر دو نسخه محفوظ‌اند؛ با جایگزینی، نسخهٔ فعلی هم نگه داشته می‌شود.</p>${S.conflicts.map((x,i)=>`<button class="btn" data-conflict="${i}">${esc(P[x.rec.day].name)} ${fmtD(x.rec.date)} · ${fa(Object.values(x.rec.ex).reduce((n,e)=>n+e.sets.filter(setHas).length,0))} ست · نمایش و انتخاب</button>`).join('')}</div>`:'')+(UI2() ? progHTML() : '') + recs.map(r => {
     const k = rkey(r.date, r.day);
-    const lines = recLines(r).map(({ ex, e }) => `<li><span class="en" dir="ltr">${ex.no}. ${ex.name}</span>${e.alt ? ' <span class="muted">(جایگزین)</span>' : ''}<div class="vals">${e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? fa(s.r) : '–'}</span>`).join('')}${e.rir !== '' && e.rir != null ? `<span class="v" dir="ltr">RIR ${fa(e.rir)}</span>` : ''}</div></li>`).join('');
+    const lines = recLines(r).map(({ ex, e }) => `<li><span class="en" dir="ltr">${ex.no}. ${esc(ex.name)}</span>${e.alt ? ' <span class="muted">(جایگزین)</span>' : ''}<div class="vals">${e.sets.filter(setHas).map(s => `<span class="v" dir="ltr">${s.w !== '' ? fa(s.w) : '–'}${LRM}×${LRM}${s.r !== '' ? esc(fa(s.r)) : '–'}</span>`).join('')}${e.rir !== '' && e.rir != null ? `<span class="v" dir="ltr">RIR ${fa(e.rir)}</span>` : ''}</div></li>`).join('');
     const c = r.cardio || {};
     const cl = (c.min || c.d) ? `<li><span class="en" dir="ltr">${cardioName(r.day, c)}</span> <span class="muted">${cardioText(c, false)}</span></li>` : '';
     const nl = r.note && r.note.trim() ? `<li class="muted">یادداشت: ${esc(r.note.trim())}</li>` : '';
@@ -1806,12 +2016,17 @@ function renderHistory() {
   }).join('');
 }
 $('#history-list').addEventListener('click', ev => {
+  const cf=ev.target.closest('[data-conflict]');if(cf){
+    const i=+cf.dataset.conflict,x=S.conflicts[i];if(!x)return;mState={kind:'conflict',i};
+    const lines=Object.entries(x.rec.ex).map(([id,e])=>`<p><b dir="ltr">${esc(e.spec?.name||(EX[id]||OLD_EX[id])?.name||id)}</b><br><span dir="ltr">${e.sets.filter(setHas).map(st=>esc(fa(st.w))+' × '+esc(fa(st.r))+(st.d?'':' ؟')).join(' · ')}</span></p>`).join('');
+    showModal(`<h2 id="m-title">${P[x.rec.day].name} ${fmtD(x.rec.date)}</h2>${lines}<p>با انتخاب این نسخه، نسخهٔ فعلی هم در تعارض‌ها محفوظ می‌ماند.</p><div class="m-act"><button class="btn acc" data-m="choose-conflict">انتخاب این نسخه</button><button class="btn" data-m="close">بستن</button></div>`);return;
+  }
   const o = ev.target.closest('[data-open]');
   if (o) { const r = S.sessions[o.dataset.open]; if (!r) return; view = { day: r.day, date: r.date, editing: r.date !== todayIso() }; closeSheet(); render(); window.scrollTo(0, 0); return; }
   const d = ev.target.closest('[data-del]');
   if (d) {
     if (d.dataset.armed) {
-      delete S.sessions[d.dataset.del]; save(true); render(); toast('جلسه حذف شد');
+      checkpoint('حذف جلسه');if(!rescue())return;delete S.sessions[d.dataset.del]; save(true); render(); toast('جلسه حذف شد');
       const item = d.closest('.h-item');
       if (RM || !item) renderHistory();
       else { item.style.height = item.offsetHeight + 'px'; void item.offsetWidth; item.classList.add('h-out'); setTimeout(renderHistory, 280); }
@@ -1844,13 +2059,22 @@ function renderSettings() {
   $('#export-file').hidden = IS_PREVIEW;
   $('#share-report').hidden = IS_PREVIEW || !navigator.share;
   $('#report-box').hidden = true; $('#backup-box').hidden = true;
+  $('#backup-mode').value=S.backupMode||'shortcut';$('#shortcut-name').value=S.shortcutName||'پشتیبان دفتر تمرین';$('#shortcut-ready').checked=!!S.shortcutReady;
+  $('#shortcut-state').textContent=S.backupPending?'پشتیبان این جلسه هنوز تأیید نشده است.':(S.lastShortcutAttempt?'آخرین اجرای میان‌بر ثبت شد؛ تأیید ذخیرهٔ فایل با توست.':'میان‌بر هنوز اجرا نشده است.');
+  $('#recovery-info').textContent=STORE_BLOCKED?'دادهٔ ناخوانا محفوظ است؛ ذخیرهٔ خودکار متوقف شده. نسخهٔ نجات را ذخیره یا بازگردانی کن.':'نسخهٔ نجات قبل از بازگردانی و حذف، روی همین دستگاه نگهداری می‌شود.';
+  $('#conflict-count').textContent=fa((S.conflicts||[]).length)+' نسخهٔ متعارض محفوظ است.';
+  $('#restore-rescue').hidden=!localStorage.getItem(KEY+':rescue');
+  $('#use-recovered').hidden=!STORE_BLOCKED;
+  updateSaveUI();
+  checkPersistence();
 }
-$('#start-sel').addEventListener('change', ev => { S.start = ev.target.value; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد'); });
+$('#start-sel').addEventListener('change', ev => { checkpoint('تاریخ شروع');S.start = ev.target.value; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد'); });
 $('#start-date').addEventListener('change', ev => {
   const v = ev.target.value; if (!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
-  S.start = v; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد');
+  checkpoint('تاریخ شروع');S.start = v; save(true); renderSettings(); render(); toast('تاریخ شروع ذخیره شد');
 });
 function toggleDeload(forceOn) {
+  checkpoint('هفتهٔ دی‌لود');
   const k = satOf(todayIso());
   const on = S.deload.includes(k);
   if (on && !forceOn) S.deload = S.deload.filter(x => x !== k);
@@ -1875,7 +2099,7 @@ function reportText() {
     for (const { ex, e } of recLines(r)) {
       const t = e.t || tgt(ex, ctxOf(r.date));
       const sets = e.sets.filter(setHas).map(s => (s.w !== '' ? s.w : '-') + '×' + (s.r !== '' ? s.r : '-') + (s.d ? '' : '?')).join(', ');
-      L.push(ex.no + '. ' + (e.alt ? ex.alt + ' (جایگزین ' + ex.name + ')' : ex.name) + ' [هدف ' + t.s + '×' + t.r[0] + '-' + t.r[1] + (t.rir ? ' RIR ' + t.rir[0] + (t.rir[1] !== t.rir[0] ? '-' + t.rir[1] : '') : '') + ']: ' + sets + (e.rir !== '' && e.rir != null ? ' | RIR ست آخر: ' + (e.rir === '4' ? '4+' : e.rir) : ''));
+      L.push(ex.no + '. ' + (ex.name + (e.alt?' (جایگزین)':'')) + ' [هدف ' + t.s + '×' + t.r[0] + '-' + t.r[1] + (t.rir ? ' RIR ' + t.rir[0] + (t.rir[1] !== t.rir[0] ? '-' + t.rir[1] : '') : '') + ']: ' + sets + (e.rir !== '' && e.rir != null ? ' | RIR ست آخر: ' + (e.rir === '4' ? '4+' : e.rir) : ''));
     }
     const c = r.cardio || {};
     if (c.min || c.d) L.push(cardioName(r.day, c) + ': ' + (cardioText(c, true) || 'ثبت شد'));
@@ -1893,7 +2117,7 @@ async function copyText(txt, box, okMsg) {
 $('#copy-report').addEventListener('click', () => copyText(reportText(), $('#report-box'), 'گزارش کپی شد؛ در گفتگو بفرست'));
 $('#share-report').addEventListener('click', async () => { try { await navigator.share({ text: reportText() }); } catch (e) { } });
 const backupObj = () => ({ app: 'daftar-tamrin', v: 1, exported: new Date().toISOString(), data: S });
-function markBackup() { S.lastBackup = Date.now(); save(true); renderSettings(); renderTop(); }
+function markBackup() { delete S.backupPending;S.lastBackup = Date.now(); save(true); renderSettings(); renderTop(); }
 $('#copy-backup').addEventListener('click', async () => { if (await copyText(JSON.stringify(backupObj()), $('#backup-box'), 'پشتیبان کپی شد؛ جایی مطمئن بچسبانش')) markBackup(); });
 $('#export-file').addEventListener('click', async () => {
   const name = 'daftar-tamrin-' + todayIso() + '.json';
@@ -1909,41 +2133,85 @@ $('#export-file').addEventListener('click', async () => {
     markBackup(); toast('فایل پشتیبان دانلود شد');
   } catch (e) { toast('ذخیرهٔ فایل نشد؛ از «کپی پشتیبان به‌صورت متن» استفاده کن'); }
 });
-function importText(txt) {
-  let o;
-  try { o = JSON.parse(String(txt).trim()); } catch (e) { toast('متن پشتیبان خوانده نشد'); return; }
-  const d = o && o.data && o.data.sessions ? o.data : (o && o.sessions ? o : null);
-  if (!d) { toast('این متن پشتیبان دفتر تمرین نیست'); return; }
-  const hadNone = !Object.values(S.sessions).some(recHas);
-  let n = 0;
-  for (const [k, r] of Object.entries(d.sessions)) {
-    if (!r || !r.date || !r.day || !P[r.day]) continue;
-    const cur = S.sessions[k];
-    if (!cur || (r.upd || 0) > (cur.upd || 0)) { S.sessions[k] = r; n++; }
-  }
-  if (hadNone && d.start) S.start = d.start;
-  if (d.exNotes && typeof d.exNotes === 'object') for (const [k, n] of Object.entries(normNotes(d.exNotes))) { if (!S.exNotes[k] || (n.upd || 0) > (S.exNotes[k].upd || 0)) S.exNotes[k] = n; }
-  if (Array.isArray(d.deload)) S.deload = Array.from(new Set(S.deload.concat(d.deload)));
-  save(true); renderSettings(); render();
-  toast(fa(n) + ' جلسه بازگردانی شد');
+
+async function checkPersistence(){
+  const el=document.getElementById('persist-state');
+  try{if(!navigator.storage?.persisted){el.textContent='وضعیت نگهداری پایدار در این محیط قابل بررسی نیست؛ پشتیبان مستقل لازم است.';return;}
+    let ok=await navigator.storage.persisted();if(!ok&&navigator.storage.persist)ok=await navigator.storage.persist();
+    el.textContent=ok?'نگهداری پایدار اطلاعات فعال است؛ پشتیبان بیرون از اپ را هم نگه دار.':'نگهداری پایدار تأیید نشده؛ پشتیبان بیرون از اپ را نگه دار.';
+  }catch(e){el.textContent='وضعیت نگهداری اطلاعات قابل بررسی نیست.';}
 }
+async function runShortcut(){
+  if(!save(true)){toast('ابتدا مشکل ذخیره را رفع کن');return false;}
+  const name=(S.shortcutName||'پشتیبان دفتر تمرین').trim();
+  try{
+    await navigator.clipboard.writeText(JSON.stringify(backupObj()));
+    S.lastShortcutAttempt=Date.now();S.backupPending=Date.now();save(true);
+    location.href='shortcuts://run-shortcut?name='+encodeURIComponent(name)+'&input=clipboard';return true;
+  }catch(e){toast('کپی برای میان‌بر انجام نشد؛ از ذخیرهٔ فایل پشتیبان استفاده کن');return false;}
+}
+function offerBackup(){
+  if(IS_PREVIEW||S.backupMode==='manual')return;
+  mState={kind:'backup'};
+  showModal(`<h2 id="m-title">پشتیبان جلسه</h2><p>جلسه ذخیره شد. میان‌بر «${esc(S.shortcutName||'پشتیبان دفتر تمرین')}» فایل پشتیبان را در پوشهٔ انتخابی تو می‌نویسد.</p><div class="m-act"><button class="btn acc" data-m="run-backup">اجرای میان‌بر</button><button class="btn" data-m="close">بعداً</button></div><p class="m-sub">پس از اجرای موفق، در تنظیمات «فایل ذخیره شد» را بزن؛ اپ نتیجهٔ ذخیره در آی‌کلاد را مستقیماً نمی‌بیند.</p>`);
+}
+$('#undo-last').addEventListener('click',undoLast);
+$('#retry-save').addEventListener('click',()=>{if(save(true))toast('اطلاعات ذخیره شد');});
+$('#backup-mode').addEventListener('change',ev=>{checkpoint('روش پشتیبان');S.backupMode=ev.target.value;save(true);});
+$('#shortcut-name').addEventListener('change',ev=>{const v=ev.target.value.trim();if(!v||v.length>150){toast('نام میان‌بر معتبر بنویس');return;}checkpoint('نام میان‌بر');S.shortcutName=v;save(true);});
+$('#shortcut-ready').addEventListener('change',ev=>{S.shortcutReady=ev.target.checked;save(true);});
+$('#run-shortcut').addEventListener('click',runShortcut);
+$('#confirm-shortcut').addEventListener('click',()=>{if(!S.lastShortcutAttempt){toast('اول میان‌بر را اجرا و فایل را بررسی کن');return;}delete S.backupPending;markBackup();toast('تأیید پشتیبان ثبت شد');});
+$('#download-recovery').addEventListener('click',()=>{
+  let txt;try{txt=localStorage.getItem(KEY+':quarantine')||localStorage.getItem(KEY+':rescue')||localStorage.getItem(KEY+':lastgood');}catch(e){}
+  if(!txt){toast('هنوز نسخهٔ نجاتی وجود ندارد');return;}
+  downloadText(txt,'daftar-tamrin-recovery-'+todayIso()+'.json');
+});
+$('#restore-rescue').addEventListener('click',()=>{try{const txt=localStorage.getItem(KEY+':rescue');if(txt)importText(txt);}catch(e){toast('نسخهٔ نجات خوانده نشد');}});
+$('#use-recovered').addEventListener('click',ev=>{
+  const b=ev.currentTarget;if(!b.dataset.armed){b.dataset.armed='1';b.textContent='نسخهٔ نجات را ذخیره کردی؟ برای ادامه دوباره بزن';setTimeout(()=>{delete b.dataset.armed;b.textContent='استفاده از نسخهٔ بازیابی‌شده';},5000);return;}
+  STORE_BLOCKED=false;if(save(true)){renderSettings();render();toast('نسخهٔ بازیابی‌شده فعال شد');}else STORE_BLOCKED=true;updateSaveUI();
+});
+function downloadText(txt,name){
+  const a=document.createElement('a');const url=URL.createObjectURL(new Blob([txt],{type:'application/json'}));a.href=url;a.download=name;document.body.append(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},2000);
+}
+
+function importText(txt){
+  try{
+    const d=freezeEntries(C.parseBackup(txt));d.exNotes=normNotes(d.exNotes);
+    const plan=C.merge(S,d);mState={kind:'import',plan};
+    showModal(`<h2 id="m-title">بازگردانی پشتیبان</h2><p>${fa(plan.counts.added)} جلسهٔ تازه، ${fa(plan.counts.updated)} جلسهٔ جدیدتر و ${fa(plan.counts.conflicts)} نسخهٔ متعارض.</p><p>نسخه‌های متفاوت جدا نگه داشته می‌شوند و قبل از اعمال، نسخهٔ نجات ساخته می‌شود.</p>${plan.barConflict?'<label><input type="checkbox" id="import-bar"> وزن میلهٔ فایل ('+fa(d.tbBar)+' کیلو) جایگزین تنظیم فعلی شود</label>':''}<div class="m-act"><button class="btn acc" data-m="apply-import">اعمال بازگردانی</button><button class="btn" data-m="close">انصراف</button></div>`);
+    mState.incomingBar=d.tbBar;return true;
+  }catch(e){toast(e.message||'پشتیبان نامعتبر است');return false;}
+}
+
 $('#import-file').addEventListener('change', ev => {
   const f = ev.target.files && ev.target.files[0]; if (!f) return;
   const rd = new FileReader(); rd.onload = () => importText(rd.result); rd.onerror = () => toast('فایل خوانده نشد'); rd.readAsText(f);
   ev.target.value = '';
 });
 $('#import-btn').addEventListener('click', () => { const t = $('#import-text').value; if (!t.trim()) { toast('اول متن پشتیبان را بچسبان'); return; } importText(t); $('#import-text').value = ''; });
-async function forceUpdate() {
-  save(true); toast('در حال گرفتن نسخهٔ جدید…');
-  try { if (window.caches) { const ks = await caches.keys(); await Promise.all(ks.map(k => caches.delete(k))); } } catch (e) { }
-  try { if (navigator.serviceWorker) { const r = await navigator.serviceWorker.getRegistration(); if (r) await r.update(); } } catch (e) { }
-  setTimeout(() => location.reload(), 400);
+async function forceUpdate(){
+  if(!save(true)){toast('ابتدا مشکل ذخیره را رفع کن');return;}
+  toast('در حال بررسی نسخهٔ جدید…');
+  const abort=new AbortController();const timeout=setTimeout(()=>abort.abort(),8000);
+  try{
+    const res=await fetch('sw.js?check='+Date.now(),{cache:'no-store',signal:abort.signal});
+    if(!res.ok)throw Error();
+    const remote=await res.text();const v=remote.match(/daftar-tamrin-([\d.]+)'/)?.[1];if(!v)throw Error();
+    if(!navigator.serviceWorker){toast('به‌روزرسانی در این محیط در دسترس نیست');return;}
+    const reg=await navigator.serviceWorker.getRegistration();if(!reg){toast('اپ را یک بار با اینترنت دوباره باز کن');return;}
+    await reg.update();
+    if(v==='3.6.0'){toast('همین نسخه، جدیدترین است');return;}
+    toast('نسخهٔ تازه در حال آماده شدن است؛ پس از آماده شدن دکمهٔ به‌روزرسانی را بزن');
+  }catch(e){toast('نسخهٔ تازه دریافت نشد؛ نسخهٔ آفلاین فعلی محفوظ است');}finally{clearTimeout(timeout);}
 }
+
 $('#force-update').addEventListener('click', forceUpdate);
 $('#quick-update').addEventListener('click', forceUpdate);
 $('#wipe-btn').addEventListener('click', ev => {
   const b = ev.currentTarget;
-  if (b.dataset.armed) { S = { v: 1, sessions: {}, deload: [], exNotes: {}, start: satOf(todayIso()) }; save(true); stopTimer(); closeSheet(); render(); toast('همهٔ داده‌ها پاک شد'); }
+  if (b.dataset.armed) { checkpoint('پاک کردن همه');if(!rescue())return;S = { v: 1, sessions: {}, deload: [], exNotes: {}, start: satOf(todayIso()) }; save(true); stopTimer(); closeSheet(); render(); toast('همهٔ داده‌ها پاک شد'); }
   else { b.dataset.armed = '1'; b.textContent = 'مطمئنی؟ دوباره بزن'; setTimeout(() => { delete b.dataset.armed; b.textContent = 'پاک کردن همه'; }, 4000); }
 });
 
@@ -1958,7 +2226,7 @@ function hideModal() { mState = null; outThen(modal, () => { modal.hidden = true
 function openNote(id) {
   const ex = EX[id]; if (!ex) return;
   mState = { kind: 'note', id };
-  showModal(`<h2 id="m-title">نکتهٔ من · <span class="en">${ex.name}</span></h2>
+  showModal(`<h2 id="m-title">نکتهٔ من · <span class="en">${esc(ex.name)}</span></h2>
     <textarea id="m-note" aria-label="نکتهٔ من برای این حرکت" placeholder="مثلاً ارتفاع صندلی ۴، دستهٔ وسط، یا حس شانه در این حرکت">${esc(myNote(id))}</textarea>
     <p class="m-sub">این نکته برای همین حرکت ذخیره می‌شود و هر روزی که این حرکت در برنامه باشد، زیرش نمایش داده می‌شود.</p>
     <div class="m-act"><button class="btn acc" type="button" data-m="save-note">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, myNote(id) ? null : '#m-note', true);
@@ -1967,13 +2235,20 @@ function openBar() {
   mState = { kind: 'bar' };
   showModal(`<h2 id="m-title">وزن میلهٔ <span class="en">Trap Bar</span></h2>
     <div class="m-num"><input id="m-bar" inputmode="decimal" autocomplete="off" aria-label="وزن میله به کیلو" value="${barW() != null ? fa(barW()) : ''}" placeholder="۲۰"><span class="m-sub">کیلو</span></div>
-    <p class="m-sub">از این به بعد فقط مجموع صفحه‌ها را بنویس؛ این عدد خودکار اضافه می‌شود و عدد نهایی ثبت می‌شود. اگر روی میله نوشته نشده، از باشگاه بپرس یا یک بار با ترازو بسنج.</p>
+    <p class="m-sub">این تنظیم برای ست‌های تازه است؛ وزن ست‌های قبلی تغییر نمی‌کند.</p><label><input type="checkbox" id="bar-apply-current"> اصلاح وزن میله در ست‌های همین جلسه</label><p class="m-sub">از این به بعد فقط مجموع صفحه‌ها را بنویس؛ این عدد خودکار اضافه می‌شود و عدد نهایی ثبت می‌شود. اگر روی میله نوشته نشده، از باشگاه بپرس یا یک بار با ترازو بسنج.</p>
     <div class="m-act"><button class="btn acc" type="button" data-m="save-bar">ذخیره</button><button class="btn" type="button" data-m="close">بستن</button></div>`, '#m-bar', true);
+}
+function finishMissing(rec){
+  let sets=0,rir=0;
+  for(const base of dayExs(view.day)){const t=targetFor(base,ctxOf(view.date),rec),e=rec.ex[base.id];sets+=Math.max(0,t.s-(e?.sets.slice(0,t.s).filter(st=>st.d).length||0));if(t.rir&&(!e||e.rir===''))rir++;}
+  const out=[];if(sets)out.push(fa(sets)+' ست');if(rir)out.push('فاصله از ناتوانی '+fa(rir)+' حرکت');
+  if(P[view.day].items.some(b=>b.cardio)&&!rec.cardio?.d)out.push('هوازی');return out;
 }
 function openFinish(edit) {
   const rec = getRec(true);
   const est = rec.t0 && rec.t1 && rec.t1 > rec.t0 ? Math.max(1, Math.round((rec.t1 - rec.t0) / 60000)) : null;
   mState = { kind: 'finish', edit, rpe: rec.rpe || null, rpm: rec.rpm || null, est };
+  const missing=finishMissing(rec);mState.missing=missing;
   const box = (k, title, hint) => `<div class="eff eff2" data-k="${k}">
       <div class="eff-h"><b>${title}</b><span>${hint}</span></div>
       <div class="eff-top" dir="ltr"><button class="eff-step" type="button" data-step="-1" aria-label="کمتر">−</button><div class="eff-val" aria-live="polite"><b class="eff-n"></b><span class="eff-c"></span></div><button class="eff-step" type="button" data-step="1" aria-label="بیشتر">+</button></div>
@@ -1982,11 +2257,11 @@ function openFinish(edit) {
       <p class="eff-desc"></p>
     </div>`;
   showModal(`<h2 id="m-title">${edit ? 'مدت و سختی جلسه' : 'پایان جلسه'}</h2>
-    <label class="m-lbl" for="m-min">مدت تمرین اصلی (دقیقه)</label>
+    ${!edit&&missing.length?'<div class="banner warn"><span>موارد باقی‌مانده: '+missing.map(esc).join('، ')+'</span></div>':''}<label class="m-lbl" for="m-min">مدت تمرین اصلی (دقیقه)</label>
     <div class="m-num"><input id="m-min" inputmode="numeric" autocomplete="off" value="${rec.min ? fa(rec.min) : ''}" placeholder="${est ? fa(est) : ''}"><span class="m-sub">${est ? 'از اولین تا آخرین ست حدود ' + fa(est) + ' دقیقه شد؛ اگر خالی بگذاری، همین ثبت می‌شود.' : 'بدون گرم‌کردن و هوازی'}</span></div>
     ${box('rpe', 'سختی بدنی', 'عضله‌ها، نفس، خستگی بدن')}
     ${box('rpm', 'سختی روانی', 'تمرکز، انگیزه، اراده')}
-    <div class="m-act"><button class="btn acc" type="button" data-m="save-finish">${edit ? 'ذخیره' : 'ثبت و پایان'}</button><button class="btn" type="button" data-m="close">انصراف</button></div>`);
+    <p class="m-sub" id="finish-warning" hidden></p><div class="m-act"><button class="btn acc" type="button" data-m="save-finish">${edit ? 'ذخیره' : 'ثبت و پایان'}</button><button class="btn" type="button" data-m="close">انصراف</button></div>`);
   paintEff();
 }
 function paintEff() {
@@ -2001,42 +2276,58 @@ function paintEff() {
   });
 }
 mCard.addEventListener('input', ev => { if (ev.target.id === 'm-min' || ev.target.id === 'm-bar') faInput(ev.target); });
-mCard.addEventListener('click', ev => {
+mCard.addEventListener('click', async ev => {
   const rb = ev.target.closest('[data-rpe]');
   if (rb && mState) { mState[rb.closest('.eff').dataset.k] = +rb.dataset.rpe; paintEff(); return; }
   const st = ev.target.closest('[data-step]');
   if (st && mState) { const k = st.closest('.eff').dataset.k; mState[k] = Math.min(10, Math.max(1, (mState[k] || (+st.dataset.step > 0 ? 0 : 6)) + +st.dataset.step)); paintEff(); return; }
   const m = ev.target.closest('[data-m]'); if (!m || !mState) return;
   if (m.dataset.m === 'close') return hideModal();
+  if(m.dataset.m==='run-backup'){hideModal();await runShortcut();return;}
+  if(m.dataset.m==='apply-import'){
+    if(!rescue())return;checkpoint('بازگردانی پشتیبان');
+    const old=S,blocked=STORE_BLOCKED;const plan=mState.plan;
+    if($('#import-bar')?.checked)plan.data.tbBar=mState.incomingBar;
+    S=plan.data;STORE_BLOCKED=false;
+    if(!save(true)){S=old;STORE_BLOCKED=blocked;updateSaveUI();return;}
+    hideModal();renderSettings();render();toast('بازگردانی انجام شد؛ نسخه‌های متفاوت محفوظ‌اند');return;
+  }
+  if(m.dataset.m==='choose-conflict'){
+    if(!rescue())return;checkpoint('انتخاب نسخهٔ جلسه');const x=S.conflicts[mState.i],old=S.sessions[x.key];
+    S.conflicts.splice(mState.i,1);if(old)S.conflicts.push({key:x.key,rec:C.clone(old),at:Date.now()});S.sessions[x.key]=C.clone(x.rec);
+    if(save(true)){hideModal();render();renderHistory();toast('نسخهٔ انتخابی فعال شد');}return;
+  }
   if (m.dataset.m === 'save-bar') {
     const v = num($('#m-bar').value);
     if (v == null || v < 0 || v > 80) { toast('وزن میله را به کیلو بنویس'); return; }
-    S.tbBar = v;
-    // sets typed as plates before the bar weight was known (or in this session) get their total recomputed
-    const cur = curKey();
-    for (const [k, r] of Object.entries(S.sessions)) for (const [id, e] of Object.entries(r.ex || {})) {
-      if (!EX[id] || !EX[id].tb) continue;
-      for (const st of e.sets) if (st && st.p != null && st.p !== '' && (st.b == null || k === cur)) { st.b = v; st.w = totalOf(st.p); }
-    }
-    save(true); hideModal(); softRender(); toast('وزن میله ذخیره شد');
+    checkpoint('وزن میله');S.tbBar=v;
+    if($('#bar-apply-current').checked){const rec=getRec(false);if(rec){
+      for(const [id,e]of Object.entries(rec.ex)){if(!effective(EX[id]||OLD_EX[id],e).tb)continue;for(const st of e.sets)if(st.p!=null&&st.p!==''){st.b=v;st.w=totalOf(st.p,v);}}
+      touch(rec);
+    }}
+    save(true);hideModal();softRender();toast('وزن میله ذخیره شد');
     return;
   }
   if (m.dataset.m === 'save-note') {
-    const t = $('#m-note').value.trim(); const id = mState.id;
+    checkpoint('نکتهٔ حرکت');const t = $('#m-note').value.trim(); const id = mState.id;
     if (t) S.exNotes[nk(id)] = { t, upd: Date.now() }; else delete S.exNotes[nk(id)];
     save(true); hideModal(); softRender(); toast(t ? 'نکته ذخیره شد' : 'نکته پاک شد');
     return;
   }
   if (m.dataset.m === 'save-finish') {
     const rec = getRec(true); const inp = $('#m-min');
+    if(document.querySelector('#main input[aria-invalid="true"]')||!validField(inp,true)|| (inp.value!==''&&(num(inp.value)<1||num(inp.value)>1440))){toast('ابتدا عددهای نامعتبر را اصلاح کن');return;}
+    const remaining=[...finishMissing(rec)];if(!mState.rpe)remaining.push('سختی بدنی');if(!mState.rpm)remaining.push('سختی روانی');
+    if(!mState.edit&&remaining.length&&!mState.confirmed){mState.confirmed=true;const w=$('#finish-warning');w.hidden=false;w.textContent='هنوز '+remaining.join('، ')+' ثبت نشده. برای پایان با همین اطلاعات، دوباره «ثبت و پایان» را بزن.';return;}
+    checkpoint('پایان یا ویرایش جلسه');
     let v = num(inp.value); if (v == null && mState.est) v = mState.est;
     if (v != null) rec.min = Math.round(v); else delete rec.min;
     if (mState.rpe) rec.rpe = mState.rpe; else delete rec.rpe;
     if (mState.rpm) rec.rpm = mState.rpm; else delete rec.rpm;
     const wasEdit = mState.edit;
-    if (!wasEdit) { rec.done = true; stopTimer(); }
-    touch(rec); save(true); hideModal(); softRender();
-    if (!wasEdit) { toast('جلسه ثبت شد'); window.scrollTo({ top: 0, behavior: 'smooth' }); } else toast('ذخیره شد');
+    if (!wasEdit) { rec.done = true;S.backupPending=Date.now();stopTimer(); }
+    touch(rec); if(!save(true))return;hideModal(); softRender();
+    if (!wasEdit) { toast('جلسه ثبت شد'); window.scrollTo({ top: 0, behavior: 'smooth' });if(S.shortcutReady&&S.backupMode!=='manual')await runShortcut();else setTimeout(offerBackup,220); } else toast('ذخیره شد');
   }
 });
 document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && !modal.hidden) hideModal(); });
@@ -2049,9 +2340,10 @@ function toast(msg) {
   clearTimeout(toastH); toastH = setTimeout(() => outThen(t, () => { t.hidden = true; }), 2200);
 }
 
-render();
+render();updateSaveUI();
+if(!STORE_BLOCKED)save(true);
 if (!IS_PREVIEW) { try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => { }); } catch (e) { } }
-if ('serviceWorker' in navigator && location.protocol === 'https:') {
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
   navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(reg => {
     const check = () => reg.update().catch(() => {});
     document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });

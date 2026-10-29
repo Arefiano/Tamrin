@@ -3,7 +3,7 @@
 // gets the latest version straight from the server (bypassing the HTTP cache);
 // offline, or if the network is slow, the cached copy opens instead.
 // Icons and the manifest are cache-first and refresh in the background.
-const CACHE = 'daftar-tamrin-3.5.5';
+const CACHE = 'daftar-tamrin-3.6.0';
 const FILES = [
   './',
   './index.html',
@@ -23,7 +23,7 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(k => k.startsWith('daftar-tamrin-') && k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
@@ -36,13 +36,13 @@ self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
-  if (url.origin !== self.location.origin) return;
+  if (url.origin !== self.location.origin || !url.pathname.startsWith(new URL('./',self.location.href).pathname)) return;
 
   if (isPage(req, url)) {
     event.respondWith(caches.open(CACHE).then(async cache => {
       const cached = (await cache.match(req, { ignoreSearch: true })) || (await cache.match('./index.html')) || (await cache.match('./'));
       const network = fetch(req, { cache: 'no-cache' }).then(res => {
-        if (res && res.ok) { cache.put('./index.html', res.clone()); cache.put('./', res.clone()); }
+        if (res && res.ok) { event.waitUntil(Promise.all([cache.put('./index.html', res.clone()),cache.put('./', res.clone())]).catch(()=>{})); }
         return res;
       }).catch(() => null);
       if (!cached) return (await network) || new Response('آفلاین', { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
@@ -58,7 +58,7 @@ self.addEventListener('fetch', event => {
   event.respondWith(caches.open(CACHE).then(async cache => {
     const cached = await cache.match(req, { ignoreSearch: true });
     const network = fetch(req, { cache: 'no-cache' }).then(res => {
-      if (res && res.ok) cache.put(req, res.clone());
+      if (res && res.ok) event.waitUntil(cache.put(req,res.clone()).catch(()=>{}));
       return res;
     }).catch(() => null);
     if (cached) { event.waitUntil(network); return cached; }

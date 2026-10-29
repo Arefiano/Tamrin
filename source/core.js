@@ -1,0 +1,127 @@
+/* Pure data rules. No DOM, network or storage. Kept inline in the published app. */
+(function(root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.TamrinCore = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function() {
+  'use strict';
+  const clone = x => JSON.parse(JSON.stringify(x));
+  const obj = x => x !== null && typeof x === 'object' && !Array.isArray(x);
+  const safeKey = k => !['__proto__', 'constructor', 'prototype'].includes(k);
+  const digits = v => String(v == null ? '' : v).trim().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,،]/g, '.');
+  function number(v, integer = false, max = 10000) {
+    const s = digits(v);
+    if (!s || !/^\d+(?:\.\d+)?$/.test(s)) return null;
+    const n = Number(s);
+    return Number.isFinite(n) && n >= 0 && n <= max && (!integer || Number.isInteger(n)) ? n : null;
+  }
+  const iso = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && Number.isFinite(Date.parse(s)) && new Date(s+'T12:00:00Z').toISOString().slice(0,10) === s;
+  const text = (s, max = 10000) => { if (typeof s !== 'string' || s.length > max) throw Error('متن نامعتبر در پشتیبان'); return s; };
+  function numeric(v, integer = false, max = 10000) {
+    if (v === '' || v == null) return '';
+    const n = number(v, integer, max); if (n == null) throw Error('عدد نامعتبر در پشتیبان'); return String(n);
+  }
+  function target(t) {
+    if (!obj(t) || !Number.isInteger(t.s) || t.s < 1 || t.s > 100) throw Error('هدف نامعتبر');
+    const pair = (a, max) => { if (!Array.isArray(a) || a.length !== 2 || a.some(n=> typeof n !== 'number' || !Number.isFinite(n) || n < 0 || n > max) || a[0] > a[1]) throw Error('بازهٔ نامعتبر'); return a.slice(); };
+    return {s:t.s, r:pair(t.r,1000), rir:t.rir == null ? null : pair(t.rir, 10)};
+  }
+  function spec(o) {
+    if (!obj(o)) throw Error('مشخصات حرکت نامعتبر');
+    const clean=(v,max)=>{const t=text(v,max);if(/[<>\"']/.test(t))throw Error('مشخصات حرکت شامل متن نامعتبر است');return t;};
+    const z = {name:clean(o.name,200)};
+    for (const k of ['db','lm','tb','pl','carry']) if (o[k]) z[k]=1;
+    for (const k of ['unit','tag','pz']) if (o[k] != null) z[k]=clean(o[k],300);
+    if(o.r){if(!Array.isArray(o.r)||o.r.length!==2||o.r.some(n=>!Number.isInteger(n)||n<1||n>1000)||o.r[0]>o.r[1])throw Error('بازهٔ حرکت نامعتبر');z.r=o.r.slice();}
+    for (const k of ['rest','restLast']) if(o[k]) { if(!Array.isArray(o[k])||o[k].length!==2||o[k].some(n=>!Number.isInteger(n)||n<0||n>3600)||o[k][0]>o[k][1])throw Error('استراحت نامعتبر');z[k]=o[k].slice(); }
+    return z;
+  }
+  function entry(e, depth = 0) {
+    if (!obj(e) || !Array.isArray(e.sets) || e.sets.length > 100) throw Error('ست‌های پشتیبان نامعتبرند');
+    const z = {alt:!!e.alt, rir:numeric(e.rir, true, 4), sets:e.sets.map(s=> {
+      if (!obj(s)) throw Error('ست نامعتبر');
+      const st={w:numeric(s.w), r:numeric(s.r, false, 1000), d:s.d?1:0};
+      // Historic fractional distances are valid. Live repeat fields enforce integers.
+      if(s.x) st.x=1;
+      if(s.p!=null) st.p=numeric(s.p);
+      if(s.b!=null && s.b!=='') st.b=Number(numeric(s.b,false,80));
+      return st;
+    })};
+    if (e.t) z.t=target(e.t);
+    if (e.spec) z.spec=spec(e.spec);
+    if (e.variants && !depth) { z.variants={}; for(const k of ['main','alt'])if(e.variants[k])z.variants[k]=entry(e.variants[k],1); }
+    return z;
+  }
+  function session(r, key) {
+    if (!obj(r)||!iso(r.date)||!['sat','mon','wed','fri'].includes(r.day)||key!==r.date+'|'+r.day||!obj(r.ex)) throw Error('شناسه یا ساختار جلسه نامعتبر است');
+    const z={date:r.date,day:r.day,ex:{},cardio:{},done:!!r.done,note:r.note==null?'':text(r.note),upd:0};
+    for(const [id,e] of Object.entries(r.ex)) { if(!safeKey(id)||!/^\w[\w-]{0,79}$/.test(id))throw Error('شناسهٔ حرکت نامعتبر');z.ex[id]=entry(e); }
+    for (const k of ['upd','t0','t1']) if(r[k]!=null) { if(typeof r[k]!=='number'||!Number.isFinite(r[k])||r[k]<0)throw Error('زمان نامعتبر');z[k]=r[k]; }
+    for(const [k,max] of [['min',1440],['rpe',10],['rpm',10]])if(r[k]!=null){const n=number(r[k],true,max);if(n==null||n<1)throw Error('مدت یا سختی نامعتبر');z[k]=n;}
+    if(r.cardio!=null && !obj(r.cardio))throw Error('هوازی نامعتبر');
+    for(const k of ['min','inc','spd','inc2','spd2','inc1','spd1','lvl'])if(r.cardio?.[k]!=null)z.cardio[k]=numeric(r.cardio[k],false,k==='min'?1440:1000);
+    for(const k of ['d','alt'])if(r.cardio?.[k])z.cardio[k]=true;
+    if(r.ssOff){if(!obj(r.ssOff))throw Error('سوپرست نامعتبر');z.ssOff={};for(const [k,v]of Object.entries(r.ssOff)){if(!safeKey(k))throw Error('شناسه نامعتبر');if(v)z.ssOff[k]=1;}}
+    return z;
+  }
+  function normalize(raw) {
+    if(!obj(raw)||!obj(raw.sessions)||Object.keys(raw.sessions).length>10000)throw Error('این فایل پشتیبان دفتر تمرین نیست');
+    if(raw.schema!=null && raw.schema>2)throw Error('این پشتیبان مربوط به نسخهٔ جدیدتری است؛ ابتدا اپ را به‌روزرسانی کن');
+    const d={v:1,schema:2,sessions:{},deload:[],exNotes:{}};
+    for(const [k,r] of Object.entries(raw.sessions))d.sessions[k]=session(r,k);
+    if(raw.start!=null){if(!iso(raw.start))throw Error('تاریخ شروع نامعتبر');d.start=raw.start;}
+    if(raw.deload!=null){if(!Array.isArray(raw.deload)||raw.deload.some(x=>!iso(x)))throw Error('هفتهٔ دی‌لود نامعتبر');d.deload=[...new Set(raw.deload)];}
+    if(raw.exNotes!=null){if(!obj(raw.exNotes))throw Error('یادداشت نامعتبر');for(const [k,n]of Object.entries(raw.exNotes)){if(!safeKey(k)||k.length>250||!obj(n))throw Error('یادداشت نامعتبر');d.exNotes[k]={t:text(n.t),upd:number(n.upd,false,1e16)||0};}}
+    for(const k of ['mig1','mig2','hideInstall','shortcutReady'])if(raw[k])d[k]=1;
+    if(raw.tbBar!=null && raw.tbBar!==''){const n=number(raw.tbBar,false,80);if(n==null)throw Error('وزن میله نامعتبر');d.tbBar=n;}
+    for(const k of ['lastBackup','lastShortcutAttempt','backupPending'])if(raw[k]!=null){const n=number(raw[k],false,1e16);if(n==null)throw Error('زمان پشتیبان نامعتبر');d[k]=n;}
+    if(raw.backupMode)d.backupMode=['shortcut','manual'].includes(raw.backupMode)?raw.backupMode:'manual';
+    if(raw.shortcutName!=null)d.shortcutName=text(raw.shortcutName,150);
+    // Migrate the incoming state, independent of the receiving device's flags.
+    if(!raw.mig2)for(const r of Object.values(d.sessions)){const e=r.ex.sat1;if(e&&!e.alt&&r.date<='2026-10-24')e.alt=true;}
+    if(!raw.mig1)for(const r of Object.values(d.sessions)){const e=r.ex.mon1;if(e&&e.alt&&r.date<'2026-10-20')e.alt=false;}
+    d.mig1=1;d.mig2=1;
+    if(raw.conflicts!=null){if(!Array.isArray(raw.conflicts)||raw.conflicts.length>10000)throw Error('تعارض نامعتبر');d.conflicts=raw.conflicts.map(x=>{if(!obj(x)||typeof x.key!=='string')throw Error('تعارض نامعتبر');return {key:x.key,rec:session(x.rec,x.key),at:number(x.at,false,1e16)||0};});}
+    return d;
+  }
+  function parseBackup(txt) {
+    if(typeof txt!=='string'||txt.length>20*1024*1024)throw Error('فایل خالی یا بیش از حد بزرگ است');
+    let o;try{o=JSON.parse(txt);}catch{throw Error('فایل پشتیبان قابل خواندن نیست');}
+    if(!obj(o))throw Error('ساختار پشتیبان نامعتبر');
+    if(o.app && o.app!=='daftar-tamrin')throw Error('این پشتیبان متعلق به دفتر تمرین نیست');
+    return normalize(o.data || o);
+  }
+  function merge(current,incoming) {
+    const out=clone(current);out.conflicts=out.conflicts||[];
+    const counts={added:0,updated:0,conflicts:0};
+    for(const [k,r]of Object.entries(incoming.sessions)){
+      const old=out.sessions[k];if(!old){out.sessions[k]=clone(r);counts.added++;continue;}
+      if(JSON.stringify(old)===JSON.stringify(r))continue;
+      // Preserve both complete versions: field merges can silently invent a workout.
+      const newer=(r.upd||0)>(old.upd||0), losing=newer?old:r;
+      const canonical=x=>JSON.stringify(x,(_k,v)=>obj(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
+      const signature=canonical(losing);
+      if(!out.conflicts.some(x=>x.key===k&&JSON.stringify(x.rec)===signature)){out.conflicts.push({key:k,rec:clone(losing),at:Date.now()});counts.conflicts++;}
+      if(newer){out.sessions[k]=clone(r);counts.updated++;}
+    }
+    for(const x of incoming.conflicts||[])if(!out.conflicts.some(y=>y.key===x.key&&JSON.stringify(y.rec)===JSON.stringify(x.rec)))out.conflicts.push(clone(x));
+    for(const [k,n]of Object.entries(incoming.exNotes))if(!out.exNotes[k]||n.upd>out.exNotes[k].upd)out.exNotes[k]=clone(n);
+    out.deload=[...new Set(out.deload.concat(incoming.deload))];
+    const empty=Object.keys(current.sessions).length===0;
+    if(empty&&incoming.start)out.start=incoming.start;
+    if(incoming.tbBar!=null && (empty || out.tbBar==null))out.tbBar=incoming.tbBar;
+    out.schema=2;out.mig1=1;out.mig2=1;
+    return {data:out,counts,barConflict:incoming.tbBar!=null && current.tbBar!=null && incoming.tbBar!==current.tbBar};
+  }
+  function metric(st, exercise) {
+    const w=number(st.w),r=number(st.r);
+    if(r==null||r<=0)return null;
+    if(exercise?.carry||exercise?.unit==='متر')return w>0?{k:'carry',v:w*r}: {k:'distance',v:r};
+    return w>0?{k:'w',v:w*(1+r/30)}:{k:'r',v:r};
+  }
+  function trapTotal(st, fallback) {
+    if(st && st.w!=='' && number(st.w)!=null)return String(number(st.w));
+    return st?.p!=='' && number(st?.p)!=null ? String(number(st.p)+(st.b??fallback??0)):'';
+  }
+  return {clone,number,digits,iso,normalize,parseBackup,merge,metric,trapTotal};
+});
