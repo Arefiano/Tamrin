@@ -7,6 +7,7 @@
   'use strict';
   const clone = x => JSON.parse(JSON.stringify(x));
   const obj = x => x !== null && typeof x === 'object' && !Array.isArray(x);
+  const canonical=x=>JSON.stringify(x,(_k,v)=>obj(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
   const safeKey = k => !['__proto__', 'constructor', 'prototype'].includes(k);
   const digits = v => String(v == null ? '' : v).trim().replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[٫,،]/g, '.');
   function number(v, integer = false, max = 10000) {
@@ -96,15 +97,14 @@
     const counts={added:0,updated:0,conflicts:0};
     for(const [k,r]of Object.entries(incoming.sessions)){
       const old=out.sessions[k];if(!old){out.sessions[k]=clone(r);counts.added++;continue;}
-      if(JSON.stringify(old)===JSON.stringify(r))continue;
+      if(canonical(old)===canonical(r))continue;
       // Preserve both complete versions: field merges can silently invent a workout.
       const newer=(r.upd||0)>(old.upd||0), losing=newer?old:r;
-      const canonical=x=>JSON.stringify(x,(_k,v)=>obj(v)?Object.fromEntries(Object.entries(v).sort(([a],[b])=>a.localeCompare(b))):v);
       const signature=canonical(losing);
-      if(!out.conflicts.some(x=>x.key===k&&JSON.stringify(x.rec)===signature)){out.conflicts.push({key:k,rec:clone(losing),at:Date.now()});counts.conflicts++;}
+      if(!out.conflicts.some(x=>x.key===k&&canonical(x.rec)===signature)){out.conflicts.push({key:k,rec:clone(losing),at:Date.now()});counts.conflicts++;}
       if(newer){out.sessions[k]=clone(r);counts.updated++;}
     }
-    for(const x of incoming.conflicts||[])if(!out.conflicts.some(y=>y.key===x.key&&JSON.stringify(y.rec)===JSON.stringify(x.rec)))out.conflicts.push(clone(x));
+    for(const x of incoming.conflicts||[])if(!out.conflicts.some(y=>y.key===x.key&&canonical(y.rec)===canonical(x.rec)))out.conflicts.push(clone(x));
     for(const [k,n]of Object.entries(incoming.exNotes))if(!out.exNotes[k]||n.upd>out.exNotes[k].upd)out.exNotes[k]=clone(n);
     out.deload=[...new Set(out.deload.concat(incoming.deload))];
     const empty=Object.keys(current.sessions).length===0;

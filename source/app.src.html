@@ -2033,7 +2033,7 @@ function downloadText(txt,name){
 function importText(txt){
   try{
     const d=freezeEntries(C.parseBackup(txt));d.exNotes=normNotes(d.exNotes);
-    const plan=C.merge(S,d);mState={kind:'import',plan};
+    const plan=C.merge(C.normalize(S),d);mState={kind:'import',plan};
     showModal(`<h2 id="m-title">بازگردانی پشتیبان</h2><p>${fa(plan.counts.added)} جلسهٔ تازه، ${fa(plan.counts.updated)} جلسهٔ جدیدتر و ${fa(plan.counts.conflicts)} نسخهٔ متعارض.</p><p>نسخه‌های متفاوت جدا نگه داشته می‌شوند و قبل از اعمال، نسخهٔ نجات ساخته می‌شود.</p>${plan.barConflict?'<label><input type="checkbox" id="import-bar"> وزن میلهٔ فایل ('+fa(d.tbBar)+' کیلو) جایگزین تنظیم فعلی شود</label>':''}<div class="m-act"><button class="btn acc" data-m="apply-import">اعمال بازگردانی</button><button class="btn" data-m="close">انصراف</button></div>`);
     mState.incomingBar=d.tbBar;return true;
   }catch(e){toast(e.message||'پشتیبان نامعتبر است');return false;}
