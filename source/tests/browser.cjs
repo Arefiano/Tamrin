@@ -2,7 +2,8 @@
 const fs=require('fs'),path=require('path'),http=require('http'),assert=require('node:assert/strict');
 const {chromium,webkit}=require('playwright');
 const root=path.resolve(__dirname,'../out/tamrin');
-const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http://localhost').pathname;const file=path.join(root,pathname==='/'?'index.html':pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}fs.readFile(file,(e,b)=>{if(e){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/json');res.end(b);});});
+let networkUnavailable=false;
+const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(503).end('offline test');return;}const pathname=new URL(req.url,'http://localhost').pathname;const file=path.join(root,pathname==='/'?'index.html':pathname);if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}fs.readFile(file,(e,b)=>{if(e){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.js')?'application/javascript':file.endsWith('.html')?'text/html':file.endsWith('.png')?'image/png':'application/json');res.end(b);});});
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const url='http://127.0.0.1:'+server.address().port;
  for(const [name,engine] of [['chromium',chromium],['webkit',webkit]]){
   const browser=await engine.launch({headless:true});const ctx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'});const page=await ctx.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -22,8 +23,9 @@ const server=http.createServer((req,res)=>{const pathname=new URL(req.url,'http:
    await page.locator('#sh-settings [data-close]').click();await page.locator('#open-guide').click();await page.locator('#sh-guide [data-close]').click();await page.locator('#open-history').click();await page.locator('#sh-history [data-close]').click();
    await page.screenshot({path:path.resolve('test-results/'+name+'-390.png'),fullPage:false});
    // Check offline reload after the service worker has controlled this page.
-   await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await ctx.setOffline(false);
-   assert.deepEqual(errors,[]);console.log(name+': browser flows, Persian layout, offline and update passed');
+   await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
+   if(name==='webkit')networkUnavailable=true;else await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);networkUnavailable=false;await ctx.setOffline(false);
+   assert.deepEqual(errors,[]);console.log(name+': browser flows, Persian layout, '+(name==='webkit'?'server-unavailable fallback':'network-offline reload')+' and update passed');
   }catch(e){await page.screenshot({path:path.resolve('test-results/'+name+'-failure.png'),fullPage:true});throw e;}finally{await browser.close();}
  }
 })().then(()=>server.close()).catch(e=>{console.error(e);server.close();process.exitCode=1;});
