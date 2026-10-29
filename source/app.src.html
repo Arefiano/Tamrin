@@ -657,7 +657,7 @@ input.invalid{outline:2px solid var(--warn)!important;border-color:var(--warn)!i
       <p>همهٔ جلسه‌های ثبت‌شده روی این گوشی پاک می‌شوند. اول پشتیبان بگیر.</p>
       <div class="row"><button class="btn danger" type="button" id="wipe-btn">پاک کردن همه</button></div>
     </div>
-    
+
     <div class="sec">
       <h3>نسخهٔ اپ</h3>
       <p>نسخهٔ نصب‌شده: <b dir="ltr">/*VER*/</b>. عدد اول با تغییرهای بزرگ، عدد دوم با قابلیت‌های تازه و عدد سوم با اصلاح‌های کوچک بالا می‌رود.</p>
@@ -903,7 +903,7 @@ const ALT_PROFILE = {
  fri1:{lm:1},fri2:{db:1,r:[12,20],tag:''},fri3:{},fri4:{db:1},wed6:{pl:1}
 };
 function exerciseSpec(ex, alt) {
-  const o={name:alt ? ex.alt : ex.name};
+  const o={name:alt && ex.alt ? ex.alt : ex.name};
   for(const k of ['db','lm','tb','pl','unit','tag','pz','rest','restLast'])if(ex[k]!=null)o[k]=C.clone(ex[k]);
   if(alt){for(const k of ['db','lm','tb','pl','tag','pz'])delete o[k];Object.assign(o,ALT_PROFILE[ex.id]||{});}
   if(ex.unit==='متر')o.carry=1;
@@ -985,7 +985,7 @@ function undoLast(){
   const a=UNDO.pop();if(!a)return;
   const current=C.clone(S);S=a.data;view=a.view;
   if(!save(true)){S=current;UNDO.push(a);updateSaveUI();return;}
-  stopTimer();if(a.timer){startTimer([a.timer.lo,a.timer.hi],a.timer.label);T={...a.timer};tick();}
+  stopTimer();if(a.timer){startTimer([a.timer.lo,a.timer.hi],a.timer.label);T={...a.timer};try{localStorage.setItem(KEY+':timer',JSON.stringify(T));}catch(e){}tick();}
   render();if(openId==='history')renderHistory();if(openId==='settings')renderSettings();updateSaveUI();toast('برگشت انجام شد');
 }
 window.addEventListener('pagehide',()=>save(true));
@@ -1043,7 +1043,7 @@ function suggest(ex, t, ctx) {
   if (ctx.deload) return null;
   if(ex.carry||ex.unit==='متر')return null;
   const alt=!!getRec(false)?.ex[ex.id]?.alt;
-  const p = prevEntry(ex.id, view.date, (r, e) => !isDeload(r.date) && !!e.alt===alt); 
+  const p = prevEntry(ex.id, view.date, (r, e) => !isDeload(r.date) && !!e.alt===alt);
   if (!p) return null;
   const pt = p.e.t || tgt(ex, ctxOf(p.rec.date));
   if (pt.r[0] !== t.r[0] || pt.r[1] !== t.r[1]) {
@@ -1466,7 +1466,7 @@ main.addEventListener('click', ev => {
     const base=EX[altB.closest('.ex').dataset.ex],rec=getRec(true),e=entry(rec,base,true);
     const variants=e.variants||{},key=e.alt?'alt':'main',next=e.alt?'main':'alt';
     const keep=C.clone(e);delete keep.variants;variants[key]=keep;
-    const n=variants[next]||{sets:[],rir:'',alt:!e.alt,spec:exerciseSpec(base,!e.alt)};
+    const n=C.clone(variants[next]||{sets:[],rir:'',alt:!e.alt,spec:exerciseSpec(base,!e.alt)});
     n.variants=variants;rec.ex[base.id]=n;snapT(n,base);touch(rec);softRender();return;
   }
 
@@ -1937,6 +1937,7 @@ function toggleDeload(forceOn) {
   const on = S.deload.includes(k);
   if (on && !forceOn) S.deload = S.deload.filter(x => x !== k);
   else if (!on) S.deload.push(k);
+  for(const r of Object.values(S.sessions))if(!r.done&&r.date===todayIso())for(const [id,e]of Object.entries(r.ex)){const ex=EX[id];if(ex)e.t=tgt(effective(ex,e),ctxOf(r.date));}
   save(true); if (openId === 'settings') renderSettings(); render();
   toast(S.deload.includes(k) ? 'این هفته دی‌لود شد' : 'دی‌لود لغو شد');
 }
