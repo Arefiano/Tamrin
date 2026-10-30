@@ -3510,10 +3510,10 @@ $('#wipe-btn').addEventListener('click', ev => {
 const modal = $('#modal'), mCard = $('#m-card');
 let mState = null;
 function showModal(html, focusSel, top) {
-  guideSwipe=null;mCard.style.transform='';mCard.style.removeProperty('--guide-drop');mCard.classList.remove('guide-dragging');cancelOut(modal);modal.classList.remove('exercise-guide'); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
+  releaseGuideMedia();guideSwipe=null;mCard.style.transform='';mCard.style.removeProperty('--guide-drop');mCard.classList.remove('guide-dragging');cancelOut(modal);modal.classList.remove('exercise-guide'); modal.classList.toggle('top', !!top); mCard.innerHTML = html; modal.hidden = false; document.body.classList.add('lock');
   if (focusSel) { const f = mCard.querySelector(focusSel); if (f) setTimeout(() => f.focus(), 60); }
 }
-function hideModal() { mCard.querySelectorAll('video').forEach(v=>v.pause());const focusBack=mState?.kind==='guide'?guideOpener:null;mState = null;guideSwipe=null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = '';mCard.style.transform='';mCard.style.removeProperty('--guide-drop');mCard.classList.remove('guide-dragging');modal.classList.remove('exercise-guide'); if (!openId) document.body.classList.remove('lock');if(focusBack?.isConnected)focusBack.focus({preventScroll:true}); }); }
+function hideModal() { releaseGuideMedia();const focusBack=mState?.kind==='guide'?guideOpener:null;mState = null;guideSwipe=null; outThen(modal, () => { modal.hidden = true; mCard.innerHTML = '';mCard.style.transform='';mCard.style.removeProperty('--guide-drop');mCard.classList.remove('guide-dragging');modal.classList.remove('exercise-guide'); if (!openId) document.body.classList.remove('lock');if(focusBack?.isConnected)focusBack.focus({preventScroll:true}); }); }
 
 const G = globalThis.TamrinGuides;
 const GUIDE_ICONS = {
@@ -3548,7 +3548,9 @@ function guideWeightHTML(ex,rec){
   const t=targetFor(ex,ctxOf(view.date),rec),sug=suggest(ex,t,ctxOf(view.date));
   return `<h3>وزنهٔ این حرکت</h3><p class="m-sub">${ex.db?'عدد هر دمبل را بنویس.':ex.lm?'فقط مجموع صفحه‌های روی میله را بنویس.':ex.tb?'مجموع صفحه‌ها را وارد کن؛ وزن میله جداگانه اضافه می‌شود.':ex.pl?'مجموع صفحه‌ها را بنویس.':'عدد وزنهٔ دستگاه را بنویس.'}</p>${weightSuggestionHTML(ex,sug)}${adviceHTML(ex,t,rec).replace('<details','<details open')}`;
 }
-let guideSwipe=null,guideOpener=null;
+let guideSwipe=null,guideOpener=null,guideMediaURL=null;
+function releaseGuideMedia(){mCard.querySelectorAll('video').forEach(v=>v.pause());if(guideMediaURL){URL.revokeObjectURL(guideMediaURL);guideMediaURL=null;}}
+function mountGuideMedia(){mCard.querySelectorAll('video').forEach(v=>{const src=v.querySelector('source')?.getAttribute('src');if(!src?.startsWith('data:video/mp4;base64,'))return;const binary=atob(src.split(',')[1]),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));guideMediaURL=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));v.src=guideMediaURL;});}
 /* the swipe hint shows on the first three guide openings only (a per-phone convenience) */
 function guideHintDue(){try{const n=+(localStorage.getItem(KEY+':guideHint')||0);if(n>=3)return false;localStorage.setItem(KEY+':guideHint',String(n+1));}catch(_){}return true;}
 function openExerciseGuide(name,id=null){
@@ -3562,7 +3564,7 @@ function openExerciseGuide(name,id=null){
   showModal(`<div class="guide-handle" aria-hidden="true"></div><header class="guide-head"><div><h2 id="m-title">راهنمای حرکت</h2><span class="en" dir="ltr">${esc(ex.name)}</span></div><button class="guide-close" type="button" data-m="close" aria-label="بستن راهنمای حرکت">×</button></header>
     <div class="guide-viewport"><div class="guide-track">${panels.map((p,i)=>`<section class="guide-panel" role="tabpanel" id="guide-panel-${i}" aria-labelledby="guide-tab-${i}" tabindex="0"${i?' inert aria-hidden="true"':''}>${p}</section>`).join('')}</div></div>
     ${id&&guideHintDue()?'<p class="guide-swipe-hint">برای جابه‌جایی بین بخش‌ها، به چپ یا راست بکش ↔</p>':''}<nav class="guide-nav" role="tablist" aria-label="بخش‌های راهنمای حرکت">${keys.map((k,i)=>`<button class="guide-tab" type="button" role="tab" id="guide-tab-${i}" aria-controls="guide-panel-${i}" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-guide-tab="${i}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GUIDE_ICONS[k]}</svg><span>${labels[i]}</span></button>`).join('')}</nav>`,'.guide-close');
-  modal.classList.add('exercise-guide');
+  modal.classList.add('exercise-guide');mountGuideMedia();
 }
 // Kept as the movement-aware note entry point for existing callers.
 function openNote(id){openExerciseGuide(null,id);}
