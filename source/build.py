@@ -13,7 +13,7 @@ FONT_MAP = {  # file name -> (source blob id, css weight)
     'yb-900.woff2': ('3bcd1b45cb98bd8eeac4dd7c83ac7bc9', '900'),
 }
 
-src = open(SRC + 'app.src.html', encoding='utf-8').read().replace('/*CORE*/', open(SRC+'core.js',encoding='utf-8').read()).replace('/*GUIDES*/', open(SRC+'exercise-guides.js',encoding='utf-8').read())
+src = open(SRC + 'app.src.html', encoding='utf-8').read().replace('/*CORE*/', open(SRC+'core.js',encoding='utf-8').read()).replace('/*HISTORY*/', open(SRC+'history.js',encoding='utf-8').read()).replace('/*GUIDES*/', open(SRC+'exercise-guides.js',encoding='utf-8').read())
 head, body = src.split('<!--BODY-->')
 
 def face(url, w):
