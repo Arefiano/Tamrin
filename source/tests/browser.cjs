@@ -24,7 +24,19 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await page.screenshot({path:path.resolve('test-results/'+name+'-390.png'),fullPage:false});
    // Check offline reload after the service worker has controlled this page.
    await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await page.waitForFunction(()=>!!navigator.serviceWorker.controller);
-   if(name==='webkit')networkUnavailable=true;else await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);networkUnavailable=false;await ctx.setOffline(false);
+   if(name==='webkit')networkUnavailable=true;else await ctx.setOffline(true);await page.reload();assert.equal(await page.locator('.ex[data-ex]').count()>0,true);await page.locator('#quick-update').click();await page.waitForTimeout(300);assert.equal(await page.locator('.ex[data-ex]').count()>0,true);
+   // Previously embedded video must remain playable with the network disabled.
+   await page.locator('[data-day=fri]').click();
+   await page.locator('.ex[data-ex=fri3] [data-info]').click();
+   const offlineVideo=page.locator('.guide-media video');
+   const offlineReady=await offlineVideo.evaluate(async v=>{
+     v.muted=true;v.load();
+     await Promise.race([v.play(),new Promise((_,reject)=>setTimeout(()=>reject(Error('Offline media timeout: '+v.error?.message)),10000))]);
+     return v.readyState>=2&&!v.paused;
+   });
+   assert.equal(offlineReady,true,'cached rear-delt video should play offline');
+   await page.locator('.guide-close').click();
+   networkUnavailable=false;await ctx.setOffline(false);
 
    // Independent legacy-migration/insight/resume fixture, with synthetic local dates.
    const fx=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,reducedMotion:'reduce'}),fp=await fx.newPage();
