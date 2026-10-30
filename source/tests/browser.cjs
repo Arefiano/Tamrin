@@ -71,7 +71,7 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    const dayBefore=await fp.locator('#daypill span').textContent();
    await swipe(110);assert.equal(await selected(),'1');await swipe(110);assert.equal(await selected(),'2');await swipe(110);assert.equal(await selected(),'2');
    await swipe(-110);assert.equal(await selected(),'1');await swipe(-110);assert.equal(await selected(),'0');await swipe(-110);assert.equal(await selected(),'0');
-   await swipe(15,100);assert.equal(await selected(),'0');await swipe(110,0,true);assert.equal(await selected(),'0');assert.equal(await fp.locator('#daypill span').textContent(),dayBefore);
+   await swipe(15,-100);assert.equal(await selected(),'0');await swipe(110,0,true);assert.equal(await selected(),'0');assert.equal(await fp.locator('#daypill span').textContent(),dayBefore);
    assert.equal(await fp.locator('.ex[data-ex=fri2]').count(),1);
    await fp.locator('[data-m=edit-guide-note]').click();await fp.locator('#m-note').fill('پیش‌نویس مستقل');await fp.locator('[data-guide-tab="1"]').click();await fp.locator('[data-guide-tab="0"]').click();assert.equal(await fp.locator('#m-note').inputValue(),'پیش‌نویس مستقل');await fp.locator('[data-m=cancel-guide-note]').click();
    await fp.locator('[data-guide-tab="0"]').focus();await fp.keyboard.press('ArrowLeft');assert.equal(await selected(),'1');await fp.keyboard.press('End');assert.equal(await selected(),'2');await fp.keyboard.press('Home');assert.equal(await selected(),'0');
@@ -85,6 +85,21 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await fp.locator('[data-guide-tab="1"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-weight.png')});
    await fp.locator('[data-guide-tab="2"]').click();await fp.screenshot({path:path.resolve('test-results/'+name+'-guide-comparison.png')});
    await closeGuide();await fp.screenshot({path:path.resolve('test-results/'+name+'-compact-card.png')});
+   // The close control is physically on the right, including RTL layout.
+   await openGuide(landmine);assert.equal(await fp.locator('.guide-head').evaluate(el=>{const b=el.querySelector('.guide-close').getBoundingClientRect(),r=el.getBoundingClientRect();return b.left>r.left+r.width/2;}),true);
+   const pull=async(dy,{header=false,cancel=false,scrolled=false}={})=>fp.locator('#m-card').evaluate((card,{dy,header,cancel,scrolled})=>{
+     const panel=card.querySelector('.guide-panel:not([inert])');panel.scrollTop=scrolled?120:0;
+     const target=header?card.querySelector('.guide-head h2'):panel.querySelector('.guide-cues');
+     const send=(type,touches)=>{const ev=new Event(type,{bubbles:true,cancelable:true});Object.defineProperty(ev,'touches',{value:touches});target.dispatchEvent(ev);};
+     send('touchstart',[{clientX:180,clientY:250}]);send('touchmove',[{clientX:181,clientY:250+dy}]);
+     const moved=card.style.transform;send(cancel?'touchcancel':'touchend',[]);return moved;
+   },{dy,header,cancel,scrolled});
+   assert.ok((await pull(180,{scrolled:true})).includes('translateY')===false);assert.equal(await fp.locator('#modal').isVisible(),true);
+   assert.ok((await pull(20)).includes('20px'));assert.equal(await fp.locator('#modal').isVisible(),true);
+   assert.ok((await pull(180,{cancel:true})).includes('180px'));assert.equal(await fp.locator('#modal').isVisible(),true);
+   await pull(180);await fp.waitForSelector('#modal[hidden]',{state:'attached'});assert.equal(await fp.locator('.ex[data-ex=fri2]').count(),1);
+   await openGuide(landmine);await pull(180,{header:true,scrolled:true});await fp.waitForSelector('#modal[hidden]',{state:'attached'});
+   await openGuide(landmine);assert.equal(await fp.locator('#m-card').evaluate(el=>el.style.transform),'');await closeGuide();
    // Warmups and cardio alternatives share the same catalog, with no bogus load tabs.
    await fp.locator('details.warm summary').click();await fp.locator('[data-movement-guide="Band External Rotation"]').click();assert.equal(await fp.locator('.guide-tab').count(),1);assert.ok((await fp.locator('#guide-panel-0').textContent()).includes('تحت‌خاری'));await closeGuide();
    await fp.locator('[data-calt]').click();await fp.locator('.cardio [data-movement-guide]').click();assert.equal(await fp.locator('.guide-head .en').textContent(),'Stationary Bike');await closeGuide();await fp.locator('[data-calt]').click();
