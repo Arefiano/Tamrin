@@ -51,3 +51,18 @@ test('iOS zoom prevention preserves single-finger gestures and build settings',(
  a.match(source,/passive: false/);
  a.match(build,/maximum-scale=1, user-scalable=no/);
 });
+
+
+test('Friday first exercise shows correct side-on landmine setup and Lyfta reference',()=>{
+ const h=harness();h.api.S=makeState();h.api.setView({date:'2026-10-30',day:'fri'});
+ a.equal(h.api.P.fri.items[0].id,'fri2');
+ const g=h.api.guideData('Landmine Lateral Raise');
+ a.equal(g.reference.url,'https://lyfta.app/ex/8l9');
+ a.ok(g.setup.includes('عمود بر امتداد'));
+ a.ok(g.error.includes('روبه‌روی نوک'));
+ h.api.openNote('fri2');
+ const html=h.els.get('#m-card').innerHTML;
+ a.ok(html.includes('https://lyfta.app/ex/8l9'));
+ a.ok(html.includes('guide-reference'));
+ a.ok(html.includes('جای ایستادن'));
+});
