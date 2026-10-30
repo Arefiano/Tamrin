@@ -224,6 +224,7 @@ textarea:focus{border-color:var(--accent);outline:none}
 .guide-close{order:-1;width:44px;height:44px;flex:none;border:1px solid var(--line-2);background:var(--surface-2);border-radius:12px;font-size:30px;line-height:1;color:var(--ink-2)}
 .guide-viewport{min-height:0;flex:1;overflow:hidden;touch-action:pan-y;overscroll-behavior:contain}
 .guide-track{display:flex;direction:rtl;width:100%;height:100%;transform:translateX(0);transition:transform .24s var(--ease)}
+.modal.exercise-guide:not([hidden]):not(.out) .m-card{animation:none}
 .exercise-guide .m-card{transition:transform .22s var(--ease);will-change:transform}
 .exercise-guide .m-card.guide-dragging{animation:none!important;transition:none!important}
 @keyframes guideDrop{from{transform:translateY(var(--guide-drop,0px))}to{transform:translateY(105%)}}
