@@ -41,3 +41,13 @@ test('compact exercise card retains personal notes and sets while moving all thr
 test('guide lookup follows effective movement and handles unknown historical names safely',()=>{const h=harness();a.ok(h.api.guideData('Single-Arm Cable Row').setup.includes('نشسته'));a.ok(h.api.guideData('Half-Kneeling Landmine Press').setup.includes('زانوی سمت دست فعال'));a.equal(h.api.guideData(h.api.effective(h.api.EX.fri2,{alt:true}).name).cues[0],guides.exercises['Dumbbell Lateral Raise'].cues[0]);for(const name of ['Future Press','__proto__','constructor'])a.equal(h.api.guideData(name).cues.length,0);});
 
 test('Lyfta video is connected to rear-delt fly only and is embedded for offline use',()=>{const g=require('../exercise-guides.js');const name='Chest-Supported Dumbbell Rear Delt Raise';const v=g.exercises[name].video;a.equal(v.source,'https://lyfta.app/ex/8b');a.ok(v.src.startsWith('data:video/mp4;base64,'));a.ok(v.poster.startsWith('data:image/png;base64,'));a.equal(Object.values(g.exercises).filter(x=>x.video).length,1);const h=harness();h.api.S=makeState();h.api.setView({date:'2026-10-30',day:'fri'});h.api.openNote('fri3');const html=h.els.get('#m-card').innerHTML;a.ok(html.includes('<video controls playsinline loop muted preload="none"'));a.ok(html.includes('https://lyfta.app/ex/8b'));a.ok(!html.includes('IMG_8588'));});
+
+test('iOS zoom prevention preserves single-finger gestures and build settings',()=>{
+ const source=fs.readFileSync(require.resolve('../app.src.html'),'utf8');
+ const build=fs.readFileSync(require.resolve('../build.py'),'utf8');
+ a.match(source,/touch-action:manipulation/);
+ a.match(source,/\['gesturestart', 'gesturechange', 'gestureend'\]/);
+ a.match(source,/event\.touches\.length > 1/);
+ a.match(source,/passive: false/);
+ a.match(build,/maximum-scale=1, user-scalable=no/);
+});
