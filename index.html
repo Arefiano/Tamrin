@@ -3537,7 +3537,7 @@ async function forceUpdate(){
     if(!navigator.serviceWorker){toast('به‌روزرسانی در این محیط در دسترس نیست');return;}
     const reg=await navigator.serviceWorker.getRegistration();if(!reg){toast('اپ را یک بار با اینترنت دوباره باز کن');return;}
     await reg.update();
-    if(v==='/*VER*/'){toast('همین نسخه، جدیدترین است');return;}
+    if(v==='3.9.7'){toast('همین نسخه، جدیدترین است');return;}
     toast('نسخهٔ تازه در حال آماده شدن است؛ پس از آماده شدن دکمهٔ به‌روزرسانی را بزن');
   }catch(e){toast('نسخهٔ تازه دریافت نشد؛ نسخهٔ آفلاین فعلی محفوظ است');}finally{clearTimeout(timeout);}
 }
