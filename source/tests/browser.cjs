@@ -59,7 +59,7 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await fp.locator('[data-day=fri]').click();await openGuide(landmine);
    const guideName=await fp.locator('.guide-head .en').textContent();assert.equal(guideName,'Landmine Lateral Raise');
    const swipe=async(dx,dy=0,cancel=false)=>fp.locator('.guide-viewport').evaluate((el,{dx,dy,cancel})=>{
-     const target=el.querySelector('.guide-panel:not([inert]) .guide-image')||el.querySelector('.guide-panel:not([inert]) h3');
+     const target=el.querySelector('.guide-panel:not([inert]) .guide-image')||el.querySelector('.guide-panel:not([inert]) h3')||el.querySelector('.guide-panel:not([inert]) .guide-cues')||el.querySelector('.guide-panel:not([inert])');
      const rect=el.getBoundingClientRect(),x=rect.x+rect.width/2,y=rect.y+70;
      // WebKit exposes Touch without a usable constructor in this runner.
      // Dispatch the same touch lists through standard DOM events in both engines.
