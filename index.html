@@ -3580,7 +3580,7 @@ function setGuideTab(index,focus=false){
 function resetGuideDrag(){mCard.classList.remove('guide-dragging');mCard.style.transform='';}
 mCard.addEventListener('touchstart',ev=>{
   if(mState?.kind!=='guide')return;ev.stopPropagation();guideSwipe=null;
-  if(ev.touches.length!==1||ev.target.closest('textarea,input,button,a,summary'))return;
+  if(ev.touches.length!==1||ev.target.closest('textarea,input,button,a,summary,video'))return;
   const header=ev.target.closest('.guide-head,.guide-handle'),panel=ev.target.closest('.guide-panel');
   if(!header&&!panel)return;
   const t=ev.touches[0];guideSwipe={x:t.clientX,y:t.clientY,at:Date.now(),dx:0,dy:0,lock:null,header:!!header,canPull:!!header||panel.scrollTop<=0};
