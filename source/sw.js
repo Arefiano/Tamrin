@@ -3,14 +3,17 @@
 // gets the latest version straight from the server (bypassing the HTTP cache);
 // offline, or if the network is slow, the cached copy opens instead.
 // Icons and the manifest are cache-first and refresh in the background.
-const CACHE = 'daftar-tamrin-3.9.5';
+const CACHE = 'daftar-tamrin-3.9.6';
 const FILES = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-180.png',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './media/rear-delt-fly.mp4',
+  './media/rear-delt-fly.webm',
+  './media/rear-delt-fly.png'
 ];
 const NET_TIMEOUT = 4000;
 

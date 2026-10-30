@@ -19,6 +19,7 @@ jobs:
       - run: python -m pip install Pillow==11.1.0
       - run: node --test source/tests/*.test.cjs
       - run: python source/build.py
+      - run: python source/tools/verify_release.py
       - run: npm install --no-save playwright@1.56.1
       - run: npx playwright install --with-deps chromium webkit
       - run: mkdir -p test-results && node source/tests/browser.cjs

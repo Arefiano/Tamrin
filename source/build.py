@@ -67,6 +67,8 @@ index = (
 )
 open(OUT + 'index.html', 'w', encoding='utf-8').write(index)
 shutil.copy(SRC + 'sw.js', OUT + 'sw.js')
+# Media are static files, not inline data URLs in the app shell.
+shutil.copytree(SRC + 'media', OUT + 'media')
 manifest = {
     'name': 'دفتر تمرین', 'short_name': 'دفتر تمرین', 'lang': 'fa', 'dir': 'rtl',
     'start_url': './', 'scope': './', 'display': 'standalone',
