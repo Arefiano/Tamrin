@@ -1,7 +1,7 @@
 name: App checks
 on:
   push:
-    branches: [main, 'audit/**']
+    branches: [main, 'audit/**', 'optimize/**']
   pull_request:
 permissions:
   contents: read
