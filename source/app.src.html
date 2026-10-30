@@ -2233,7 +2233,7 @@ function guideExecutionHTML(ex,id,rec){
   const program=base&&!e?.alt&&ex.name===base.name&&Array.isArray(base.note)?base.note:[];
   const muscles=(g.primary||[]).map(x=>`<span>اصلی: ${esc(x)}</span>`).concat((g.secondary||[]).map(x=>`<span class="secondary">کمکی: ${esc(x)}</span>`)).join('');
   const sources=(g.sources||[]).filter(k=>G.sources[k]);
-  return `${g.video?`<figure class="guide-media"><video controls playsinline loop muted preload="none" poster="${esc(g.video.poster)}" aria-label="ویدئوی اجرای ${esc(ex.name)}"><source src="${esc(g.video.src)}" type="video/mp4">پخش ویدئو در این مرورگر پشتیبانی نمی‌شود.</video><figcaption>ویدئوی مرجع · <a href="${esc(g.video.source)}" target="_blank" rel="noopener noreferrer">${esc(g.video.provider)}</a></figcaption></figure>`:''}${g.image?`<div class="guide-image" data-image-slot="${esc(ex.name)}"><img src="${esc(g.image)}" alt="تصویر اجرای ${esc(ex.name)}؛ شروع سمت راست و پایان سمت چپ"></div>`:''}
+  return `${g.video?`<figure class="guide-media"><video controls playsinline loop muted preload="none" poster="${esc(g.video.poster)}" aria-label="ویدئوی اجرای ${esc(ex.name)}"><source src="${esc(g.video.src)}" type="video/mp4">${g.video.webm?`<source src="${esc(g.video.webm)}" type="video/webm">`:''}پخش ویدئو در این مرورگر پشتیبانی نمی‌شود.</video><figcaption>ویدئوی مرجع · <a href="${esc(g.video.source)}" target="_blank" rel="noopener noreferrer">${esc(g.video.provider)}</a></figcaption></figure>`:''}${g.image?`<div class="guide-image" data-image-slot="${esc(ex.name)}"><img src="${esc(g.image)}" alt="تصویر اجرای ${esc(ex.name)}؛ شروع سمت راست و پایان سمت چپ"></div>`:''}
     ${muscles?`<div class="guide-muscles">${muscles}</div><p class="guide-hint">سبز: هدف اصلی · آبی روشن: کمکی · نمایش شماتیک</p>`:''}
     ${g.setup?`<p class="m-prog">${esc(g.setup)}</p>`:''}
     ${g.cues.length?`<ol class="guide-cues">${g.cues.map(c=>`<li>${esc(c)}</li>`).join('')}</ol>`:'<p class="m-sub">هنوز راهنمایی برای این حرکت ثبت نشده است.</p>'}
@@ -2252,7 +2252,7 @@ function guideWeightHTML(ex,rec){
 }
 let guideSwipe=null,guideOpener=null,guideMediaURL=null;
 function releaseGuideMedia(){mCard.querySelectorAll('video').forEach(v=>v.pause());if(guideMediaURL){URL.revokeObjectURL(guideMediaURL);guideMediaURL=null;}}
-function mountGuideMedia(){mCard.querySelectorAll('video').forEach(v=>{const src=v.querySelector('source')?.getAttribute('src');if(!src?.startsWith('data:video/mp4;base64,'))return;const binary=atob(src.split(',')[1]),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));guideMediaURL=URL.createObjectURL(new Blob([bytes],{type:'video/mp4'}));v.src=guideMediaURL;});}
+function mountGuideMedia(){mCard.querySelectorAll('video').forEach(v=>{const source=[...v.querySelectorAll('source')].find(x=>v.canPlayType(x.type==='video/mp4'?'video/mp4; codecs="avc1.64001f"':x.type));if(!source)return;const src=source.getAttribute('src'),type=source.type;if(!src?.startsWith('data:video/'))return;const binary=atob(src.split(',')[1]),bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));guideMediaURL=URL.createObjectURL(new Blob([bytes],{type}));v.src=guideMediaURL;});}
 /* the swipe hint shows on the first three guide openings only (a per-phone convenience) */
 function guideHintDue(){try{const n=+(localStorage.getItem(KEY+':guideHint')||0);if(n>=3)return false;localStorage.setItem(KEY+':guideHint',String(n+1));}catch(_){}return true;}
 function openExerciseGuide(name,id=null){
