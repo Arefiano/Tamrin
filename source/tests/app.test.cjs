@@ -53,16 +53,22 @@ test('iOS zoom prevention preserves single-finger gestures and build settings',(
 });
 
 
-test('Friday first exercise shows correct side-on landmine setup and Lyfta reference',()=>{
+test('Friday landmine guide plays Lyfta video inline with muted autoplay and loop',()=>{
  const h=harness();h.api.S=makeState();h.api.setView({date:'2026-10-30',day:'fri'});
  a.equal(h.api.EX.fri2.name,'Landmine Lateral Raise');
  const g=h.api.guideData('Landmine Lateral Raise');
  a.equal(g.reference.url,'https://lyfta.app/ex/8l9');
+ a.equal(g.video.src,'https://lyftaweb.s3.us-east-2.amazonaws.com/GymvisualMP4/32371201.mp4');
+ a.equal(g.video.autoplay,true);
+ a.equal(g.video.source,'https://lyfta.app/ex/8l9');
  a.ok(g.setup.includes('عمود بر امتداد'));
  a.ok(g.error.includes('روبه‌روی نوک'));
  h.api.openNote('fri2');
  const html=h.els.get('#m-card').innerHTML;
  a.ok(html.includes('https://lyfta.app/ex/8l9'));
- a.ok(html.includes('guide-reference'));
+ a.ok(html.includes('<video controls playsinline loop muted autoplay preload="auto"'));
+ a.ok(html.includes('GymvisualMP4/32371201.mp4'));
+ a.ok(html.includes('ویدئوی مرجع'));
+ a.ok(!html.includes('class="guide-reference"'));
  a.ok(html.includes('جای ایستادن'));
 });
