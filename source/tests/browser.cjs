@@ -100,6 +100,10 @@ const server=http.createServer((req,res)=>{if(networkUnavailable){res.writeHead(
    await pull(180);await fp.waitForSelector('#modal[hidden]',{state:'attached'});assert.equal(await fp.locator('.ex[data-ex=fri2]').count(),1);
    await openGuide(landmine);await pull(180,{header:true,scrolled:true});await fp.waitForSelector('#modal[hidden]',{state:'attached'});
    await openGuide(landmine);assert.equal(await fp.locator('#m-card').evaluate(el=>el.style.transform),'');await closeGuide();
+   // Embedded reference video works without external media requests and pauses on exit.
+   await openGuide(fp.locator('.ex[data-ex=fri3]'));const video=fp.locator('.guide-media video');assert.equal(await video.count(),1);
+   const media=await video.evaluate(async v=>{v.muted=true;v.load();await v.play();return {ready:v.readyState,source:v.currentSrc.startsWith('data:video/mp4;base64,'),paused:v.paused};});assert.equal(media.source,true);assert.equal(media.paused,false);assert.ok(media.ready>=2);
+   await fp.locator('[data-guide-tab="1"]').click();assert.equal(await video.evaluate(v=>v.paused),true);await closeGuide();
    // Warmups and cardio alternatives share the same catalog, with no bogus load tabs.
    await fp.locator('details.warm summary').click();await fp.locator('[data-movement-guide="Band External Rotation"]').click();assert.equal(await fp.locator('.guide-tab').count(),1);assert.ok((await fp.locator('#guide-panel-0').textContent()).includes('تحت‌خاری'));await closeGuide();
    await fp.locator('[data-calt]').click();await fp.locator('.cardio [data-movement-guide]').click();assert.equal(await fp.locator('.guide-head .en').textContent(),'Stationary Bike');await closeGuide();await fp.locator('[data-calt]').click();
