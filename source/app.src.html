@@ -1018,13 +1018,14 @@ const SLOT_BY_DOW = { 6: 'sat', 0: 'mon', 1: 'mon', 2: 'wed', 3: 'wed', 4: 'fri'
 const TRAIN_DOW = { 6: 'sat', 1: 'mon', 3: 'wed', 5: 'fri' };
 
 /* ---------- storage, recovery and undo ---------- */
-let STORE_BLOCKED=false, storageOk=true, saveT=null;
+let STORE_BLOCKED=false, storageOk=true, saveT=null, lastValidatedRaw=null;
 function emptyState(){return {v:1,schema:3,sessions:{},deload:[],exNotes:{},start:satOf(todayIso()),mig1:1,mig2:1,backupMode:'shortcut',shortcutName:'پشتیبان دفتر تمرین'};}
 function load(){
   let raw=null;
   try{
     raw=localStorage.getItem(KEY);if(!raw)return emptyState();
-    const state=C.normalize(JSON.parse(raw));state.start=state.start||satOf(todayIso());return freezeEntries(state);
+    const state=C.normalize(JSON.parse(raw));state.start=state.start||satOf(todayIso());
+    const loaded=freezeEntries(state);lastValidatedRaw=raw;return loaded;
   }catch(e){
     STORE_BLOCKED=true;
     try{if(raw&&!localStorage.getItem(KEY+':quarantine'))localStorage.setItem(KEY+':quarantine',raw);}catch(_){}
@@ -1046,8 +1047,13 @@ function save(now){
     if(STORE_BLOCKED){updateSaveUI();return false;}
     try{
       const txt=JSON.stringify(S);const prev=localStorage.getItem(KEY);
-      if(prev && prev!==txt){try{C.normalize(JSON.parse(prev));localStorage.setItem(KEY+':lastgood',prev);}catch(e){if(e.name==='QuotaExceededError')throw e;}}
-      localStorage.setItem(KEY,txt);storageOk=true;updateSaveUI();return true;
+      if(prev && prev!==txt){try{
+        // Previous writes from this tab are already known valid. Validate only
+        // unexpected external changes before preserving them as lastgood.
+        if(prev!==lastValidatedRaw)C.normalize(JSON.parse(prev));
+        localStorage.setItem(KEY+':lastgood',prev);
+      }catch(e){if(e.name==='QuotaExceededError')throw e;}}
+      localStorage.setItem(KEY,txt);lastValidatedRaw=txt;storageOk=true;updateSaveUI();return true;
     }catch(e){storageOk=false;updateSaveUI();return false;}
   };
   if(now)return f();saveT=setTimeout(f,250);return true;

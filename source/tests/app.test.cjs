@@ -15,6 +15,20 @@ test('boot with current and legacy states preserves entries',()=>{for(const raw 
 test('corrupt data is quarantined and automatic writes are blocked',()=>{const h=harness({'daftar-tamrin-v1':'{broken'});a.equal(h.api.blocked,true);a.equal(h.api.save(true),false);a.equal(h.store.get('daftar-tamrin-v1'),'{broken');a.equal(h.store.get('daftar-tamrin-v1:quarantine'),'{broken');});
 test('valid previous state recovered without overwriting corrupt primary',()=>{const h=harness({'daftar-tamrin-v1':'{broken','daftar-tamrin-v1:lastgood':JSON.stringify({...makeState(),tbBar:35})});a.equal(h.api.S.tbBar,35);a.equal(h.api.blocked,true);});
 test('storage failure produces a persistent alert',()=>{const h=harness();h.fail();a.equal(h.api.save(true),false);a.equal(h.els.get('#save-status').hidden,false);});
+test('save reuses known-valid previous state and still validates external writes',()=>{
+ const key='daftar-tamrin-v1',h=harness({[key]:JSON.stringify(makeState())});
+ const old=C.normalize;let calls=0;
+ C.normalize=(...args)=>{calls++;return old(...args)};
+ try{
+   h.api.S.tbBar=20;a.equal(h.api.save(true),true);
+   h.api.S.tbBar=25;a.equal(h.api.save(true),true);
+   a.equal(calls,0,'own prior saves should not be parsed and normalized again');
+   h.store.set(key,JSON.stringify({...makeState(),tbBar:30}));
+   h.api.S.tbBar=35;a.equal(h.api.save(true),true);
+   a.equal(calls,1,'external previous data must still be validated');
+   a.equal(JSON.parse(h.store.get(key+':lastgood')).tbBar,30);
+ }finally{C.normalize=old;}
+});
 test('missing RIR blocks progression while valid RIR allows it',()=>{const e=entry();const h=harness();h.api.S=makeState({'2026-10-26|mon':{date:'2026-10-26',day:'mon',ex:{mon1:e}}});h.api.setView({date:'2026-10-29',day:'mon'});a.equal(h.api.suggest(h.api.EX.mon1,{s:4,r:[6,10],rir:[2,3]},{week:3}),null);e.rir='2';a.equal(h.api.suggest(h.api.EX.mon1,{s:4,r:[6,10],rir:[2,3]},{week:3}).type,'up');});
 test('unchecked sets intentionally remain in record baseline and charts',()=>{const h=harness();h.api.S=makeState({'2026-10-26|mon':{date:'2026-10-26',day:'mon',ex:{mon1:entry(0)}}});h.api.setView({date:'2026-10-29',day:'mon'});a.ok(h.api.prevBest('mon1','2026-10-29',false).w>30);a.ok(h.api.progHTML().includes('۳۰'));});
 test('alternative equipment and target are independent',()=>{const h=harness();const base=h.api.EX.fri2,e={sets:[],rir:'',alt:true,spec:h.api.exerciseSpec(base,true)};const ex=h.api.effective(base,e);a.equal(ex.db,1);a.equal(ex.lm,undefined);a.deepEqual(Array.from(ex.r),[12,20]);});
