@@ -1,0 +1,27 @@
+name: Inspect public exercise video sources
+on:
+  push:
+    paths:
+      - '.github/workflows/media-source-check.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect public HTML media references
+        run: |
+          python - <<'PY'
+          import re,urllib.request,html
+          urls=['https://lyfta.app/ex/8l9','https://www.lyfta.app/exercise/landmine-lateral-raise-8l9','https://fitwill.app/exercise/3237/landmine-lateral-raise/video/']
+          for url in urls:
+            print('PAGE',url)
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                body=r.read().decode('utf-8','replace')
+                print('STATUS',r.status,'LEN',len(body),'FINAL',r.url)
+              matches=re.findall(r'[^\s"\x27<>]{0,140}(?:\.mp4|\.webm|\.m3u8|\.gif|videoUrl|video_url|<video|<source|poster=)[^\s"\x27<>]{0,160}',body,re.I)
+              for m in list(dict.fromkeys(matches))[:30]:print('MEDIA',html.unescape(m)[:280])
+            except Exception as e:print('ERROR',repr(e))
+          PY
