@@ -72,3 +72,18 @@ test('Friday landmine guide plays Lyfta video inline with muted autoplay and loo
  a.ok(!html.includes('class="guide-reference"'));
  a.ok(html.includes('جای ایستادن'));
 });
+
+test('personal note card follows muscle legend and opens editing on tap without an edit button',()=>{
+ const h=harness();h.api.S=makeState();
+ h.api.setView({date:'2026-10-30',day:'fri'});
+ h.api.openNote('fri2');
+ const html=h.els.get('#m-card').innerHTML;
+ const muscles=html.indexOf('class="guide-muscles"'),hint=html.indexOf('class="guide-hint"'),note=html.indexOf('class="guide-personal"'),setup=html.indexOf('class="m-prog"');
+ a.ok(muscles>=0&&muscles<hint&&hint<note&&note<setup);
+ a.match(html,/<button class="guide-personal-trigger" type="button" data-m="edit-guide-note"/);
+ a.ok(html.includes('aria-controls="guide-note-editor"'));
+ a.ok(html.includes('id="guide-note-preview"'));
+ a.ok(!html.includes('ویرایش</button>'));
+ a.ok(html.includes('data-m="save-note"'));
+ a.ok(html.includes('data-m="cancel-guide-note"'));
+});
