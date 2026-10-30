@@ -1,0 +1,52 @@
+name: Test Lyfta iframe embedding
+on:
+  push:
+    paths: ['.github/workflows/iframe-test.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect embedding headers
+        run: |
+          python - <<'PY'
+          import urllib.request
+          for url in ['https://lyfta.app/ex/8l9','https://lyftaweb.s3.us-east-2.amazonaws.com/GymvisualMP4/32371201.mp4']:
+            try:
+              with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0'}),timeout=20) as r:
+                print('URL',url,'STATUS',r.status,'FINAL',r.url)
+                for k in ['X-Frame-Options','Content-Security-Policy','Content-Type','Access-Control-Allow-Origin','Content-Length']:
+                  print(k,repr(r.headers.get(k)))
+            except Exception as e:print('ERROR',repr(e))
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save playwright@1.56.1
+      - run: npx playwright install --with-deps chromium webkit
+      - name: Browser iframe test
+        run: |
+          node - <<'JS'
+          const {chromium,webkit}=require('playwright');
+          (async()=>{
+            for(const [name,type] of [['Chromium',chromium],['WebKit-iPhone',webkit]]){
+              let browser;
+              try{
+                browser=await type.launch({headless:true});
+                const context=await browser.newContext(name==='WebKit-iPhone'?{viewport:{width:390,height:844},isMobile:true,hasTouch:true}:{});
+                const page=await context.newPage();
+                const errors=[];
+                page.on('console',msg=>{if(msg.type()==='error')errors.push(msg.text())});
+                page.on('pageerror',e=>errors.push(String(e)));
+                await page.setContent('<html><body><iframe id="test" src="https://lyfta.app/ex/8l9" width="360" height="500"></iframe></body></html>');
+                await page.waitForTimeout(10000);
+                const frame=page.frame({url:/lyfta\.app\/ex\/8l9/});
+                console.log('BROWSER',name,'FRAME',frame?.url()||'NO LOADED FRAME','TITLE',frame?await frame.title().catch(e=>String(e)):'n/a');
+                console.log('BROWSER_ERRORS',name,JSON.stringify(errors.slice(0,10)));
+                await browser.close();
+              }catch(e){console.log('BROWSER_FAIL',name,String(e));if(browser)await browser.close();}
+            }
+          })().catch(e=>{console.log('FATAL',String(e));process.exitCode=1});
+          JS
